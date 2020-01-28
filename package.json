@@ -1,0 +1,38 @@
+{
+  "name": "reddit-youtube-video-bot",
+  "version": "1.0.0",
+  "description": "Automated system to (1) scrape Reddit, (2) repackage the content, and (3) upload it to other platforms like YouTube.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest -c jest.config.js",
+    "build": "rm -rf ./build/ && tsc",
+    "start": "rm -rf build && tsc && NODE_ENV=development && node ./build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielgwilson/reddit-youtube-video-bot.git"
+  },
+  "author": "Daniel G. Wilson",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/danielgwilson/reddit-youtube-video-bot/issues"
+  },
+  "homepage": "https://github.com/danielgwilson/reddit-youtube-video-bot#readme",
+  "private": true,
+  "dependencies": {
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.0",
+    "@types/prettier": "^1.19.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1",
+    "ts-jest": "^25.0.0",
+    "ts-node": "^8.6.2"
+  }
+}
