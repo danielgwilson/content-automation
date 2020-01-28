@@ -1,4 +1,5 @@
 import snoowrap from "snoowrap";
+import { Post } from "../types/post";
 
 export default class {
   private r: snoowrap;
@@ -21,12 +22,12 @@ export default class {
     });
   }
 
-  async getPost() {
+  async getPost(): Promise<Post> {
     const subreddit = this.r.getSubreddit("AskReddit");
     const posts = await subreddit.getHot();
     const topPost = posts[0];
 
-    const { title, score, comments } = topPost;
+    const { id, title, score, comments } = topPost;
 
     const topComments = await comments.fetchMore({ amount: 10 });
     const cleanComments = topComments.map(comment => {
@@ -37,6 +38,6 @@ export default class {
       };
     });
 
-    return { title, score, comments: cleanComments };
+    return { id, title, score, comments: cleanComments };
   }
 }

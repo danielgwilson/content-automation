@@ -20,6 +20,7 @@
   "homepage": "https://github.com/danielgwilson/reddit-youtube-video-bot#readme",
   "private": true,
   "dependencies": {
+    "@google-cloud/text-to-speech": "^2.1.2",
     "config": "^3.2.5",
     "snoowrap": "^1.20.1"
   },

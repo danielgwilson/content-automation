@@ -1,5 +1,6 @@
 import config from "config";
 import Scraper from "./scraper/scraper";
+import Generator from "./generator/generator";
 
 (async () => {
   const scraper = new Scraper({
@@ -10,4 +11,7 @@ import Scraper from "./scraper/scraper";
   });
   const post = await scraper.getPost();
   console.log(post);
+
+  const generator = new Generator(config.get("GOOGLE_APPLICATION_CREDENTIALS"));
+  await generator.generate(post);
 })();
