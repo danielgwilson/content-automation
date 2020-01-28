@@ -20,11 +20,15 @@
   "homepage": "https://github.com/danielgwilson/reddit-youtube-video-bot#readme",
   "private": true,
   "dependencies": {
-    "typescript": "^3.7.5"
+    "config": "^3.2.5",
+    "snoowrap": "^1.20.1"
   },
   "devDependencies": {
+    "@types/config": "0.0.36",
     "@types/jest": "^25.1.0",
     "@types/prettier": "^1.19.0",
+    "@types/request": "^2.48.4",
+    "@types/snoowrap": "^1.19.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.9.0",
@@ -33,6 +37,7 @@
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "ts-jest": "^25.0.0",
-    "ts-node": "^8.6.2"
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   }
 }
