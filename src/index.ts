@@ -1,11 +1,13 @@
 import config from "config";
-import snoowrap from "snoowrap";
+import Scraper from "./scraper/scraper";
 
-const r = new snoowrap({
-  userAgent: config.get("REDDIT_USER_AGENT"),
-  clientId: config.get("REDDIT_CLIENT_ID"),
-  clientSecret: config.get("REDDIT_CLIENT_SECRET"),
-  refreshToken: config.get("REDDIT_REFRESH_TOKEN")
-});
-
-r.getHot().then(posts => posts.map(post => console.log(post.title)));
+(async () => {
+  const scraper = new Scraper({
+    userAgent: config.get("REDDIT_USER_AGENT"),
+    clientId: config.get("REDDIT_CLIENT_ID"),
+    clientSecret: config.get("REDDIT_CLIENT_SECRET"),
+    refreshToken: config.get("REDDIT_REFRESH_TOKEN")
+  });
+  const post = await scraper.getPost();
+  console.log(post);
+})();
