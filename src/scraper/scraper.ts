@@ -22,14 +22,24 @@ export default class {
     });
   }
 
-  async getPost(): Promise<Post> {
-    const subreddit = this.r.getSubreddit("AskReddit");
+  async getPost(
+    {
+      subredditName,
+      postIndex,
+      nComments
+    }: {
+      subredditName: string;
+      postIndex: number;
+      nComments: number;
+    } = { subredditName: "AskReddit", postIndex: 0, nComments: 10 }
+  ): Promise<Post> {
+    const subreddit = this.r.getSubreddit(subredditName);
     const posts = await subreddit.getHot();
-    const topPost = posts[0];
+    const topPost = posts[postIndex];
 
     const { id, title, score, comments } = topPost;
 
-    const topComments = await comments.fetchMore({ amount: 10 });
+    const topComments = await comments.fetchMore({ amount: nComments });
     const cleanComments = topComments.map(comment => {
       return {
         score: comment.score,

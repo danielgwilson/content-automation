@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest -c jest.config.js",
-    "build": "rm -rf ./build/ && tsc",
-    "start": "rm -rf build && tsc && NODE_ENV=development && node ./build/index.js"
+    "build": "rm -rf ./build/ && tsc && cp -rf ./public/ ./build/public/",
+    "start": "npm run build && NODE_ENV=development && node ./build/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "private": true,
   "dependencies": {
     "@google-cloud/text-to-speech": "^2.1.2",
+    "canvas": "^2.6.1",
     "config": "^3.2.5",
     "snoowrap": "^1.20.1"
   },

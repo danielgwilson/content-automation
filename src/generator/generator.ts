@@ -1,7 +1,7 @@
-import fs from "fs";
-import util from "util";
 import textToSpeech from "@google-cloud/text-to-speech";
 import { Post } from "../types/post";
+import { generateAudio } from "./generate-audio";
+import { generateVideo } from "./generate-video";
 
 export default class {
   client: any;
@@ -33,26 +33,7 @@ export default class {
   }
 
   async generate(post: Post) {
-    const texts = [post.title, ...post.comments.map(comment => comment.body)];
-
-    for (let [i, text] of texts.entries()) {
-      const request = {
-        input: { text },
-        voice: this.voice,
-        audioConfig: this.audioConfig
-      };
-
-      // Performs the text-to-speech request
-      const [response] = await this.client.synthesizeSpeech(request);
-      // Write the binary audio content to a local file
-      const writeFile = util.promisify(fs.writeFile);
-      const fileName = `./temp/${post.id}-${i}.mp3`;
-      await writeFile(fileName, response.audioContent, "binary");
-      console.log(`Audio content written to file: ${fileName}`);
-    }
-
-    console.log(
-      `Total characters converted to audio: ${texts.join("").length}`
-    );
+    // await generateAudio(post, this.client, this.voice, this.audioConfig);
+    await generateVideo(post);
   }
 }
