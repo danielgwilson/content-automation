@@ -1,4 +1,5 @@
 import Canvas from "canvas";
+import CanvasElement from "./canvas-element";
 
 export const renderRect = (
   ctx: Canvas.CanvasRenderingContext2D,
@@ -48,3 +49,27 @@ export const renderRect = (
 
   return rect;
 };
+
+export class RectElement extends CanvasElement {
+  constructor(
+    props: {
+      width?: number;
+      height?: number;
+
+      paddingTop?: number;
+      paddingLeft?: number;
+      paddingRight?: number;
+      paddingBottom?: number;
+
+      justifyContent?: null | "center";
+      verticalAlign?: null | "middle";
+    } = {}
+  ) {
+    super(props);
+  }
+
+  render(ctx: Canvas.CanvasRenderingContext2D) {
+    ctx.fillRect(this.x, this.y, this.getRealWidth(), this.getRealHeight());
+    super.render(ctx);
+  }
+}
