@@ -5,18 +5,17 @@ import Generator from "./generator/generator";
 import mockPost from "./tests/mock-post";
 
 (async () => {
-  // const scraper = new Scraper({
-  //   userAgent: config.get("REDDIT_USER_AGENT"),
-  //   clientId: config.get("REDDIT_CLIENT_ID"),
-  //   clientSecret: config.get("REDDIT_CLIENT_SECRET"),
-  //   refreshToken: config.get("REDDIT_REFRESH_TOKEN")
-  // });
-  // const post = await scraper.getPost({
-  //   subredditName: "AskReddit",
-  //   postIndex: 1,
-  //   nComments: 10
-  // });
-  const post = mockPost;
+  const scraper = new Scraper({
+    userAgent: config.get("REDDIT_USER_AGENT"),
+    clientId: config.get("REDDIT_CLIENT_ID"),
+    clientSecret: config.get("REDDIT_CLIENT_SECRET"),
+    refreshToken: config.get("REDDIT_REFRESH_TOKEN")
+  });
+  const post = await scraper.getPost({
+    subredditName: "AskReddit",
+    postIndex: 1,
+    nComments: 10
+  });
   console.log(`\n----------`);
   console.log(`Title: ${post.title}`);
   console.log(`Score: ${post.score}`);

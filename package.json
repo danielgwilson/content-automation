@@ -21,8 +21,18 @@
   "private": true,
   "dependencies": {
     "@google-cloud/text-to-speech": "^2.1.2",
-    "canvas": "^2.6.1",
+    "@nexrender/action-copy": "^1.8.16",
+    "@nexrender/action-encode": "^1.8.16",
+    "@nexrender/action-upload": "^1.10.0",
+    "@nexrender/cli": "^1.10.1",
+    "@nexrender/core": "^1.10.1",
+    "@nexrender/provider-ftp": "^1.10.0",
+    "@nexrender/provider-gs": "^1.9.2",
+    "@nexrender/provider-s3": "^1.8.16",
     "config": "^3.2.5",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.1",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "snoowrap": "^1.20.1"
   },
   "devDependencies": {

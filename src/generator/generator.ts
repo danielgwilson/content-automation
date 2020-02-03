@@ -1,7 +1,7 @@
 import textToSpeech from "@google-cloud/text-to-speech";
 import { Post } from "../types/post";
-import { generateAudio } from "./generate-audio";
-import { generateVideo } from "./generate-video";
+import { generateAudio } from "./audio/generate-audio";
+import { generateVideo } from "./video/generate-video";
 
 export default class {
   client: any;
@@ -33,7 +33,7 @@ export default class {
   }
 
   async generate(post: Post) {
-    // await generateAudio(post, this.client, this.voice, this.audioConfig);
+    await generateAudio(post, this.client, this.voice, this.audioConfig);
     await generateVideo(post);
   }
 }
