@@ -1,15 +1,23 @@
 import path from "path";
 const { render } = require("@nexrender/core");
-import { Post } from "../../types/post";
+import { getAssetsForSection, getAssetForUpdateCompLength } from "./assets";
+import { ProcessedPost } from "../../types/post";
 
-export async function generateVideo(post: Post) {
-  const job = getJob(post);
+export async function generateVideo(
+  post: ProcessedPost,
+  {
+    compName = "reddit-template"
+  }: {
+    compName?: string;
+  } = {}
+) {
+  const job = getJob(post, "reddit-template");
 
   const result = await render(job);
   console.log(result);
 }
 
-function getJob(post: Post) {
+function getJob(post: ProcessedPost, compName: string) {
   const srcPrefix = "file://";
   const job: any = {
     template: {
@@ -18,25 +26,9 @@ function getJob(post: Post) {
         "/../../",
         "/public/after-effects/reddit-template.aep"
       )}`,
-      composition: "reddit-template"
+      composition: compName
     },
-    assets: [
-      {
-        layerName: "title-text",
-        type: "data",
-        property: "Source Text",
-        value: post.title
-      },
-      {
-        src: `${srcPrefix}${path.join(
-          __dirname,
-          "/../../",
-          `/temp/${post.id}-0.mp3`
-        )}`,
-        layerName: "audio",
-        type: "audio"
-      }
-    ],
+    assets: [],
     actions: {
       postrender: [
         {
@@ -52,33 +44,18 @@ function getJob(post: Post) {
       ]
     }
   };
-  for (let i = 1; i < 2; i++) {
-    job.assets.push({
-      src: `${srcPrefix}${path.join(
-        __dirname,
-        "/../../",
-        "/public/after-effects/extend-scripts/dupe-audio.jsx"
-      )}`,
-      type: "script"
-    });
-    job.assets.push({
-      src: `${srcPrefix}${path.join(
-        __dirname,
-        "/../../",
-        `/temp/${post.id}-${i}.mp3`
-      )}`,
-      layerIndex: 1,
-      type: "audio"
-    });
+
+  for (let section of post.sections) {
+    job.assets.push(...getAssetsForSection(section, compName));
   }
-  job.assets.push({
-    src: `${srcPrefix}${path.join(
-      __dirname,
-      "/../../",
-      "/public/after-effects/extend-scripts/update-comp-length.jsx"
-    )}`,
-    type: "script"
-  });
+
+  // job.assets.push({
+  //   type: "data",
+  //   layerName: "comment-text",
+  //   property: "enabled",
+  //   value: false
+  // });
+  job.assets.push(getAssetForUpdateCompLength(compName));
 
   return job;
 }

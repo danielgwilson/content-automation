@@ -33,7 +33,12 @@ export default class {
   }
 
   async generate(post: Post) {
-    await generateAudio(post, this.client, this.voice, this.audioConfig);
-    await generateVideo(post);
+    const processedPost = await generateAudio(
+      post,
+      this.client,
+      this.voice,
+      this.audioConfig
+    );
+    await generateVideo(processedPost);
   }
 }

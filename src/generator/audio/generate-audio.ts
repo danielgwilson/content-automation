@@ -1,7 +1,7 @@
 import fs from "fs";
 import util from "util";
 import path from "path";
-import { Post } from "../../types/post";
+import { Post, ProcessedPost, PostSection } from "../../types/post";
 
 export async function generateAudio(
   post: Post,
@@ -15,11 +15,11 @@ export async function generateAudio(
     audioEncoding: string;
     speakingRate: number;
   }
-) {
+): Promise<ProcessedPost> {
   const texts = [post.title, ...post.comments.map(comment => comment.body)];
   const audioLengths: number[] = [];
 
-  const promises: Promise<undefined>[] = [];
+  const promises: Promise<PostSection>[] = [];
   for (let [i, text] of texts.entries()) {
     const request = {
       input: { text },
@@ -52,11 +52,14 @@ export async function generateAudio(
         const audioLength = (response.audioContent.length * 8) / 32000; // Why is 8 bits per character accurate? Shouldn't this be 6 bpc??
         audioLengths.push(audioLength);
 
-        return resolve();
+        return resolve({
+          type: i === 0 ? "title" : "comment",
+          fragments: [{ text, audio: { fileName, length: audioLength } }]
+        });
       })
     );
   }
-  await Promise.all(promises);
+  const sections = await Promise.all(promises);
 
   const totalCharacters = texts.join("").length;
   const totalAudioLength = audioLengths.reduce((a, b) => a + b, 0);
@@ -67,4 +70,9 @@ export async function generateAudio(
       .toISOString()
       .substr(11, 8)}\n`
   );
+
+  return {
+    post,
+    sections
+  } as ProcessedPost;
 }

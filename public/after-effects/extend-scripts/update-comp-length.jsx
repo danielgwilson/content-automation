@@ -6,4 +6,3 @@ for (var i = 1; i <= app.project.numItems; i++) {
     }
 }
 comp.duration = comp.layer(1).outPoint;
-comp.layer("audio").outPoint = comp.layer(1).outPoint;
