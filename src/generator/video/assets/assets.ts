@@ -1,38 +1,53 @@
-import { PostSection } from "../../types/post";
+import { IPostSection } from "../../../types/post";
 
-export function getAssetsForSection(section: PostSection, compName: string) {
-  const srcPrefix = "file://";
-  const sectionDelay = 1;
+const srcPrefix = "file://";
+
+export function getAssetsForSection(section: IPostSection, compName: string) {
+  return section.type === "title"
+    ? getAssetsForSectionTitle(section, compName)
+    : getAssetsForSectionComment(section, compName);
+}
+
+function getAssetsForSectionTitle(section: IPostSection, compName: string) {
   const assets = [];
 
-  if (section.type === "title") {
-    assets.push({
-      type: "data",
-      layerName: "title-text",
-      property: "Source Text",
-      value: section.fragments[0].text
-    });
-    assets.push({
-      src: `${srcPrefix}${section.fragments[0].audio.fileName}`,
-      layerName: "audio",
-      type: "audio"
-    });
-    assets.push({
-      type: "data",
-      layerIndex: 1,
-      property: "outPoint",
-      expression: "layer.startTime + layer.source.duration"
-    });
-    assets.push(
-      getAssetForSetPropertyToParentProperty(
-        {
-          layer: { name: "title-text", property: "outPoint" },
-          parent: { index: 1, property: "outPoint" }
-        },
-        compName
-      )
-    );
-  } else {
+  assets.push({
+    type: "data",
+    layerName: "title-text",
+    property: "Source Text",
+    value: section.fragments[0].text
+  });
+  assets.push({
+    src: `${srcPrefix}${section.fragments[0].audio.filePath}`,
+    layerName: "audio",
+    type: "audio"
+  });
+  assets.push({
+    type: "data",
+    layerIndex: 1,
+    property: "outPoint",
+    expression: "layer.startTime + layer.source.duration"
+  });
+  assets.push(
+    getAssetForSetPropertyToParentProperty(
+      {
+        layer: { name: "title-text", property: "outPoint" },
+        parent: { index: 1, property: "outPoint" }
+      },
+      compName
+    )
+  );
+
+  return assets;
+}
+
+function getAssetsForSectionComment(section: IPostSection, compName: string) {
+  const assets = [];
+
+  for (let [i, fragment] of section.fragments.entries()) {
+    const sectionDelay = i === 0 ? 1 : 0;
+
+    // Add new audio track containing fragment
     assets.push(getAssetForDuplicateLayer(1, compName));
     assets.push(
       getAssetForSetPropertyToParentProperty(
@@ -50,7 +65,7 @@ export function getAssetsForSection(section: PostSection, compName: string) {
       expression: `layer.startTime + ${sectionDelay}`
     });
     assets.push({
-      src: `${srcPrefix}${section.fragments[0].audio.fileName}`,
+      src: `${srcPrefix}${fragment.audio.filePath}`,
       layerIndex: 1,
       type: "audio"
     });
@@ -58,7 +73,7 @@ export function getAssetsForSection(section: PostSection, compName: string) {
       type: "data",
       layerIndex: 1,
       property: "name",
-      value: `audio.${section.fragments[0].audio.fileName}`
+      value: `audio.${fragment.audio.filePath}`
     });
     assets.push({
       type: "data",
@@ -66,41 +81,49 @@ export function getAssetsForSection(section: PostSection, compName: string) {
       property: "outPoint",
       expression: "layer.startTime + layer.source.duration"
     });
+
+    // Update comment text to show current fragment
     assets.push(
       getAssetForDuplicateLayer("comment-text", compName, {
-        newName: `comment-text.${section.fragments[0].audio.fileName}`
+        newName: `comment-text.${fragment.audio.filePath}`
       })
+    );
+    assets.push(
+      getAssetForSetPropertyToParentProperty(
+        {
+          layer: {
+            name: `comment-text.${fragment.audio.filePath}`,
+            property: "startTime"
+          },
+          parent: {
+            name: `audio.${fragment.audio.filePath}`,
+            property: "startTime"
+          }
+        },
+        compName
+      )
+    );
+    assets.push(
+      getAssetForSetPropertyToParentProperty(
+        {
+          layer: {
+            name: `comment-text.${fragment.audio.filePath}`,
+            property: "outPoint"
+          },
+          parent: {
+            name: `audio.${fragment.audio.filePath}`,
+            property: "outPoint"
+          }
+        },
+        compName
+      )
     );
     assets.push({
       type: "data",
-      layerName: `comment-text.${section.fragments[0].audio.fileName}`,
+      layerName: `comment-text.${fragment.audio.filePath}`,
       property: "Source Text",
-      value: section.fragments[0].text
+      value: fragment.textWithPriors
     });
-    assets.push(
-      getAssetForSetPropertyToParentProperty(
-        {
-          layer: {
-            name: `comment-text.${section.fragments[0].audio.fileName}`,
-            property: "startTime"
-          },
-          parent: { index: 1, property: "startTime" }
-        },
-        compName
-      )
-    );
-    assets.push(
-      getAssetForSetPropertyToParentProperty(
-        {
-          layer: {
-            name: `comment-text.${section.fragments[0].audio.fileName}`,
-            property: "outPoint"
-          },
-          parent: { index: 1, property: "outPoint" }
-        },
-        compName
-      )
-    );
   }
 
   return assets;

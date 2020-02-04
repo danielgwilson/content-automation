@@ -1,10 +1,13 @@
 import path from "path";
 const { render } = require("@nexrender/core");
-import { getAssetsForSection, getAssetForUpdateCompLength } from "./assets";
-import { ProcessedPost } from "../../types/post";
+import {
+  getAssetsForSection,
+  getAssetForUpdateCompLength
+} from "./assets/assets";
+import { IProcessedPost } from "../../types/post";
 
 export async function generateVideo(
-  post: ProcessedPost,
+  post: IProcessedPost,
   {
     compName = "reddit-template"
   }: {
@@ -17,7 +20,7 @@ export async function generateVideo(
   console.log(result);
 }
 
-function getJob(post: ProcessedPost, compName: string) {
+function getJob(post: IProcessedPost, compName: string) {
   const srcPrefix = "file://";
   const job: any = {
     template: {
@@ -49,12 +52,12 @@ function getJob(post: ProcessedPost, compName: string) {
     job.assets.push(...getAssetsForSection(section, compName));
   }
 
-  // job.assets.push({
-  //   type: "data",
-  //   layerName: "comment-text",
-  //   property: "enabled",
-  //   value: false
-  // });
+  job.assets.push({
+    type: "data",
+    layerName: "comment-text",
+    property: "enabled",
+    value: false
+  });
   job.assets.push(getAssetForUpdateCompLength(compName));
 
   return job;

@@ -1,5 +1,5 @@
 import snoowrap from "snoowrap";
-import { Post } from "../types/post";
+import { IPost } from "../types/post";
 
 export default class {
   private r: snoowrap;
@@ -32,7 +32,7 @@ export default class {
       postIndex: number;
       nComments: number;
     } = { subredditName: "AskReddit", postIndex: 0, nComments: 10 }
-  ): Promise<Post> {
+  ): Promise<IPost> {
     const subreddit = this.r.getSubreddit(subredditName);
     const posts = await subreddit.getHot();
     const topPost = posts[postIndex];

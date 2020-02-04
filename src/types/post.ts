@@ -1,4 +1,4 @@
-export interface Post {
+export interface IPost {
   id: string;
   title: string;
   score: number;
@@ -9,18 +9,21 @@ export interface Post {
   }[];
 }
 
-export interface ProcessedPost {
-  post: Post;
-  sections: PostSection[];
+export interface IProcessedPost {
+  post: IPost;
+  sections: IPostSection[];
 }
 
-export interface PostSection {
+export interface IPostSection {
   type: "title" | "comment";
   fragments: {
     text: string;
+    textWithPriors: string;
     audio: {
+      filePath: string;
       fileName: string;
       length: number;
     };
   }[];
+  length: number;
 }

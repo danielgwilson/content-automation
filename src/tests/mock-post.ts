@@ -1,4 +1,4 @@
-import { Post } from "../types/post";
+import { IPost } from "../types/post";
 
 export default {
   id: "mockPost123",
