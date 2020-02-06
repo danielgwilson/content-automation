@@ -2,21 +2,20 @@ import path from "path";
 const { render } = require("@nexrender/core");
 import {
   getAssetsForSection,
-  getAssetForUpdateCompLength
+  getAssetForMatchCompLengthToContents,
+  getAssetForSetAttribute,
+  getAssetForSetAttributeToParentAttribute
 } from "./assets/assets";
 import { IProcessedPost } from "../../types/post";
 
-export async function generateVideo(
-  post: IProcessedPost,
-  {
-    compName = "reddit-template"
-  }: {
-    compName?: string;
-  } = {}
-) {
-  const job = getJob(post, "reddit-template");
+export async function generateVideo(post: IProcessedPost) {
+  const job = getJob(post, "reddit-template-01");
 
-  const result = await render(job);
+  const result = await render(job, {
+    workpath: path.join(__dirname, "/../../", "/temp/nexrender/"),
+    skipCleanup: true,
+    debug: true
+  });
   console.log(result);
 }
 
@@ -52,13 +51,98 @@ function getJob(post: IProcessedPost, compName: string) {
     job.assets.push(...getAssetsForSection(section, compName));
   }
 
-  job.assets.push({
-    type: "data",
-    layerName: "comment-text",
-    property: "enabled",
-    value: false
-  });
-  job.assets.push(getAssetForUpdateCompLength(compName));
+  // Disable placeholder comment text and background
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "comment-text",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "user-text",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "score-text",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "upvote-arrow",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "downvote-arrow",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "comment-bg",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+
+  // // Update comp lengths for main comp and comment comp
+  job.assets.push(
+    getAssetForMatchCompLengthToContents(`${compName}.comment-comp`)
+  );
+  // Update title comp outPoint
+  job.assets.push(
+    getAssetForSetAttributeToParentAttribute(
+      {
+        layer: { name: `${compName}.comment-comp`, attribute: "outPoint" },
+        parent: {
+          index: 1,
+          attribute: "outPoint"
+        }
+      },
+      compName
+    )
+  );
+  job.assets.push(getAssetForMatchCompLengthToContents(compName));
 
   return job;
 }

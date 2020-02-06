@@ -23,6 +23,7 @@ export async function generateAudio(
   const promises: Promise<IPostSection>[] = [];
   for (let [i, text] of texts.entries()) {
     const cleanText = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+    // .replace(/\n/g, ""); // removes weird disallowed characters. SHOULD REMOVE UNSAFE!! Arb. code exec. bug
     promises.push(
       new Promise(async resolve => {
         const sentences = splitBySentence
@@ -89,7 +90,13 @@ export async function generateAudio(
         return resolve({
           type: i === 0 ? "title" : "comment",
           fragments,
-          length: audioLength
+          length: audioLength,
+
+          subredditName: post.subredditName,
+          score: i === 0 ? post.score : post.comments[i - 1].score,
+          upvoteRatio: i === 0 ? post.upvoteRatio : undefined,
+          author: i === 0 ? post.author : post.comments[i - 1].author,
+          numComments: post.numComments
         });
       })
     );

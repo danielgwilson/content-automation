@@ -13,8 +13,8 @@ import mockPost from "./tests/mock-post";
   });
   const post = await scraper.getPost({
     subredditName: "AskReddit",
-    postIndex: 1,
-    nComments: 10
+    postIndex: 0,
+    nComments: 3
   });
   console.log(`\n----------`);
   console.log(`Title: ${post.title}`);
@@ -25,6 +25,9 @@ import mockPost from "./tests/mock-post";
       return "\n" + (i + 1) + " - " + comment.body.substr(0, 20) + "...";
     })}\n`
   );
+  console.log(`Author: ${post.author}`);
+  console.log(`Upvote Ratio: ${post.upvoteRatio}`);
+  console.log(`Number of Comments: ${post.numComments}`);
 
   const generator = new Generator(config.get("GOOGLE_APPLICATION_CREDENTIALS"));
   await generator.generate(post);

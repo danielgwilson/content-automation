@@ -37,17 +37,36 @@ export default class {
     const posts = await subreddit.getHot();
     const topPost = posts[postIndex];
 
-    const { id, title, score, comments } = topPost;
+    const {
+      id,
+      title,
+      score,
+      author,
+      num_comments,
+      comments,
+      upvote_ratio
+    } = topPost;
 
     const topComments = await comments.fetchMore({ amount: nComments });
     const cleanComments = topComments.map(comment => {
       return {
+        author: comment.author.name,
         score: comment.score,
         body: comment.body,
-        body_html: comment.body_html
+        body_html: comment.body_html,
+        gildings: comment.gildings
       };
     });
 
-    return { id, title, score, comments: cleanComments };
+    return {
+      id,
+      title,
+      subredditName,
+      score,
+      upvoteRatio: upvote_ratio,
+      author: author.name,
+      numComments: num_comments,
+      comments: cleanComments
+    };
   }
 }
