@@ -1,5 +1,5 @@
 import snoowrap from "snoowrap";
-import { Post } from "../types/post";
+import { IPost } from "../types/post";
 
 export default class {
   private r: snoowrap;
@@ -22,22 +22,53 @@ export default class {
     });
   }
 
-  async getPost(): Promise<Post> {
-    const subreddit = this.r.getSubreddit("AskReddit");
+  async getPost(
+    {
+      subredditName,
+      postIndex,
+      nComments
+    }: {
+      subredditName: string;
+      postIndex: number;
+      nComments: number;
+    } = { subredditName: "AskReddit", postIndex: 0, nComments: 10 }
+  ): Promise<IPost> {
+    const subreddit = this.r.getSubreddit(subredditName);
     const posts = await subreddit.getHot();
-    const topPost = posts[0];
+    const topPost = posts[postIndex];
 
-    const { id, title, score, comments } = topPost;
+    const {
+      id,
+      title,
+      score,
+      author,
+      num_comments,
+      comments,
+      upvote_ratio,
+      gildings
+    } = topPost;
 
-    const topComments = await comments.fetchMore({ amount: 10 });
+    const topComments = await comments.fetchMore({ amount: nComments });
     const cleanComments = topComments.map(comment => {
       return {
+        author: comment.author.name,
         score: comment.score,
         body: comment.body,
-        body_html: comment.body_html
+        body_html: comment.body_html,
+        gildings: comment.gildings
       };
     });
 
-    return { id, title, score, comments: cleanComments };
+    return {
+      id,
+      title,
+      subredditName,
+      score,
+      upvoteRatio: upvote_ratio,
+      author: author.name,
+      numComments: num_comments,
+      comments: cleanComments,
+      gildings
+    };
   }
 }

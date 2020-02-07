@@ -1,5 +1,7 @@
-node_modules/
-build/
-config/
-temp/
+node_modules
 .DS_Store
+build
+.env
+coverage
+config
+public/bg-videos
