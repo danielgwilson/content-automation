@@ -4,3 +4,4 @@ build
 .env
 coverage
 config
+public/bg-videos

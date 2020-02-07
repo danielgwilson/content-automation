@@ -2,12 +2,15 @@ import { Gildings } from "snoowrap/dist/objects/VoteableContent";
 
 export interface IPost {
   id: string;
+
   title: string;
   subredditName: string;
   score: number;
   upvoteRatio: number;
   author: string;
   numComments: number;
+  gildings: Gildings;
+
   comments: {
     author: string;
     score: number;

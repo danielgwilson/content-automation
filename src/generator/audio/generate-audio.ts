@@ -26,14 +26,15 @@ export async function generateAudio(
     // .replace(/\n/g, ""); // removes weird disallowed characters. SHOULD REMOVE UNSAFE!! Arb. code exec. bug
     promises.push(
       new Promise(async resolve => {
-        const sentences = splitBySentence
-          ? cleanText
-              .replace(
-                /(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm,
-                "$1$2|"
-              )
-              .split("|")
-          : [cleanText];
+        const sentences =
+          splitBySentence && i > 0
+            ? cleanText
+                .replace(
+                  /(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm,
+                  "$1$2|"
+                )
+                .split("|")
+            : [cleanText]; // Splits text by ending punctuation except for title
 
         const fragments: {
           text: string;

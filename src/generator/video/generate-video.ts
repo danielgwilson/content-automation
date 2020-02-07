@@ -2,9 +2,10 @@ import path from "path";
 const { render } = require("@nexrender/core");
 import {
   getAssetsForSection,
-  getAssetForMatchCompLengthToContents,
+  getAssetForMatchCompDurationToContents,
   getAssetForSetAttribute,
-  getAssetForSetAttributeToParentAttribute
+  getAssetForSetAttributeToParentAttribute,
+  getAssetForDuplicateLayer
 } from "./assets/assets";
 import { IProcessedPost } from "../../types/post";
 
@@ -20,10 +21,11 @@ export async function generateVideo(post: IProcessedPost) {
 }
 
 function getJob(post: IProcessedPost, compName: string) {
-  const srcPrefix = "file://";
+  const SRC_PREFIX = "file://";
+  const AUDIO_LEVEL_BG = -10.0;
   const job: any = {
     template: {
-      src: `${srcPrefix}${path.join(
+      src: `${SRC_PREFIX}${path.join(
         __dirname,
         "/../../",
         "/public/after-effects/reddit-template.aep"
@@ -51,7 +53,7 @@ function getJob(post: IProcessedPost, compName: string) {
     job.assets.push(...getAssetsForSection(section, compName));
   }
 
-  // Disable placeholder comment text and background
+  // Disable placeholder layers that were duplicated but are otherwise unused
   job.assets.push(
     getAssetForSetAttribute(
       {
@@ -124,12 +126,124 @@ function getJob(post: IProcessedPost, compName: string) {
       `${compName}.comment-comp`
     )
   );
-
-  // // Update comp lengths for main comp and comment comp
   job.assets.push(
-    getAssetForMatchCompLengthToContents(`${compName}.comment-comp`)
+    getAssetForSetAttribute(
+      {
+        layer: {
+          name: "transition-ref",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
   );
-  // Update title comp outPoint
+
+  // Background music
+  job.assets.push(
+    getAssetForDuplicateLayer("audio-ref", compName, {
+      newName: "audio-ref.bg-music"
+    })
+  );
+  job.assets.push({
+    type: "audio",
+    layerName: "audio-ref.bg-music",
+    src: `${SRC_PREFIX}${path.join(
+      __dirname,
+      "/../../",
+      "/public/bg-music/",
+      "Sunshine_Samba.mp3"
+    )}`
+  });
+  job.assets.push({
+    type: "data",
+    layerName: "audio-ref.bg-music",
+    property: "timeRemapEnabled",
+    value: true
+  });
+  job.assets.push({
+    type: "data",
+    layerName: "audio-ref.bg-music",
+    property: "Time Remap",
+    expression: "loopOut()"
+  });
+  job.assets.push(
+    getAssetForSetAttributeToParentAttribute(
+      {
+        layer: { name: "audio-ref.bg-music", attribute: "outPoint" },
+        parent: {
+          index: 1,
+          attribute: "outPoint"
+        }
+      },
+      compName
+    )
+  );
+  job.assets.push({
+    type: "data",
+    layerName: `audio-ref.bg-music`,
+    property: "Audio Levels",
+    value: [AUDIO_LEVEL_BG, AUDIO_LEVEL_BG]
+  });
+
+  // Background video
+  job.assets.push({
+    type: "video",
+    layerName: "bg-ref",
+    composition: `${compName}.bg-comp`,
+    src: `${SRC_PREFIX}${path.join(
+      __dirname,
+      "/../../",
+      "/public/bg-videos/bg-02-forest-atmosphere.mp4"
+    )}`
+  });
+  job.assets.push({
+    type: "data",
+    layerName: "bg-ref",
+    composition: `${compName}.bg-comp`,
+    property: "timeRemapEnabled",
+    value: true
+  });
+  job.assets.push({
+    type: "data",
+    layerName: "bg-ref",
+    composition: `${compName}.bg-comp`,
+    property: "Time Remap",
+    expression: "loopOut()"
+  });
+  job.assets.push(
+    getAssetForSetAttributeToParentAttribute(
+      {
+        layer: { name: "bg-ref", attribute: "outPoint" },
+        parent: {
+          index: 1,
+          attribute: "outPoint"
+        }
+      },
+      `${compName}.bg-comp`,
+      compName
+    )
+  );
+  job.assets.push(
+    getAssetForMatchCompDurationToContents(`${compName}.bg-comp`)
+  );
+  job.assets.push(
+    getAssetForSetAttributeToParentAttribute(
+      {
+        layer: { name: `${compName}.bg-comp`, attribute: "outPoint" },
+        parent: {
+          index: 1,
+          attribute: "outPoint"
+        }
+      },
+      compName
+    )
+  );
+
+  // Update comment comp duration and outPoint
+  job.assets.push(
+    getAssetForMatchCompDurationToContents(`${compName}.comment-comp`)
+  );
   job.assets.push(
     getAssetForSetAttributeToParentAttribute(
       {
@@ -142,7 +256,15 @@ function getJob(post: IProcessedPost, compName: string) {
       compName
     )
   );
-  job.assets.push(getAssetForMatchCompLengthToContents(compName));
+  job.assets.push({
+    type: "data",
+    layerName: `${compName}.comment-comp`,
+    property: "outPoint",
+    expression: "layer.outPoint + 1"
+  });
+
+  // Update main comp duration
+  job.assets.push(getAssetForMatchCompDurationToContents(compName));
 
   return job;
 }

@@ -44,7 +44,8 @@ export default class {
       author,
       num_comments,
       comments,
-      upvote_ratio
+      upvote_ratio,
+      gildings
     } = topPost;
 
     const topComments = await comments.fetchMore({ amount: nComments });
@@ -66,7 +67,8 @@ export default class {
       upvoteRatio: upvote_ratio,
       author: author.name,
       numComments: num_comments,
-      comments: cleanComments
+      comments: cleanComments,
+      gildings
     };
   }
 }

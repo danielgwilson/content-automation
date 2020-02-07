@@ -1,7 +1,8 @@
 import { IPostSection } from "../../../types/post";
 
-const srcPrefix = "file://";
-const SECTION_DELAY = 1;
+const SRC_PREFIX = "file://";
+const SECTION_DELAY = 1.0;
+const AUDIO_LEVEL_VOICE = 3.0;
 
 export function getAssetsForSection(section: IPostSection, compName: string) {
   return section.type === "title"
@@ -14,7 +15,7 @@ function getAssetsForSectionTitle(section: IPostSection, compName: string) {
 
   // Add title audio
   assets.push({
-    src: `${srcPrefix}${section.fragments[0].audio.filePath}`,
+    src: `${SRC_PREFIX}${section.fragments[0].audio.filePath}`,
     layerName: "audio-ref",
     type: "audio"
   });
@@ -23,6 +24,12 @@ function getAssetsForSectionTitle(section: IPostSection, compName: string) {
     layerName: "audio-ref",
     property: "outPoint",
     expression: "layer.startTime + layer.source.duration"
+  });
+  assets.push({
+    type: "data",
+    layerName: "audio-ref",
+    property: "Audio Levels",
+    value: [AUDIO_LEVEL_VOICE, AUDIO_LEVEL_VOICE]
   });
 
   // Update title comp outPoint
@@ -116,13 +123,29 @@ function getAssetsForSectionTitle(section: IPostSection, compName: string) {
       compName
     )
   );
-  // Delay the inPoint by SECTION_DELAY seconds if this is the first fragment in a section
-  assets.push({
-    type: "data",
-    layerName: `${compName}.comment-comp`,
-    property: "inPoint",
-    expression: `layer.inPoint + ${SECTION_DELAY}`
-  });
+
+  // Add transition clip at outPoint of title comp
+  assets.push(
+    getAssetForDuplicateLayer("transition-ref", `${compName}.comment-comp`, {
+      newName: "transition-ref.title"
+    })
+  );
+  assets.push(
+    getAssetForSetAttributeToParentAttribute(
+      {
+        layer: {
+          name: "transition-ref.title",
+          attribute: "startTime"
+        },
+        parent: {
+          name: "audio-ref",
+          attribute: "outPoint"
+        }
+      },
+      `${compName}.comment-comp`,
+      compName
+    )
+  );
 
   return assets;
 }
@@ -157,7 +180,7 @@ function getAssetsForSectionComment(section: IPostSection, compName: string) {
       ...getAssetsForAddNextText(
         { name: "score-text", suffix: fragment.audio.filePath },
         section.score > 999
-          ? `${Math.round(section.score / 100) / 10}k`
+          ? `${Math.round(section.score / 100) / 10}k points`
           : `${section.score} points`,
         `${compName}.comment-comp`,
         compName
@@ -234,6 +257,35 @@ function getAssetsForSectionComment(section: IPostSection, compName: string) {
         compName
       )
     );
+
+    // Add transition clip at outPoint of last fragment
+    if (i === section.fragments.length - 1) {
+      assets.push(
+        getAssetForDuplicateLayer(
+          "transition-ref",
+          `${compName}.comment-comp`,
+          {
+            newName: `transition-ref.${fragment.audio.filePath}`
+          }
+        )
+      );
+      assets.push(
+        getAssetForSetAttributeToParentAttribute(
+          {
+            layer: {
+              name: `transition-ref.${fragment.audio.filePath}`,
+              attribute: "startTime"
+            },
+            parent: {
+              name: `audio.${fragment.audio.filePath}`,
+              attribute: "outPoint"
+            }
+          },
+          `${compName}.comment-comp`,
+          compName
+        )
+      );
+    }
   }
 
   return assets;
@@ -504,7 +556,7 @@ export function getAssetForDuplicateLayer(
   return asset;
 }
 
-export function getAssetForMatchCompLengthToContents(compName: string) {
+export function getAssetForMatchCompDurationToContents(compName: string) {
   const asset = {
     type: "data",
     composition: compName,
@@ -614,7 +666,7 @@ function getAssetsForAddNextAudio(
 
   // Replace the audio source with the current fragment clip
   assets.push({
-    src: `${srcPrefix}${filePath}`,
+    src: `${SRC_PREFIX}${filePath}`,
     layerName: `audio.${filePath}`,
     type: "audio"
   });
@@ -625,6 +677,14 @@ function getAssetsForAddNextAudio(
     layerName: `audio.${filePath}`,
     property: "outPoint",
     expression: "layer.startTime + layer.source.duration"
+  });
+
+  // Set audio levels
+  assets.push({
+    type: "data",
+    layerName: `audio.${filePath}`,
+    property: "Audio Levels",
+    value: [AUDIO_LEVEL_VOICE, AUDIO_LEVEL_VOICE]
   });
 
   return assets;

@@ -2,8 +2,6 @@ import config from "config";
 import Scraper from "./scraper/scraper";
 import Generator from "./generator/generator";
 
-import mockPost from "./tests/mock-post";
-
 (async () => {
   const scraper = new Scraper({
     userAgent: config.get("REDDIT_USER_AGENT"),
@@ -13,8 +11,8 @@ import mockPost from "./tests/mock-post";
   });
   const post = await scraper.getPost({
     subredditName: "AskReddit",
-    postIndex: 0,
-    nComments: 3
+    postIndex: 1,
+    nComments: 10
   });
   console.log(`\n----------`);
   console.log(`Title: ${post.title}`);
