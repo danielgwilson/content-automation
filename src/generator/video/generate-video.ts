@@ -14,6 +14,7 @@ export async function generateVideo(post: IProcessedPost) {
 
   const result = await render(job, {
     workpath: path.join(__dirname, "/../../", "/temp/nexrender/"),
+    maxMemoryPercent: 75,
     skipCleanup: true,
     debug: true
   });
@@ -118,6 +119,18 @@ function getJob(post: IProcessedPost, compName: string) {
     getAssetForSetAttribute(
       {
         layer: {
+          name: "collapse-comment-bar",
+          attribute: "enabled",
+          value: false
+        }
+      },
+      `${compName}.comment-comp`
+    )
+  );
+  job.assets.push(
+    getAssetForSetAttribute(
+      {
+        layer: {
           name: "comment-bg",
           attribute: "enabled",
           value: false
@@ -194,7 +207,7 @@ function getJob(post: IProcessedPost, compName: string) {
     src: `${SRC_PREFIX}${path.join(
       __dirname,
       "/../../",
-      "/public/bg-videos/bg-02-forest-atmosphere.mp4"
+      "/public/bg-videos/bg-03-rocks-waves-1080p.mp4"
     )}`
   });
   job.assets.push({

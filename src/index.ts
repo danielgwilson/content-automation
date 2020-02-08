@@ -11,8 +11,10 @@ import Generator from "./generator/generator";
   });
   const post = await scraper.getPost({
     subredditName: "AskReddit",
-    postIndex: 1,
-    nComments: 10
+    postIndex: 2,
+    minWords: 2.6 * 60 * 10,
+    sort: "top",
+    time: "week"
   });
   console.log(`\n----------`);
   console.log(`Title: ${post.title}`);

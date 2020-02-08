@@ -1,3 +1,4 @@
+import path from "path";
 import { IPostSection } from "../../../types/post";
 
 const SRC_PREFIX = "file://";
@@ -42,6 +43,18 @@ function getAssetsForSectionTitle(section: IPostSection, compName: string) {
       compName
     )
   );
+
+  // Update subreddit icon
+  assets.push({
+    src: `${SRC_PREFIX}${path.join(
+      __dirname,
+      "/../../../",
+      "/temp/",
+      "subreddit-icon.png"
+    )}`,
+    layerName: "subreddit-icon-ref",
+    type: "image"
+  });
 
   // Update title text
   assets.push({
@@ -180,7 +193,9 @@ function getAssetsForSectionComment(section: IPostSection, compName: string) {
       ...getAssetsForAddNextText(
         { name: "score-text", suffix: fragment.audio.filePath },
         section.score > 999
-          ? `${Math.round(section.score / 100) / 10}k points`
+          ? section.score > 99999
+            ? `${Math.round(section.score / 1000)}k points`
+            : `${Math.round(section.score / 100) / 10}k points`
           : `${section.score} points`,
         `${compName}.comment-comp`,
         compName
@@ -227,6 +242,31 @@ function getAssetsForSectionComment(section: IPostSection, compName: string) {
         {
           layer: {
             name: `downvote-arrow.${fragment.audio.filePath}`
+          },
+          parent: {
+            name: `audio.${fragment.audio.filePath}`
+          }
+        },
+        `${compName}.comment-comp`,
+        compName
+      )
+    );
+
+    // Set collapse comment bar inPoint and outPoint
+    assets.push(
+      getAssetForDuplicateLayer(
+        "collapse-comment-bar",
+        `${compName}.comment-comp`,
+        {
+          newName: `collapse-comment-bar.${fragment.audio.filePath}`
+        }
+      )
+    );
+    assets.push(
+      ...getAssetsForSetInOutToParent(
+        {
+          layer: {
+            name: `collapse-comment-bar.${fragment.audio.filePath}`
           },
           parent: {
             name: `audio.${fragment.audio.filePath}`
