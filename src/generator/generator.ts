@@ -1,5 +1,5 @@
 import { IProcessedPost, IGeneratorOutput } from "../types/post";
-import { generateVideo } from "./video/generate-video";
+import { generateVideo as renderVideo } from "./video/render/generate-video";
 import { saveObjectToJson } from "../util";
 
 export default class {
@@ -16,7 +16,7 @@ export default class {
     }: { saveOutputToFile?: boolean; debug?: boolean } = {}
   ) {
     const t0 = performance.now();
-    const videoGeneratorOutput = await generateVideo(post, {
+    const videoGeneratorOutput = await renderVideo(post, {
       outputDir: this.outputDir,
       debug
     });
@@ -24,7 +24,7 @@ export default class {
       id: post.id,
       dateGenerated: new Date(),
       elapsedTime: performance.now() - t0,
-      media: videoGeneratorOutput
+      media: { metadata: {}, thumbnail: {}, render: videoGeneratorOutput }
     } as IGeneratorOutput;
 
     console.log(`---`);

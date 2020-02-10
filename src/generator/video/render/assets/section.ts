@@ -1,6 +1,6 @@
 import { getAssetsForSectionTitle } from "./section-title";
 import { getAssetsForSectionComment } from "./section-comment";
-import { IPostSection, IProcessedPostDetails } from "../../../types/post";
+import { IPostSection, IProcessedPostDetails } from "../../../../types/post";
 
 export function getAssetsForSection(
   section: IPostSection,

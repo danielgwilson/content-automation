@@ -85,7 +85,7 @@ export interface IGeneratorOutput {
   dateGenerated: Date;
   elapsedTime: number;
 
-  media: IVideoOutput;
+  media: { metadata: any; thumbnail: any; render: IVideoOutput };
 }
 
 export interface IVideoOutput {

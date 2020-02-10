@@ -1,7 +1,7 @@
 import path from "path";
 const { render } = require("@nexrender/core");
-import { IProcessedPost } from "../../types/post";
-import { getJob } from "./job";
+import { IProcessedPost } from "../../../types/post";
+import { getJob } from "../job";
 
 export async function generateVideo(
   post: IProcessedPost,

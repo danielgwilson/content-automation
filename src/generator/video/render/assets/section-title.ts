@@ -1,4 +1,4 @@
-import { IPostSection, IProcessedPostDetails } from "../../../types/post";
+import { IPostSection, IProcessedPostDetails } from "../../../../types/post";
 import {
   getAssetForSetAttributeToParentAttribute,
   getAssetForDuplicateLayer

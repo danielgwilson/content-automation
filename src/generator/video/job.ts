@@ -5,9 +5,9 @@ import {
   getAssetForSetAttribute,
   getAssetForSetAttributeToParentAttribute,
   getAssetForDuplicateLayer
-} from "./assets/assets";
-import { getAssetsForSection } from "./assets/section";
-import { getSrcForPath } from "./assets/util";
+} from "./render/assets/assets";
+import { getAssetsForSection } from "./render/assets/section";
+import { getSrcForPath } from "./render/assets/util";
 
 export function getJob(
   post: IProcessedPost,
