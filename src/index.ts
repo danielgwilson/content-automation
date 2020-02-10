@@ -1,28 +1,30 @@
 import fs from "fs";
 import path from "path";
 import config from "config";
-import Scraper from "./scraper/scraper";
+import Crawler from "./crawler/crawler";
+import Processor from "./processor/processor";
 import Generator from "./generator/generator";
 
 (async () => {
   const outputDir = path.join(__dirname, "/temp/");
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
+  }
 
-  const scraper = new Scraper({
+  const crawler = new Crawler({
     userAgent: config.get("REDDIT_USER_AGENT"),
     clientId: config.get("REDDIT_CLIENT_ID"),
     clientSecret: config.get("REDDIT_CLIENT_SECRET"),
     refreshToken: config.get("REDDIT_REFRESH_TOKEN")
   });
-  const post = await scraper.getPost({
+  const post = await crawler.getPost({
     outputDir,
     subredditName: "AskReddit",
     postIndex: 2,
     minWords: 2.6 * 60 * 10,
-    sort: "top",
-    time: "week"
+    sort: { type: "top", time: "week" },
+    saveOutputToFile: true
   });
-
-  fs.writeFileSync(path.join(outputDir, "output.json"), post);
 
   console.log(`\n----------`);
   console.log(`Title: ${post.title}`);
@@ -37,6 +39,14 @@ import Generator from "./generator/generator";
   console.log(`Upvote Ratio: ${post.upvoteRatio}`);
   console.log(`Number of Comments: ${post.numComments}`);
 
-  const generator = new Generator(config.get("GOOGLE_APPLICATION_CREDENTIALS"));
-  await generator.generate(post);
+  const processor = new Processor({
+    outputDir,
+    GOOGLE_APPLICATION_CREDENTIALS: config.get("GOOGLE_APPLICATION_CREDENTIALS")
+  });
+  const processedPost = await processor.process(post, {
+    saveOutputToFile: true
+  });
+
+  const generator = new Generator({ outputDir });
+  await generator.generate(processedPost);
 })();

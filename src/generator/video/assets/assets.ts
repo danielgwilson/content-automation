@@ -1,335 +1,4 @@
-import path from "path";
-import { IPostSection } from "../../../types/post";
-
-const SRC_PREFIX = "file://";
-const SECTION_DELAY = 1.0;
-const AUDIO_LEVEL_VOICE = 3.0;
-
-export function getAssetsForSection(section: IPostSection, compName: string) {
-  return section.type === "title"
-    ? getAssetsForSectionTitle(section, compName)
-    : getAssetsForSectionComment(section, compName);
-}
-
-function getAssetsForSectionTitle(section: IPostSection, compName: string) {
-  const assets = [];
-
-  // Add title audio
-  assets.push({
-    src: `${SRC_PREFIX}${section.fragments[0].audio.filePath}`,
-    layerName: "audio-ref",
-    type: "audio"
-  });
-  assets.push({
-    type: "data",
-    layerName: "audio-ref",
-    property: "outPoint",
-    expression: "layer.startTime + layer.source.duration"
-  });
-  assets.push({
-    type: "data",
-    layerName: "audio-ref",
-    property: "Audio Levels",
-    value: [AUDIO_LEVEL_VOICE, AUDIO_LEVEL_VOICE]
-  });
-
-  // Update title comp outPoint
-  assets.push(
-    getAssetForSetAttributeToParentAttribute(
-      {
-        layer: { name: `${compName}.title-comp`, attribute: "outPoint" },
-        parent: { name: "audio-ref", attribute: "outPoint" }
-      },
-      compName
-    )
-  );
-
-  // Update subreddit icon
-  assets.push({
-    src: `${SRC_PREFIX}${path.join(
-      __dirname,
-      "/../../../",
-      "/temp/",
-      "subreddit-icon.png"
-    )}`,
-    layerName: "subreddit-icon-ref",
-    type: "image"
-  });
-
-  // Update title text
-  assets.push({
-    type: "data",
-    composition: `${compName}.title-comp`,
-    layerName: "title-text",
-    property: "Source Text",
-    value: section.fragments[0].text
-  });
-
-  // Update subreddit name
-  if (!section.subredditName) throw new Error("subredditName undefined");
-  assets.push({
-    type: "data",
-    composition: `${compName}.title-comp`,
-    layerName: "subreddit-text",
-    property: "Source Text",
-    value: "r/" + section.subredditName
-  });
-
-  // Update author name
-  if (!section.author) throw new Error("author undefined");
-  assets.push({
-    type: "data",
-    composition: `${compName}.title-comp`,
-    layerName: "user-text",
-    property: "Source Text",
-    value: "u/" + section.author
-  });
-
-  // Update number of comments
-  if (!section.numComments) throw new Error("numComments undefined");
-  assets.push({
-    type: "data",
-    composition: `${compName}.title-comp`,
-    layerName: "num-comments-text",
-    property: "Source Text",
-    value:
-      section.numComments > 999
-        ? `${Math.round(section.numComments / 100) / 10}k Comments`
-        : `${section.numComments} Comments`
-  });
-
-  // Update score
-  if (!section.score) throw new Error("score undefined");
-  assets.push({
-    type: "data",
-    composition: `${compName}.title-comp`,
-    layerName: "score-text",
-    property: "Source Text",
-    value:
-      section.score > 999
-        ? `${Math.round(section.score / 100) / 10}k`
-        : `${section.score}`
-  });
-
-  // Update upvote ratio
-  // if (!section.upvoteRatio) throw new Error("upvoteRatio undefined");
-  // assets.push(
-  //   getAssetForSetProperty(
-  //     {
-  //       layer: {
-  //         name: "pct-upvoted-text",
-  //         property: "text.sourceText",
-  //         value: `${Math.round(section.upvoteRatio * 100)}% Upvoted`
-  //       }
-  //     },
-  //     "reddit-template-01.title-comp"
-  //   )
-  // );
-
-  // Set the inPoint of the comment comp to right after the title comp finishes
-  assets.push(
-    getAssetForSetAttributeToParentAttribute(
-      {
-        layer: { name: `${compName}.comment-comp`, attribute: "inPoint" },
-        parent: { name: `${compName}.title-comp`, attribute: "outPoint" }
-      },
-      compName
-    )
-  );
-
-  // Add transition clip at outPoint of title comp
-  assets.push(
-    getAssetForDuplicateLayer("transition-ref", `${compName}.comment-comp`, {
-      newName: "transition-ref.title"
-    })
-  );
-  assets.push(
-    getAssetForSetAttributeToParentAttribute(
-      {
-        layer: {
-          name: "transition-ref.title",
-          attribute: "startTime"
-        },
-        parent: {
-          name: "audio-ref",
-          attribute: "outPoint"
-        }
-      },
-      `${compName}.comment-comp`,
-      compName
-    )
-  );
-
-  return assets;
-}
-
-function getAssetsForSectionComment(section: IPostSection, compName: string) {
-  const assets: any[] = [];
-
-  for (let [i, fragment] of section.fragments.entries()) {
-    const sectionDelay = i === 0 ? SECTION_DELAY : 0;
-
-    // Add new audio layer containing fragment
-    assets.push(
-      ...getAssetsForAddNextAudio(
-        fragment.audio.filePath,
-        compName,
-        sectionDelay
-      )
-    );
-
-    // Update user text
-    assets.push(
-      ...getAssetsForAddNextText(
-        { name: "user-text", suffix: fragment.audio.filePath },
-        section.author,
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Update score text
-    assets.push(
-      ...getAssetsForAddNextText(
-        { name: "score-text", suffix: fragment.audio.filePath },
-        section.score > 999
-          ? section.score > 99999
-            ? `${Math.round(section.score / 1000)}k points`
-            : `${Math.round(section.score / 100) / 10}k points`
-          : `${section.score} points`,
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Update comment text to show current fragment
-    assets.push(
-      ...getAssetsForAddNextText(
-        { name: "comment-text", suffix: fragment.audio.filePath },
-        fragment.textWithPriors,
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Set arrows inPoint and outPoint
-    assets.push(
-      getAssetForDuplicateLayer("upvote-arrow", `${compName}.comment-comp`, {
-        newName: `upvote-arrow.${fragment.audio.filePath}`
-      })
-    );
-    assets.push(
-      ...getAssetsForSetInOutToParent(
-        {
-          layer: {
-            name: `upvote-arrow.${fragment.audio.filePath}`
-          },
-          parent: {
-            name: `audio.${fragment.audio.filePath}`
-          }
-        },
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-    assets.push(
-      getAssetForDuplicateLayer("downvote-arrow", `${compName}.comment-comp`, {
-        newName: `downvote-arrow.${fragment.audio.filePath}`
-      })
-    );
-    assets.push(
-      ...getAssetsForSetInOutToParent(
-        {
-          layer: {
-            name: `downvote-arrow.${fragment.audio.filePath}`
-          },
-          parent: {
-            name: `audio.${fragment.audio.filePath}`
-          }
-        },
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Set collapse comment bar inPoint and outPoint
-    assets.push(
-      getAssetForDuplicateLayer(
-        "collapse-comment-bar",
-        `${compName}.comment-comp`,
-        {
-          newName: `collapse-comment-bar.${fragment.audio.filePath}`
-        }
-      )
-    );
-    assets.push(
-      ...getAssetsForSetInOutToParent(
-        {
-          layer: {
-            name: `collapse-comment-bar.${fragment.audio.filePath}`
-          },
-          parent: {
-            name: `audio.${fragment.audio.filePath}`
-          }
-        },
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Set background inPoint and outPoint
-    assets.push(
-      getAssetForDuplicateLayer("comment-bg", `${compName}.comment-comp`, {
-        newName: `comment-bg.${fragment.audio.filePath}`
-      })
-    );
-    assets.push(
-      ...getAssetsForSetInOutToParent(
-        {
-          layer: {
-            name: `comment-bg.${fragment.audio.filePath}`
-          },
-          parent: {
-            name: `audio.${fragment.audio.filePath}`
-          }
-        },
-        `${compName}.comment-comp`,
-        compName
-      )
-    );
-
-    // Add transition clip at outPoint of last fragment
-    if (i === section.fragments.length - 1) {
-      assets.push(
-        getAssetForDuplicateLayer(
-          "transition-ref",
-          `${compName}.comment-comp`,
-          {
-            newName: `transition-ref.${fragment.audio.filePath}`
-          }
-        )
-      );
-      assets.push(
-        getAssetForSetAttributeToParentAttribute(
-          {
-            layer: {
-              name: `transition-ref.${fragment.audio.filePath}`,
-              attribute: "startTime"
-            },
-            parent: {
-              name: `audio.${fragment.audio.filePath}`,
-              attribute: "outPoint"
-            }
-          },
-          `${compName}.comment-comp`,
-          compName
-        )
-      );
-    }
-  }
-
-  return assets;
-}
+import { getSrcForPath } from "./util";
 
 export function getAssetForSetPropertyToParentProperty(
   {
@@ -616,7 +285,7 @@ export function getAssetForMatchCompDurationToContents(compName: string) {
   return asset;
 }
 
-function getScriptForGetCompNamed(compName: string) {
+export function getScriptForGetCompNamed(compName: string) {
   return `
     var comp;
     for (var i = 1; i <= app.project.numItems; i++) {
@@ -629,7 +298,7 @@ function getScriptForGetCompNamed(compName: string) {
   `;
 }
 
-function getAssetsForSetInOutToParent(
+export function getAssetsForSetInOutToParent(
   {
     layer,
     parent
@@ -665,10 +334,11 @@ function getAssetsForSetInOutToParent(
   return assets;
 }
 
-function getAssetsForAddNextAudio(
+export function getAssetsForAddNextAudio(
   filePath: string,
   compName: string,
-  delay: number
+  delay: number,
+  audioLevelVoice: number
 ) {
   const assets = [];
 
@@ -706,7 +376,7 @@ function getAssetsForAddNextAudio(
 
   // Replace the audio source with the current fragment clip
   assets.push({
-    src: `${SRC_PREFIX}${filePath}`,
+    src: getSrcForPath(filePath),
     layerName: `audio.${filePath}`,
     type: "audio"
   });
@@ -724,13 +394,13 @@ function getAssetsForAddNextAudio(
     type: "data",
     layerName: `audio.${filePath}`,
     property: "Audio Levels",
-    value: [AUDIO_LEVEL_VOICE, AUDIO_LEVEL_VOICE]
+    value: [audioLevelVoice, audioLevelVoice]
   });
 
   return assets;
 }
 
-function getAssetsForAddNextText(
+export function getAssetsForAddNextText(
   layer: { name: string; suffix: string },
   text: string,
   compName: string,

@@ -1,44 +1,44 @@
-import textToSpeech from "@google-cloud/text-to-speech";
-import { IPost } from "../types/post";
-import { generateAudio } from "./audio/generate-audio";
+import { IProcessedPost, IGeneratorOutput } from "../types/post";
 import { generateVideo } from "./video/generate-video";
+import { saveObjectToJson } from "../util";
 
 export default class {
-  client: any;
-  voice: {
-    languageCode: string;
-    name: string;
-    ssmlGender: string;
-  };
-  audioConfig: {
-    audioEncoding: string;
-    speakingRate: number;
-  };
-  constructor(GOOGLE_APPLICATION_CREDENTIALS: string) {
-    process.env[
-      "GOOGLE_APPLICATION_CREDENTIALS"
-    ] = GOOGLE_APPLICATION_CREDENTIALS;
-
-    // Creates a client
-    this.client = new textToSpeech.TextToSpeechClient();
-    this.voice = {
-      languageCode: "en-US",
-      name: "en-US-Wavenet-B",
-      ssmlGender: "MALE"
-    };
-    this.audioConfig = {
-      audioEncoding: "MP3",
-      speakingRate: 1.0
-    };
+  outputDir: string;
+  constructor({ outputDir }: { outputDir: string }) {
+    this.outputDir = outputDir;
   }
 
-  async generate(post: IPost) {
-    const processedPost = await generateAudio(
-      post,
-      this.client,
-      this.voice,
-      this.audioConfig
-    );
-    await generateVideo(processedPost);
+  async generate(
+    post: IProcessedPost,
+    {
+      saveOutputToFile = false,
+      debug = false
+    }: { saveOutputToFile?: boolean; debug?: boolean } = {}
+  ) {
+    const t0 = performance.now();
+    const videoGeneratorOutput = await generateVideo(post, {
+      outputDir: this.outputDir,
+      debug
+    });
+    const generatorOutput = {
+      id: post.id,
+      dateGenerated: new Date(),
+      elapsedTime: performance.now() - t0,
+      media: videoGeneratorOutput
+    } as IGeneratorOutput;
+
+    console.log(`---`);
+    console.log(`Generation complete!`);
+    console.log(`Elapsed Time: ${generatorOutput.elapsedTime}`);
+
+    if (saveOutputToFile)
+      saveObjectToJson(generatorOutput, {
+        fileName: `${
+          generatorOutput.id
+        }.${generatorOutput.dateGenerated.toISOString()}.generator.json`,
+        outputDir: this.outputDir
+      });
+
+    return generatorOutput;
   }
 }
