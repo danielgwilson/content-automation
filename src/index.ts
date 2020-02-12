@@ -10,6 +10,10 @@ import Generator from "./generator/generator";
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
   }
+  const resourceDir = path.join(__dirname, "/resources/");
+  if (!fs.existsSync(resourceDir)) {
+    fs.mkdirSync(resourceDir);
+  }
 
   const crawler = new Crawler({
     userAgent: config.get("REDDIT_USER_AGENT"),
@@ -17,11 +21,12 @@ import Generator from "./generator/generator";
     clientSecret: config.get("REDDIT_CLIENT_SECRET"),
     refreshToken: config.get("REDDIT_REFRESH_TOKEN")
   });
+  const minMinutes = 2;
   const post = await crawler.getPost({
     outputDir,
     subredditName: "AskReddit",
-    postIndex: 2,
-    minWords: 2.6 * 60 * 10,
+    postIndex: 1,
+    minWords: 2.6 * 60 * minMinutes,
     sort: { type: "top", time: "week" },
     saveOutputToFile: true
   });
@@ -47,6 +52,9 @@ import Generator from "./generator/generator";
     saveOutputToFile: true
   });
 
-  const generator = new Generator({ outputDir });
-  await generator.generate(processedPost);
+  const generator = new Generator({ outputDir, resourceDir });
+  await generator.generate(processedPost, {
+    saveOutputToFile: true,
+    debug: true
+  });
 })();

@@ -1,5 +1,3 @@
-import { Gildings } from "snoowrap/dist/objects/VoteableContent";
-
 export interface IPost {
   id: string;
   dateCrawled: Date;
@@ -21,7 +19,7 @@ export interface IPost {
   upvoteRatio: number;
   author: string;
   numComments: number;
-  gildings: Gildings;
+  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
 
   comments: IPostComment[];
 }
@@ -31,7 +29,7 @@ export interface IPostComment {
   score: number;
   body: string;
   body_html: string;
-  gildings: Gildings;
+  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
   replies: IPostComment[];
 }
 
@@ -50,13 +48,15 @@ export interface IProcessedPostDetails {
 }
 
 export interface IPostSection {
-  type: "title" | "comment";
+  type: "title" | "comment" | "reply";
 
   fragments: IPostSectionFragment[];
   length: number;
 
   author: string;
   score: number;
+
+  children: IPostSection[];
 }
 
 export interface IPostSectionFragment {
@@ -85,10 +85,10 @@ export interface IGeneratorOutput {
   dateGenerated: Date;
   elapsedTime: number;
 
-  media: { metadata: any; thumbnail: any; render: IVideoOutput };
+  media: { metadata: any; thumbnail: any; render: IRenderOutput };
 }
 
-export interface IVideoOutput {
+export interface IRenderOutput {
   job: any;
   settings: {
     workpath: string;

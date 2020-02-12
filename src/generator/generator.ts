@@ -1,11 +1,20 @@
 import { IProcessedPost, IGeneratorOutput } from "../types/post";
-import { generateVideo as renderVideo } from "./video/render/generate-video";
+import { generateVideo } from "./video/render/generate-video";
 import { saveObjectToJson } from "../util";
+import { performance } from "perf_hooks";
 
 export default class {
   outputDir: string;
-  constructor({ outputDir }: { outputDir: string }) {
+  resourceDir: string;
+  constructor({
+    outputDir,
+    resourceDir
+  }: {
+    outputDir: string;
+    resourceDir: string;
+  }) {
     this.outputDir = outputDir;
+    this.resourceDir = resourceDir;
   }
 
   async generate(
@@ -16,15 +25,16 @@ export default class {
     }: { saveOutputToFile?: boolean; debug?: boolean } = {}
   ) {
     const t0 = performance.now();
-    const videoGeneratorOutput = await renderVideo(post, {
+    const renderOutput = await generateVideo(post, {
       outputDir: this.outputDir,
+      resourceDir: this.resourceDir,
       debug
     });
     const generatorOutput = {
       id: post.id,
       dateGenerated: new Date(),
       elapsedTime: performance.now() - t0,
-      media: { metadata: {}, thumbnail: {}, render: videoGeneratorOutput }
+      media: { metadata: {}, thumbnail: {}, render: renderOutput }
     } as IGeneratorOutput;
 
     console.log(`---`);

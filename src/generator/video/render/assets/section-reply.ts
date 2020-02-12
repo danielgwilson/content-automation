@@ -4,54 +4,32 @@ import {
   getAssetForDuplicateLayer,
   getAssetsForAddNextText,
   getAssetsForSetInOutToParent,
-  getAssetForSetAttributeToParentAttribute,
-  getAssetForSetPropertyAtParentInPoint,
-  getAssetForSetPropertyAtTime
+  getAssetForSetAttributeToParentAttribute
 } from "./assets";
 
-export function getAssetsForSectionComment(
+export function getAssetsForSectionReply(
   section: IPostSection,
   postDetails: IProcessedPostDetails,
-  {
-    compName,
-    audioLevelVoice,
-    delay
-  }: { compName: string; audioLevelVoice: number; delay: number }
+  { compName, audioLevelVoice }: { compName: string; audioLevelVoice: number }
 ) {
   const assets: any[] = [];
 
   for (let [i, fragment] of section.fragments.entries()) {
-    const sectionDelay = i === 0 ? delay : 0;
-
     // Add new audio layer containing fragment
     assets.push(
       ...getAssetsForAddNextAudio(
         fragment.audio.filePath,
         compName,
-        sectionDelay,
+        0,
         audioLevelVoice
       )
     );
 
     // Update user text
-    // assets.push(
-    //   ...getAssetsForAddNextText(
-    //     { name: "user-text", suffix: fragment.audio.filePath },
-    //     section.author,
-    //     `${compName}.comment-comp`,
-    //     compName
-    //   )
-    // );
     assets.push(
-      getAssetForSetPropertyAtParentInPoint(
-        {
-          layer: {
-            name: "user-text",
-            property: "Source Text",
-            value: section.author
-          },
-          parent: { name: `audio.${fragment.audio.filePath}` }
-        },
+      ...getAssetsForAddNextText(
+        { name: "user-text", suffix: fragment.audio.filePath },
+        section.author,
         `${compName}.comment-comp`,
         compName
       )

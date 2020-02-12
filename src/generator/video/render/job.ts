@@ -1,28 +1,28 @@
 import path from "path";
-import { IProcessedPost } from "../../types/post";
+import { IProcessedPost } from "../../../types/post";
 import {
   getAssetForMatchCompDurationToContents,
   getAssetForSetAttribute,
   getAssetForSetAttributeToParentAttribute,
   getAssetForDuplicateLayer
-} from "./render/assets/assets";
-import { getAssetsForSection } from "./render/assets/section";
-import { getSrcForPath } from "./render/assets/util";
+} from "./assets/assets";
+import { getAssetsForSection } from "./assets/section";
+import { getSrcForPath } from "./assets/util";
 
 export function getJob(
   post: IProcessedPost,
-  { outputDir, compName }: { outputDir: string; compName: string }
+  {
+    outputDir,
+    resourceDir,
+    compName
+  }: { outputDir: string; resourceDir: string; compName: string }
 ) {
   const AUDIO_LEVEL_BG = -10.0;
-  const AUDIO_LEVEL_VOICE = 3.0;
+  const AUDIO_LEVEL_VOICE = 4.0;
   const job: any = {
     template: {
       src: getSrcForPath(
-        path.join(
-          __dirname,
-          "/../../",
-          "/public/after-effects/reddit-template.aep"
-        )
+        path.join(resourceDir, "/after-effects/", "reddit-template.aep")
       ),
       composition: compName
     },
@@ -43,15 +43,31 @@ export function getJob(
     }
   };
 
-  for (let section of post.sections) {
-    job.assets.push(
-      ...getAssetsForSection(section, post.details, {
-        compName,
-        audioLevelVoice: AUDIO_LEVEL_VOICE,
-        delay: 1.0
-      })
-    );
-  }
+  job.assets.push({
+    type: "script",
+    src: getSrcForPath(
+      path.join(resourceDir, "/ae-scripts/", "section-title.js")
+    ),
+    keyword: "TITLE_PARAMS",
+    parameters: [
+      { key: "compName", value: compName },
+      { key: "fragments", value: post.sections[0].fragments },
+      { key: "author", value: post.sections[0].author },
+      { key: "score", value: post.sections[0].score },
+      { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE },
+      { key: "postDetails", value: post.details }
+    ]
+  });
+
+  // for (let section of post.sections.slice(1)) {
+  //   job.assets.push(
+  //     ...getAssetsForSection(section, post.details, {
+  //       compName,
+  //       audioLevelVoice: AUDIO_LEVEL_VOICE,
+  //       delay: 1.0
+  //     })
+  //   );
+  // }
 
   // Disable placeholder layers that were duplicated but are otherwise unused
   job.assets.push(
@@ -138,61 +154,20 @@ export function getJob(
       `${compName}.comment-comp`
     )
   );
-  job.assets.push(
-    getAssetForSetAttribute(
-      {
-        layer: {
-          name: "transition-ref",
-          attribute: "enabled",
-          value: false
-        }
-      },
-      `${compName}.comment-comp`
-    )
-  );
 
   // Background music
-  job.assets.push(
-    getAssetForDuplicateLayer("audio-ref", compName, {
-      newName: "audio-ref.bg-music"
-    })
-  );
   job.assets.push({
-    type: "audio",
-    layerName: "audio-ref.bg-music",
-    src: getSrcForPath(
-      path.join(__dirname, "/../../", "/public/bg-music/", "Sunshine_Samba.mp3")
-    )
-  });
-  job.assets.push({
-    type: "data",
-    layerName: "audio-ref.bg-music",
-    property: "timeRemapEnabled",
-    value: true
-  });
-  job.assets.push({
-    type: "data",
-    layerName: "audio-ref.bg-music",
-    property: "Time Remap",
-    expression: "loopOut()"
-  });
-  job.assets.push(
-    getAssetForSetAttributeToParentAttribute(
+    type: "script",
+    src: getSrcForPath(path.join(resourceDir, "/ae-scripts/", "bg-music.js")),
+    keyword: "BG_MUSIC_PARAMS",
+    parameters: [
+      { key: "compName", value: compName },
       {
-        layer: { name: "audio-ref.bg-music", attribute: "outPoint" },
-        parent: {
-          index: 1,
-          attribute: "outPoint"
-        }
+        key: "filePath",
+        value: path.join(resourceDir, "/bg-music/", "Sunshine_Samba.mp3")
       },
-      compName
-    )
-  );
-  job.assets.push({
-    type: "data",
-    layerName: `audio-ref.bg-music`,
-    property: "Audio Levels",
-    value: [AUDIO_LEVEL_BG, AUDIO_LEVEL_BG]
+      { key: "audioLevel", value: AUDIO_LEVEL_BG }
+    ]
   });
 
   // Background video
@@ -201,11 +176,7 @@ export function getJob(
     layerName: "bg-ref",
     composition: `${compName}.bg-comp`,
     src: getSrcForPath(
-      path.join(
-        __dirname,
-        "/../../",
-        "/public/bg-videos/bg-03-rocks-waves-1080p.mp4"
-      )
+      path.join(resourceDir, "/bg-videos/", "bg-03-rocks-waves-1080p.mp4")
     )
   });
   job.assets.push({

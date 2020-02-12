@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import snoowrap from "snoowrap";
 import { IPost, IPostComment } from "../types/post";
 import { Gildings } from "snoowrap/dist/objects/VoteableContent";

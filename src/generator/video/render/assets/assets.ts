@@ -25,7 +25,7 @@ export function getAssetForSetPropertyToParentProperty(
       var parentComp;
       for (var i = 1; i <= app.project.numItems; i++) {
           if (app.project.item(i) instanceof CompItem) {
-              if (app.project.item(i).name === ${compName}) {
+              if (app.project.item(i).name === "${compName}") {
                   comp = app.project.item(i);
                   ${parentCompName ? "if (parentComp) break;" : "break;"}
               } else if (${
@@ -51,6 +51,65 @@ export function getAssetForSetPropertyToParentProperty(
       parentCompName ? "parentComp" : "comp"
     }.layer(${"name" in parent ? '"' + parent.name + '"' : parent.index}).${
       parent.property
+    });
+
+      layer.name;
+    `
+  };
+  return asset;
+}
+
+export function getAssetForSetPropertyAtParentInPoint(
+  {
+    layer,
+    parent
+  }: {
+    layer:
+      | { name: string; property: string; value: string | number }
+      | { index: number; property: string; value: string | number };
+    parent: { name: string } | { index: number };
+  },
+  compName: string,
+  parentCompName?: string
+) {
+  const asset = {
+    type: "data",
+    composition: compName,
+    layerIndex: 1,
+    property: "name",
+    expression: `
+      var comp;
+      var parentComp;
+      for (var i = 1; i <= app.project.numItems; i++) {
+          if (app.project.item(i) instanceof CompItem) {
+              if (app.project.item(i).name === "${compName}") {
+                  comp = app.project.item(i);
+                  ${parentCompName ? "if (parentComp) break;" : "break;"}
+              } else if (${
+                parentCompName
+                  ? "app.project.item(i).name === " + '"' + parentCompName + '"'
+                  : "false"
+              }) {
+                  parentComp = app.project.item(i);
+                  if (comp) break;
+              }
+          }
+      }
+      if (!comp) throw new Error("Failed to find comp");
+      ${
+        parentCompName
+          ? 'if (!parentComp) throw new Error("Failed to find parentComp");'
+          : ""
+      }
+
+      comp.layer(${
+        "name" in layer ? '"' + layer.name + '"' : layer.index
+      }).property("${layer.property}").setValueAtTime(${
+      parentCompName ? "parentComp" : "comp"
+    }.layer(${
+      "name" in parent ? '"' + parent.name + '"' : parent.index
+    }).inPoint, ${
+      typeof layer.value === "string" ? '"' + layer.value + '"' : layer.value
     });
 
       layer.name;

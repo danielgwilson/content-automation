@@ -1,4 +1,4 @@
-import { IPost, IPostSection } from "../types/post";
+import { IPost, IPostSection, IPostComment } from "../types/post";
 import VoiceOverClient from "./voice-over";
 import { getFragments, getAudioLengthForFragments } from "./fragments";
 import { getCleanText } from "./clean-text";
@@ -7,31 +7,22 @@ export async function getSections(
   post: IPost,
   voiceOverClient: VoiceOverClient
 ) {
-  const texts = [post.title, ...post.comments.map(comment => comment.body)];
-  const cleanTexts = texts.map(text => getCleanText(text));
-
-  const promises: Promise<IPostSection>[] = [];
-  for (let [i, text] of cleanTexts.entries()) {
-    promises.push(
-      new Promise(async resolve => {
-        const fragments = await getFragments({
-          text,
-          voiceOverClient,
-          fileNamePrefix: `${post.id}-${i}`,
-          splitBySentence: i > 0
-        });
-        return resolve({
-          type: i === 0 ? "title" : "comment",
-          fragments,
-          length: getAudioLengthForFragments(fragments),
-
-          score: i === 0 ? post.score : post.comments[i - 1].score,
-          author: i === 0 ? post.author : post.comments[i - 1].author
-        } as IPostSection);
-      })
-    );
-  }
-  const sections = await Promise.all(promises);
+  const sections = await Promise.all([
+    getSectionForTitle(
+      {
+        text: post.title,
+        author: post.author,
+        score: post.score
+      },
+      { voiceOverClient, fileNamePrefix: `${post.id}-${0}` }
+    ),
+    ...post.comments.map((comment, i) => {
+      return getSectionForComment(comment, {
+        voiceOverClient,
+        fileNamePrefix: `${post.id}-${i + 1}`
+      });
+    })
+  ]);
 
   const totalCharacters = getCharacters(sections);
   const totalAudioLength = getAudioLengthForSections(sections);
@@ -43,6 +34,63 @@ export async function getSections(
   );
 
   return sections;
+}
+
+async function getSectionForTitle(
+  { text, score, author }: { text: string; score: number; author: string },
+  {
+    voiceOverClient,
+    fileNamePrefix
+  }: { voiceOverClient: VoiceOverClient; fileNamePrefix: string }
+): Promise<IPostSection> {
+  const fragments = await getFragments({
+    text: getCleanText(text),
+    voiceOverClient,
+    fileNamePrefix,
+    splitBySentence: false
+  });
+  return {
+    type: "title",
+    fragments,
+    length: getAudioLengthForFragments(fragments),
+
+    score,
+    author,
+
+    children: []
+  } as IPostSection;
+}
+
+async function getSectionForComment(
+  { body, score, author, replies }: IPostComment,
+  {
+    voiceOverClient,
+    fileNamePrefix
+  }: { voiceOverClient: VoiceOverClient; fileNamePrefix: string }
+): Promise<IPostSection> {
+  const fragments = await getFragments({
+    text: getCleanText(body),
+    voiceOverClient,
+    fileNamePrefix,
+    splitBySentence: true
+  });
+  return {
+    type: "comment",
+    fragments,
+    length: getAudioLengthForFragments(fragments),
+
+    score,
+    author,
+
+    children: await Promise.all(
+      replies.map((reply, i) =>
+        getSectionForComment(reply, {
+          voiceOverClient,
+          fileNamePrefix: `${fileNamePrefix}-${i}`
+        })
+      )
+    )
+  } as IPostSection;
 }
 
 export function getCharacters(sections: IPostSection[]) {
