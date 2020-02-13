@@ -47,6 +47,25 @@ function duplicateLayer(
   return dupe;
 }
 
+function copyLayerToComp(
+  layer:
+    | Layer
+    | { name: string; comp: CompItem }
+    | { index: number; comp: CompItem },
+  copy: { name?: string; comp: CompItem }
+) {
+  const targetLayer =
+    layer instanceof Layer
+      ? layer
+      : (("name" in layer
+          ? layer.comp.layer(layer.name)
+          : layer.comp.layer(layer.index)) as Layer);
+  targetLayer.copyToComp(copy.comp);
+  const newLayer = copy.comp.layer(1); // potential bug if layer already selected
+  if (copy.name) newLayer.name = copy.name;
+  return newLayer;
+}
+
 function updateTextLayer(
   layer:
     | TextLayer

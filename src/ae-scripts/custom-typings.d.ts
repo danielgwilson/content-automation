@@ -14,11 +14,16 @@ declare const SECTION_COMMENT_PARAMS: {
   score: number;
   audioLevelVoice: number;
   children: import("../types/post").IPostSection[];
-  delay: number;
 };
 
-declare const BG_MUSIC_PARAMS: {
+declare const BG_PARAMS: {
   compName: string;
   filePath: string;
   audioLevel: number;
+  videoPath?: string;
+};
+
+declare const ASSEMBLE_MAIN_PARAMS: {
+  compName: string;
+  subCompNames: string[];
 };

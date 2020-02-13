@@ -3,14 +3,10 @@
 
 (() => {
   // Check if required parameters are present
-  if (
-    !BG_MUSIC_PARAMS.compName ||
-    !BG_MUSIC_PARAMS.filePath ||
-    !BG_MUSIC_PARAMS.audioLevel
-  )
+  if (!BG_PARAMS.compName || !BG_PARAMS.filePath || !BG_PARAMS.audioLevel)
     throw new Error("Script missing required parameter.");
 
-  const { compName, filePath, audioLevel } = BG_MUSIC_PARAMS;
+  const { compName, filePath, audioLevel, videoPath } = BG_PARAMS;
 
   const comp = getComp(compName);
 
@@ -18,8 +14,20 @@
   const bgMusicLayer = addLayer(importFootage(filePath), comp, {
     name: "audio.bg-music"
   });
+  bgMusicLayer.moveToEnd();
   bgMusicLayer.audio.audioLevels.setValue([audioLevel, audioLevel]);
   bgMusicLayer.timeRemapEnabled = true;
   bgMusicLayer.timeRemap.expression = "loopOut()";
-  bgMusicLayer.outPoint = comp.layer(1).outPoint;
+  bgMusicLayer.outPoint = comp.duration;
+
+  // Background video
+  if (videoPath) {
+    const bgVideoLayer = addLayer(importFootage(videoPath), comp, {
+      name: `bg-video`
+    });
+    bgVideoLayer.moveToEnd();
+    bgVideoLayer.timeRemapEnabled = true;
+    bgVideoLayer.timeRemap.expression = "loopOut()";
+    bgVideoLayer.outPoint = comp.duration;
+  }
 })();
