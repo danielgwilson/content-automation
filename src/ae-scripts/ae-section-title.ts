@@ -1,5 +1,5 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
 (() => {
   // Check if required parameters are present
   if (
@@ -42,32 +42,29 @@
   );
 
   // Update title text
-  updateTextLayer("title-text", fragments[0].text, titleComp);
+  updateTextLayer({ name: "title-text", comp: titleComp }, fragments[0].text);
 
   // Update subreddit name
   updateTextLayer(
-    "subreddit-text",
-    "r/" + postDetails.subredditName,
-    titleComp
+    { name: "subreddit-text", comp: titleComp },
+    "r/" + postDetails.subredditName
   );
 
   // Update author name
-  updateTextLayer("user-text", "u/" + author, titleComp);
+  updateTextLayer({ name: "user-text", comp: titleComp }, "u/" + author);
 
   // Update number of comments
   updateTextLayer(
-    "num-comments-text",
+    { name: "num-comments-text", comp: titleComp },
     postDetails.numComments > 999
       ? `${Math.round(postDetails.numComments / 100) / 10}k Comments`
-      : `${postDetails.numComments} Comments`,
-    titleComp
+      : `${postDetails.numComments} Comments`
   );
 
   // Update score
   updateTextLayer(
-    "score-text",
-    score > 999 ? `${Math.round(score / 100) / 10}k` : `${score}`,
-    titleComp
+    { name: "score-text", comp: titleComp },
+    score > 999 ? `${Math.round(score / 100) / 10}k` : `${score}`
   );
 
   // Set the inPoint of the comment comp to right after the title comp finishes
