@@ -66,11 +66,8 @@ export function getJob(
       keyword: "SECTION_COMMENT_PARAMS",
       parameters: [
         { key: "compName", value: `${compName}.comment-comp` },
-        { key: "fragments", value: section.fragments },
-        { key: "author", value: section.author },
-        { key: "score", value: section.score },
-        { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE },
-        { key: "children", value: section.children }
+        { key: "section", value: section },
+        { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE }
       ]
     });
   }

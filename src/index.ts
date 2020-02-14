@@ -21,12 +21,13 @@ import Generator from "./generator/generator";
     clientSecret: config.get("REDDIT_CLIENT_SECRET"),
     refreshToken: config.get("REDDIT_REFRESH_TOKEN")
   });
-  const minMinutes = 2;
+  const minMinutes = 3;
   const post = await crawler.getPost({
     outputDir,
     subredditName: "AskReddit",
-    postIndex: 1,
+    postIndex: 0,
     minWords: 2.6 * 60 * minMinutes,
+    maxReplyDepth: 2,
     sort: { type: "top", time: "week" },
     saveOutputToFile: true
   });

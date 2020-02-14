@@ -29,6 +29,7 @@ export default class {
     subredditName,
     postIndex = 0,
     minWords = 3 * 600,
+    maxReplyDepth = 0,
     sort = { type: "hot" },
     saveOutputToFile = false
   }: {
@@ -36,6 +37,7 @@ export default class {
     subredditName: string;
     postIndex?: number;
     minWords?: number;
+    maxReplyDepth?: number;
     sort?:
       | { type: "hot" }
       | {
@@ -79,7 +81,7 @@ export default class {
       upvoteRatio: upvote_ratio,
       author: author.name,
       numComments: num_comments,
-      comments: await getCleanComments(comments, { minWords }),
+      comments: await getCleanComments(comments, { minWords, maxReplyDepth }),
       gildings
     } as IPost;
 

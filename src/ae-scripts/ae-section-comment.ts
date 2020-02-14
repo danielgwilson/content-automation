@@ -1,29 +1,21 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
 //@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-section-comment-util.js"
+
 (() => {
   // Check if required parameters are present
   if (
     !SECTION_COMMENT_PARAMS.compName ||
-    !SECTION_COMMENT_PARAMS.fragments ||
-    !SECTION_COMMENT_PARAMS.author ||
-    !SECTION_COMMENT_PARAMS.score ||
-    !SECTION_COMMENT_PARAMS.audioLevelVoice ||
-    !SECTION_COMMENT_PARAMS.children
+    !SECTION_COMMENT_PARAMS.section ||
+    !SECTION_COMMENT_PARAMS.audioLevelVoice
   )
     throw new Error("Script missing required parameter.");
 
-  const {
-    compName,
-    fragments,
-    author,
-    score,
-    audioLevelVoice,
-    children
-  } = SECTION_COMMENT_PARAMS;
+  const { compName, section, audioLevelVoice } = SECTION_COMMENT_PARAMS;
 
   const refComp = getComp(compName);
   const comp = app.project.items.addComp(
-    `${compName}.${fragments[0].audio.fileName}`,
+    `${compName}.${section.fragments[0].audio.fileName}`,
     refComp.width,
     refComp.height,
     refComp.pixelAspect,
@@ -31,87 +23,69 @@
     refComp.frameRate
   );
 
-  const commentBGLayer = copyLayerToComp(
-    { name: "comment-bg", comp: refComp },
-    { comp }
-  ) as ShapeLayer;
-  const collapseCommentBarLayer = copyLayerToComp(
-    { name: "collapse-comment-bar", comp: refComp },
-    { comp }
-  ) as ShapeLayer;
-  const upvoteArrowLayer = copyLayerToComp(
-    { name: "upvote-arrow", comp: refComp },
-    { comp }
-  ) as TextLayer;
-  const downvoteArrowLayer = copyLayerToComp(
-    { name: "downvote-arrow", comp: refComp },
-    { comp }
-  ) as TextLayer;
-  const userTextLayer = copyLayerToComp(
-    { name: "user-text", comp: refComp },
-    { comp }
-  ) as TextLayer;
-  const scoreTextLayer = copyLayerToComp(
-    { name: "score-text", comp: refComp },
-    { comp }
-  ) as TextLayer;
-  const commentTextLayer = copyLayerToComp(
-    { name: "comment-text", comp: refComp },
-    { comp }
-  ) as TextLayer;
-
-  const voLayers: AVLayer[] = [];
-  for (let i = 0; i < fragments.length; i++) {
-    const fragment = fragments[i];
-
-    // Add voiceover audio file
-    const voLayer = addLayer(importFootage(fragment.audio.filePath), comp, {
-      name: `audio.${fragment.audio.filePath}`
-    });
-    voLayer.startTime = i === 0 ? 0 : comp.layer(2).outPoint;
-    voLayer.audio.audioLevels.setValue([audioLevelVoice, audioLevelVoice]);
-    voLayers.push(voLayer);
+  // Copy content layers from refComp
+  for (let i = refComp.numLayers; i > 0; i--) {
+    copyLayerToComp({ index: i, comp: refComp }, { comp });
   }
 
-  // Update comment text to show current fragment
-  const textsWithPriors: string[] = [];
-  const voInPoints: number[] = [];
-  for (let i = 0; i < fragments.length; i++) {
-    textsWithPriors.push(fragments[i].textWithPriors);
-    voInPoints.push(voLayers[i].inPoint);
-  }
-  updateTextLayerAtTimes(commentTextLayer, textsWithPriors, voInPoints);
+  // Add comment contents
+  const contentComp = createCommentContentComp(
+    getComp(`${compName}.content`),
+    `${compName}.content.${section.fragments[0].audio.fileName}.0`,
+    section,
+    audioLevelVoice
+  );
+  comp.layers.add(contentComp);
 
-  // Update user text
-  updateTextLayerAtTime(userTextLayer, author, voLayers[0].inPoint);
+  // Update bg size
+  const bgLayer = comp.layer("comment-bg") as any;
+  const bgSize = bgLayer.content("Rectangle 1").content("Rectangle Path 1")
+    .size;
+  bgSize.expression = `
+    var w = 1536;
+    var contentCompName = "${compName}.content.${section.fragments[0].audio.fileName}.0";
+    var timeDiff = 0;
 
-  // Update score text
-  let scoreText = "";
-  if (score < 999) scoreText = `${score} points`;
-  else if (score < 99999) scoreText = `${Math.round(score / 100) / 10}k points`;
-  else scoreText = `${Math.round(score / 1000)}k points`;
-  updateTextLayerAtTime(scoreTextLayer, scoreText, voLayers[0].inPoint);
+    // While child / reply sub comp is active, size based on its comment text
+    while (comp(contentCompName).layer(1).source.numLayers && time > comp(contentCompName).layer(1).inPoint) {
+      timeDiff += comp(contentCompName).layer(1).startTime;
+      contentCompName = comp(contentCompName).layer(1).name;
+    }
 
-  // Update UI visibility
-  // Set inPoint and outPoint for all relevant layers
-  for (let layer of [
-    commentTextLayer,
-    userTextLayer,
-    scoreTextLayer,
-    upvoteArrowLayer,
-    downvoteArrowLayer,
-    collapseCommentBarLayer,
-    commentBGLayer
-  ]) {
-    layer.inPoint = voLayers[0].inPoint;
-    layer.outPoint = voLayers[voLayers.length - 1].outPoint;
-  }
+    var contentComp = comp(contentCompName);
+    var commentTextHeight = contentComp.layer("comment-text").sourceRectAtTime(time - timeDiff, false).height;
+    var nullYDiff = contentComp.layer("null-parent").position[1] - thisComp.layer("null-parent").position[1];
+    var h = commentTextHeight + nullYDiff + 130;
+    [w, h];
+  `;
 
   // Add transition clip at outPoint of last voice-over audio clip
   const transitionLayer = addLayer(getFootageItem("transition-1s.mp4"), comp, {
     name: "transition"
   });
-  transitionLayer.startTime = voLayers[voLayers.length - 1].outPoint;
+  transitionLayer.startTime = comp.layer(2).outPoint;
+
+  // Update UI visibility
+  // Set inPoint and outPoint for all relevant layers
+  // Also parent the layers to the null object for alignment
+  const nullLayer = comp.layer("null-parent");
+  for (let layerName of ["comment-bg", "null-parent"]) {
+    const layer = comp.layer(layerName);
+    if (!layer)
+      throw new Error(
+        `Failed to find layer named "${layerName}" in comp "${comp.name}"`
+      );
+    layer.inPoint = 0;
+    layer.outPoint = comp.layer(1).outPoint;
+    if (layerName !== "null-parent") layer.parent = nullLayer;
+  }
+
+  // Set null object expressions to move nulls
+  contentComp.layer("null-parent").position.expression = `
+    var bgHeight = comp("${comp.name}").layer("comment-bg").content("Rectangle 1").content("Rectangle Path 1").size[1];
+    var dBot = 1080 - (242 + bgHeight);
+    [position[0], Math.min(242, dBot)]
+  `;
 
   // Set the outPoint of the comment comp to match the length of the contents
   comp.duration = transitionLayer.outPoint;

@@ -1,5 +1,6 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
 //@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+
 (() => {
   // Check if required parameters are present
   if (!ASSEMBLE_MAIN_PARAMS.compName || !ASSEMBLE_MAIN_PARAMS.subCompNames)

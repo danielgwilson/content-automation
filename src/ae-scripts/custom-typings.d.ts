@@ -9,11 +9,8 @@ declare const SECTION_TITLE_PARAMS: {
 
 declare const SECTION_COMMENT_PARAMS: {
   compName: string;
-  fragments: import("../types/post").IPostSectionFragment[];
-  author: string;
-  score: number;
+  section: import("../types/post").IPostSection;
   audioLevelVoice: number;
-  children: import("../types/post").IPostSection[];
 };
 
 declare const BG_PARAMS: {
