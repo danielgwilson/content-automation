@@ -28,36 +28,33 @@
     copyLayerToComp({ index: i, comp: refComp }, { comp });
   }
 
-  // Add comment contents
+  // Get background layer to use as a position reference
+  const bgLayer = comp.layer("comment-bg");
+
+  // Add comment contents and position based on bg layer
   const contentComp = createCommentContentComp(
     getComp(`${compName}.content`),
     `${compName}.content.${section.fragments[0].audio.fileName}.0`,
     section,
     audioLevelVoice
   );
-  comp.layers.add(contentComp);
+  const contentCompLayer = comp.layers.add(contentComp.comp);
+  contentCompLayer.anchorPoint.setValue([0, 0]);
+  contentCompLayer.position.setValue(bgLayer.position.value);
 
-  // Update bg size
-  const bgLayer = comp.layer("comment-bg") as any;
-  const bgSize = bgLayer.content("Rectangle 1").content("Rectangle Path 1")
-    .size;
-  bgSize.expression = `
-    var w = 1536;
-    var contentCompName = "${compName}.content.${section.fragments[0].audio.fileName}.0";
-    var timeDiff = 0;
-
-    // While child / reply sub comp is active, size based on its comment text
-    while (comp(contentCompName).layer(1).source.numLayers && time > comp(contentCompName).layer(1).inPoint) {
-      timeDiff += comp(contentCompName).layer(1).startTime;
-      contentCompName = comp(contentCompName).layer(1).name;
+  // Update bg size to contain contents
+  function updateBGSize() {
+    const bgSize = (bgLayer as any)
+      .content("Rectangle 1")
+      .content("Rectangle Path 1").size;
+    const yPos = (bgLayer.position.value as number[])[1];
+    const bgWidth = 1536;
+    for (let keyframe of contentComp.keyframes) {
+      const bgHeight = keyframe.height - yPos;
+      bgSize.setValueAtTime(keyframe.time, [bgWidth, bgHeight]);
     }
-
-    var contentComp = comp(contentCompName);
-    var commentTextHeight = contentComp.layer("comment-text").sourceRectAtTime(time - timeDiff, false).height;
-    var nullYDiff = contentComp.layer("null-parent").position[1] - thisComp.layer("null-parent").position[1];
-    var h = commentTextHeight + nullYDiff + 130;
-    [w, h];
-  `;
+  }
+  updateBGSize();
 
   // Add transition clip at outPoint of last voice-over audio clip
   const transitionLayer = addLayer(getFootageItem("transition-1s.mp4"), comp, {
@@ -77,12 +74,15 @@
       );
     layer.inPoint = 0;
     layer.outPoint = comp.layer(1).outPoint;
-    if (layerName !== "null-parent") layer.parent = nullLayer;
+  }
+  for (let i = 1; i <= comp.numLayers; i++) {
+    const layer = comp.layer(i);
+    if (layer.name !== "null-parent") layer.parent = nullLayer;
   }
 
   // Set null object expressions to move nulls
-  contentComp.layer("null-parent").position.expression = `
-    var bgHeight = comp("${comp.name}").layer("comment-bg").content("Rectangle 1").content("Rectangle Path 1").size[1];
+  comp.layer("null-parent").position.expression = `
+    var bgHeight = thisComp.layer("comment-bg").content("Rectangle 1").content("Rectangle Path 1").size[1];
     var dBot = 1080 - (242 + bgHeight);
     [position[0], Math.min(242, dBot)]
   `;
