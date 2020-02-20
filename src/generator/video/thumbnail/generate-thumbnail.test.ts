@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { generateThumbnail } from "./generate-thumbnail";
 import { IContext } from "../../../types";
 
@@ -12,5 +14,6 @@ it("Generate a thumbnail", async () => {
     "My cool thumbnail YAY it's so awesome it's so dope ayyyyy",
     context
   );
-  expect(thumbnail).toBeDefined();
+  const output = fs.existsSync(thumbnail.filePath);
+  expect(output).toBeTruthy();
 });
