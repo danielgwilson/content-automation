@@ -1,11 +1,9 @@
 import path from "path";
 import { IProcessedPost } from "../../../types/post";
-import {
-  getAssetForMatchCompDurationToContents,
-  getAssetForSetAttribute,
-  getAssetForSetAttributeToParentAttribute
-} from "./assets/assets";
-import { getSrcForPath } from "./assets/util";
+
+function getSrcForPath(filePath: string) {
+  return `file://${filePath}`;
+}
 
 export function getJob(
   post: IProcessedPost,
