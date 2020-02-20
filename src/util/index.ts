@@ -1,0 +1,1 @@
+export { saveObjectToJson } from "./saveObjectToJson";

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest -c jest.config.js",
-    "build": "rm -rf ./build/ && tsc && cp -rf ./public/ ./build/public/",
+    "build": "rm -rf ./build/ && tsc -b && cp -rf ./resources/ ./build/resources/",
     "start": "npm run build && NODE_ENV=development && node ./build/index.js"
   },
   "repository": {
@@ -29,15 +29,19 @@
     "@nexrender/provider-ftp": "^1.10.0",
     "@nexrender/provider-gs": "^1.9.2",
     "@nexrender/provider-s3": "^1.8.16",
+    "canvas": "^2.6.1",
     "config": "^3.2.5",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.1",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "snoowrap": "^1.20.1"
+    "puppeteer": "^2.1.1",
+    "snoowrap": "^1.20.1",
+    "types-for-adobe": "^1.5.0"
   },
   "devDependencies": {
     "@types/config": "0.0.36",
     "@types/jest": "^25.1.0",
+    "@types/node": "^13.7.1",
     "@types/prettier": "^1.19.0",
     "@types/request": "^2.48.4",
     "@types/snoowrap": "^1.19.0",
