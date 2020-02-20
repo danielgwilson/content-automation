@@ -28,6 +28,7 @@ import Generator from "./generator/generator";
     postIndex: 0,
     minWords: 2.6 * 60 * minMinutes,
     maxReplyDepth: 2,
+    maxRepliesPerComment: 2,
     sort: { type: "top", time: "week" },
     saveOutputToFile: true
   });

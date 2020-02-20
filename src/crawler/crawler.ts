@@ -30,6 +30,7 @@ export default class {
     postIndex = 0,
     minWords = 3 * 600,
     maxReplyDepth = 0,
+    maxRepliesPerComment = 0,
     sort = { type: "hot" },
     saveOutputToFile = false
   }: {
@@ -38,6 +39,7 @@ export default class {
     postIndex?: number;
     minWords?: number;
     maxReplyDepth?: number;
+    maxRepliesPerComment?: number;
     sort?:
       | { type: "hot" }
       | {
@@ -81,7 +83,11 @@ export default class {
       upvoteRatio: upvote_ratio,
       author: author.name,
       numComments: num_comments,
-      comments: await getCleanComments(comments, { minWords, maxReplyDepth }),
+      comments: await getCleanComments(comments, {
+        minWords,
+        maxReplyDepth,
+        maxRepliesPerComment
+      }),
       gildings
     } as IPost;
 
@@ -97,7 +103,11 @@ export default class {
 
 async function getCleanComments(
   comments: snoowrap.Listing<snoowrap.Comment>,
-  { minWords, maxReplyDepth = 0 }: { minWords: number; maxReplyDepth?: number }
+  {
+    minWords,
+    maxReplyDepth = 0,
+    maxRepliesPerComment = 0
+  }: { minWords: number; maxReplyDepth?: number; maxRepliesPerComment?: number }
 ) {
   const cleanComments: {
     author: string;
@@ -118,7 +128,10 @@ async function getCleanComments(
 
     const commentBatch = nextComments.slice(cleanComments.length);
     for (let comment of commentBatch) {
-      const cleanComment = getCleanComment(comment, { maxReplyDepth });
+      const cleanComment = getCleanComment(comment, {
+        maxReplyDepth,
+        maxRepliesPerComment
+      });
       cleanComments.push(cleanComment);
 
       nWords += getWordCountForCleanComment(cleanComment);
@@ -130,7 +143,10 @@ async function getCleanComments(
 
 function getCleanComment(
   comment: snoowrap.Comment,
-  { maxReplyDepth = 0 }: { maxReplyDepth?: number } = {}
+  {
+    maxReplyDepth = 0,
+    maxRepliesPerComment = 0
+  }: { maxReplyDepth?: number; maxRepliesPerComment?: number } = {}
 ): IPostComment {
   return {
     author: comment.author.name,
@@ -140,9 +156,14 @@ function getCleanComment(
     gildings: comment.gildings,
     replies:
       maxReplyDepth > 0
-        ? comment.replies.map(reply =>
-            getCleanComment(reply, { maxReplyDepth })
-          )
+        ? comment.replies
+            .slice(0, maxRepliesPerComment)
+            .map(reply =>
+              getCleanComment(reply, {
+                maxReplyDepth: maxReplyDepth - 1,
+                maxRepliesPerComment
+              })
+            )
         : []
   };
 }

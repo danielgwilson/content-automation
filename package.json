@@ -29,10 +29,12 @@
     "@nexrender/provider-ftp": "^1.10.0",
     "@nexrender/provider-gs": "^1.9.2",
     "@nexrender/provider-s3": "^1.8.16",
+    "canvas": "^2.6.1",
     "config": "^3.2.5",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.1",
     "eslint-plugin-react-hooks": "^2.3.0",
+    "puppeteer": "^2.1.1",
     "snoowrap": "^1.20.1",
     "types-for-adobe": "^1.5.0"
   },

@@ -7,15 +7,16 @@ interface ContentComp {
     height: number;
   }[];
 }
+
 function createCommentContentComp(
   refComp: CompItem,
   newCompName: string,
   section: import("../types/post").IPostSection,
   audioLevelVoice: number,
-  layerOffset: number = 0
+  subCommentLevel: number = 0
 ): ContentComp {
   // Create new comment content comp
-  const comp = app.project.items.addComp(
+  const thisComp = app.project.items.addComp(
     newCompName,
     refComp.width,
     refComp.height,
@@ -27,10 +28,10 @@ function createCommentContentComp(
   // Copy content layers from refComp
   for (let i = refComp.numLayers; i > 0; i--) {
     const layer = refComp.layer(i);
-    if (layer.name === "comment-bg") continue;
-    copyLayerToComp({ index: i, comp: refComp }, { comp });
+    if (layer.name === "comment-bg" && subCommentLevel > 0) continue;
+    copyLayerToComp({ index: i, comp: refComp }, { comp: thisComp });
   }
-  const nullLayer = comp.layer("null-parent");
+  const nullLayer = thisComp.layer("null-parent");
 
   // Voice-overs
   const voLayers: AVLayer[] = [];
@@ -38,55 +39,59 @@ function createCommentContentComp(
     const fragment = section.fragments[i];
 
     // Add voice-over audio file
-    const voLayer = addLayer(importFootage(fragment.audio.filePath), comp, {
+    const voLayer = addLayer(importFootage(fragment.audio.filePath), thisComp, {
       name: `audio.${fragment.audio.filePath}`
     });
-    voLayer.startTime = i === 0 ? 0 : comp.layer(2).outPoint;
+    voLayer.startTime = i === 0 ? 0 : thisComp.layer(2).outPoint;
     voLayer.audio.audioLevels.setValue([audioLevelVoice, audioLevelVoice]);
     voLayers.push(voLayer);
   }
   const voOutPoint = voLayers[voLayers.length - 1].outPoint;
 
   // Move layers over if child comment / reply
-  if (layerOffset) {
+  if (subCommentLevel) {
     // Resize child comment text box to account for less space on the right side
-    const commentTextLayer = comp.layer("comment-text") as TextLayer;
+    const upvoteArrowLayer = thisComp.layer("upvote-arrow") as TextLayer;
+    const xOffset =
+      subCommentLevel * (upvoteArrowLayer.position.value as number[])[0]; // amount child reply comments are shifted over
+    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
     const commentTextDoc = commentTextLayer.text.sourceText.value as any;
     commentTextDoc.boxTextSize = [
-      commentTextDoc.boxTextSize[0] -
-        layerOffset * (nullLayer.position.value as number[])[0],
+      commentTextDoc.boxTextSize[0] - xOffset,
       commentTextDoc.boxTextSize[1]
     ];
     commentTextLayer.text.sourceText.setValue(commentTextDoc);
   }
 
   // Update comment text to show current fragment
-  const textsWithPriors: string[] = [];
-  const voInPoints: number[] = [];
   for (let i = 0; i < section.fragments.length; i++) {
-    textsWithPriors.push(section.fragments[i].textWithPriors);
-    voInPoints.push(voLayers[i].inPoint);
+    const textWithPriors = section.fragments[i].textWithPriors;
+    const voInPoint = voLayers[i].inPoint;
+    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
+    commentTextLayer.text.sourceText.setValueAtTime(
+      voInPoint,
+      new TextDocument(textWithPriors)
+    );
   }
-  updateTextLayerAtTimes(
-    comp.layer("comment-text") as TextLayer,
-    textsWithPriors,
-    voInPoints
-  );
 
   // Get height values for newly keyframed comment text layer
+  // NOTE: figured out that text layer sourceRectAtTime() lags by a frame
   const keyframes: { time: number; height: number }[] = [];
   for (let i = 0; i < voLayers.length; i++) {
     const time = voLayers[i].inPoint;
-    const height = (comp.layer("comment-text") as TextLayer).sourceRectAtTime(
-      time,
+    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
+    const yPos = (commentTextLayer.position.value as number[])[1];
+    const commentTextHeight = commentTextLayer.sourceRectAtTime(
+      time + thisComp.frameDuration, // because of sourceRectAtTime() single frame lag, add one frame to time to get size AFTER text has been updated
       false
     ).height;
-    keyframes.push({ time, height });
+    const distFromTop = yPos + commentTextHeight; // get total dist from top of comp
+    keyframes.push({ time, height: distFromTop });
   }
 
   // Update user text
   updateTextLayerAtTime(
-    comp.layer("user-text") as TextLayer,
+    thisComp.layer("user-text") as TextLayer,
     section.author,
     voLayers[0].inPoint
   );
@@ -98,67 +103,57 @@ function createCommentContentComp(
     scoreText = `${Math.round(section.score / 100) / 10}k points`;
   else scoreText = `${Math.round(section.score / 1000)}k points`;
   updateTextLayerAtTime(
-    comp.layer("score-text") as TextLayer,
+    thisComp.layer("score-text") as TextLayer,
     scoreText,
     voLayers[0].inPoint
   );
 
   const contentComps = addChildren(
     section.children,
-    comp,
+    thisComp,
     refComp,
     newCompName,
     audioLevelVoice,
-    layerOffset,
+    subCommentLevel,
     voOutPoint
   );
   for (let contentComp of contentComps) {
     keyframes.push(...contentComp.keyframes);
   }
 
-  // Update collapse comment bar size
-  function updateCollapseCommentBar() {
-    const barLayer = comp.layer("collapse-comment-bar") as ShapeLayer;
-    const yPos = (barLayer.position.value as number[])[1];
-    const barSize = (barLayer as any)
-      .content("Rectangle 1")
-      .content("Rectangle Path 1").size;
-    const barWidth = 5;
-    for (let keyframe of keyframes) {
-      const barHeight = keyframe.height - yPos;
-      barSize.setValueAtTime(keyframe.time, [barWidth, barHeight]);
-    }
+  // Update collapse comment bar size (and BG if it exists)
+  for (let keyframe of keyframes) {
+    updateCollapseCommentBar(thisComp, keyframe);
+    if (subCommentLevel === 0) updateBGSizeAndPos(thisComp, keyframe);
   }
-  updateCollapseCommentBar();
 
   // Update UI visibility
   // Set inPoint and outPoint for all relevant layers
   // Also parent the layers to the null object for alignment
-  for (let layerName of [
-    "comment-text",
-    "user-text",
-    "score-text",
-    "upvote-arrow",
-    "downvote-arrow",
-    "collapse-comment-bar",
-    "null-parent"
-  ]) {
-    const layer = comp.layer(layerName) as Layer;
-    if (!layer)
-      throw new Error(
-        `Failed to find layer named "${layerName}" in comp "${comp.name}"`
-      );
-    layer.inPoint = voLayers[0].inPoint;
-    layer.outPoint = comp.layer(1).outPoint;
-    if (layerName !== "null-parent") layer.parent = nullLayer;
-  }
+  // for (let layerName of [
+  //   "comment-text",
+  //   "user-text",
+  //   "score-text",
+  //   "upvote-arrow",
+  //   "downvote-arrow",
+  //   "collapse-comment-bar",
+  //   "null-parent"
+  // ]) {
+  //   const layer = thisComp.layer(layerName) as Layer;
+  //   if (!layer)
+  //     throw new Error(
+  //       `Failed to find layer named "${layerName}" in comp "${thisComp.name}"`
+  //     );
+  //   layer.outPoint = thisComp.layer(1).outPoint;
+  //   if (layerName !== "null-parent") layer.parent = nullLayer;
+  // }
 
   // Set the outPoint of the comment comp to match the length of the contents
-  comp.duration = comp.layer(1).outPoint;
+  thisComp.duration = thisComp.layer(1).outPoint;
 
-  resizeCompToContents(comp);
+  resizeCompToContents(thisComp);
 
-  return { comp, keyframes };
+  return { comp: thisComp, keyframes };
 }
 
 function resizeCompToContents(comp: CompItem) {
@@ -194,6 +189,13 @@ function resizeCompToContents(comp: CompItem) {
         height,
         (commentTextLayer.position.value as number[])[1] + rect.height
       );
+    } else if (layer.name === "comment-bg") {
+      const bgLayer = layer as TextLayer;
+      const bgSize = (bgLayer as any)
+        .content("Rectangle 1")
+        .content("Rectangle Path 1").size;
+      width = Math.max(width, bgSize.valueAtTime(comp.duration, false)[0]);
+      height = Math.max(height, bgSize.valueAtTime(comp.duration, false)[1]);
     }
   }
 
@@ -209,7 +211,7 @@ function addChildren(
   refComp: CompItem,
   newCompName: string,
   audioLevelVoice: number,
-  layerOffset: number,
+  subCommentLevel: number,
   voOutPoint: number
 ): ContentComp[] {
   const contentComps: ContentComp[] = [];
@@ -223,7 +225,7 @@ function addChildren(
       `${newCompName}.${i}`,
       child,
       audioLevelVoice,
-      layerOffset + 1
+      subCommentLevel + 1
     );
 
     // Add child content comp to current comp
@@ -237,7 +239,7 @@ function addChildren(
     const nullLayer = comp.layer("null-parent");
     // const childNullLayer = childComp.layer("null-parent");
     const upvoteArrowLayer = comp.layer("upvote-arrow") as TextLayer;
-    const xPos = (upvoteArrowLayer.position.value as number[])[0]; // where layerOffset represents rank of subcomment
+    const xPos = (upvoteArrowLayer.position.value as number[])[0]; // where subCommentLevel represents rank of subcomment
     let yPos = 0;
     if (i === 0) {
       const commentTextLayer = comp.layer("comment-text") as TextLayer;
@@ -250,7 +252,7 @@ function addChildren(
     } else {
       yPos =
         (contentCompLayers[i - 1].position.value as number[])[1] +
-        contentComp.comp.height;
+        contentComps[i - 1].comp.height;
     }
 
     contentCompLayer.position.setValue([xPos, yPos]);
@@ -275,4 +277,44 @@ function addChildren(
   }
 
   return contentComps;
+}
+
+// Update collapse comment bar size
+function updateCollapseCommentBar(
+  comp: CompItem,
+  keyframe: { time: number; height: number }
+) {
+  const barLayer = comp.layer("collapse-comment-bar") as ShapeLayer;
+  const yPos = (barLayer.position.value as number[])[1];
+  const barSize = (barLayer as any)
+    .content("Rectangle 1")
+    .content("Rectangle Path 1").size;
+  const barWidth = 5;
+  const barHeight = keyframe.height - yPos;
+  barSize.setValueAtTime(keyframe.time, [barWidth, barHeight]);
+  barSize.setInterpolationTypeAtKey(
+    barSize.nearestKeyIndex(keyframe.time),
+    KeyframeInterpolationType.HOLD
+  );
+}
+
+// Update bg size to contain contents
+function updateBGSizeAndPos(
+  comp: CompItem,
+  keyframe: { time: number; height: number }
+) {
+  const bgLayer = comp.layer("comment-bg");
+  const bgSize = (bgLayer as any)
+    .content("Rectangle 1")
+    .content("Rectangle Path 1").size;
+  const paddingBottom = 60;
+  const bgWidth = 1536;
+
+  // Update BG height
+  const bgHeight = keyframe.height + paddingBottom;
+  bgSize.setValueAtTime(keyframe.time, [bgWidth, bgHeight]);
+  bgSize.setInterpolationTypeAtKey(
+    bgSize.nearestKeyIndex(keyframe.time),
+    KeyframeInterpolationType.HOLD
+  );
 }
