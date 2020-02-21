@@ -1,10 +1,6 @@
 import { IPost, IProcessedPost } from "../types/post";
 import VoiceOverClient from "./voice-over";
-import {
-  getSections,
-  getCharacters,
-  getAudioLengthForSections
-} from "./sections";
+import { getSections } from "./sections";
 import { saveObjectToJson } from "../util";
 import { fetchAndSaveFile } from "./fetch-and-save-file";
 

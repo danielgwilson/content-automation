@@ -21,11 +21,11 @@ import Generator from "./generator/generator";
     clientSecret: config.get("REDDIT_CLIENT_SECRET"),
     refreshToken: config.get("REDDIT_REFRESH_TOKEN")
   });
-  const minMinutes = 3;
+  const minMinutes = 10;
   const post = await crawler.getPost({
     outputDir,
     subredditName: "AskReddit",
-    postIndex: 0,
+    postIndex: 3,
     minWords: 2.6 * 60 * minMinutes,
     maxReplyDepth: 2,
     maxRepliesPerComment: 2,

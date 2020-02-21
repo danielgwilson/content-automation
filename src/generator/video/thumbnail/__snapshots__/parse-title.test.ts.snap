@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Gets uncommon words in title 1`] = `
+Array [
+  "People",
+  "haven't",
+  "pooped",
+  "2019",
+  "yet,",
+  "holding",
+  "years",
+  "shit?",
+]
+`;

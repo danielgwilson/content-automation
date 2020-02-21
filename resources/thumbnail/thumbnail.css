@@ -3,21 +3,64 @@
   src: url("../fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf");
 }
 
-body {
-  margin: 0;
+:root {
+  --text-color-primary: rgb(250, 250, 250);
+  --boxed-lines-color-primary: #ff5577;
+  --text-color-secondary: rgb(22, 22, 23);
+  --boxed-lines-color-secondary: #ffffff;
 }
 
-.container {
-  width: 1280;
-  height: 720;
+body {
+  margin: 0;
+  background-color: rgba(22, 22, 23, 0);
+}
+
+.content {
+  padding: 32;
+}
+
+.title-container {
+  width: 840;
+  height: 520;
 }
 
 .title {
   font-family: "IBM Plex Sans", Monaco, monospace;
   font-weight: 800;
-  color: rgb(250, 250, 250);
+  color: var(--text-color-primary);
+  text-align: center;
 }
 
-body {
-  background-color: rgb(22, 22, 23);
+.boxed-lines-primary {
+  display: inline;
+  padding: 16px 0em;
+  background-color: var(--boxed-lines-color-primary);
+  box-shadow: 16px 0 0 var(--boxed-lines-color-primary),
+    -16px 0 0 var(--boxed-lines-color-primary);
+  box-decoration-break: clone;
+  line-height: 1.8;
+  vertical-align: middle;
+}
+
+.subreddit-container {
+  width: 300;
+  height: 50;
+  padding-bottom: 50;
+}
+
+.subreddit {
+  font-family: "IBM Plex Sans", Monaco, monospace;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+}
+
+.boxed-lines-secondary {
+  display: inline;
+  padding: 16px 0em;
+  background-color: var(--boxed-lines-color-secondary);
+  box-shadow: 16px 0 0 var(--boxed-lines-color-secondary),
+    -16px 0 0 var(--boxed-lines-color-secondary);
+  box-decoration-break: clone;
+  line-height: 1.8;
+  vertical-align: middle;
 }
