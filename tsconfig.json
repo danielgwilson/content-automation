@@ -72,7 +72,8 @@
     "**/*.test.ts",
     "node_modules",
     "**/node_modules/*",
-    "./src/ae-scripts/"
+    "./src/ae-scripts/",
+    "./src/tests"
   ],
   "references": [{ "path": "./src/ae-scripts" }]
 }

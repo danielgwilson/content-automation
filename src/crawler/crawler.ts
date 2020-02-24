@@ -28,7 +28,7 @@ export default class {
     outputDir,
     subredditName,
     postIndex = 0,
-    minWords = 3 * 600,
+    minWords = 2.6 * 60 * 20,
     maxReplyDepth = 0,
     maxRepliesPerComment = 0,
     sort = { type: "hot" },
@@ -156,14 +156,12 @@ function getCleanComment(
     gildings: comment.gildings,
     replies:
       maxReplyDepth > 0
-        ? comment.replies
-            .slice(0, maxRepliesPerComment)
-            .map(reply =>
-              getCleanComment(reply, {
-                maxReplyDepth: maxReplyDepth - 1,
-                maxRepliesPerComment
-              })
-            )
+        ? comment.replies.slice(0, maxRepliesPerComment).map(reply =>
+            getCleanComment(reply, {
+              maxReplyDepth: maxReplyDepth - 1,
+              maxRepliesPerComment
+            })
+          )
         : []
   };
 }

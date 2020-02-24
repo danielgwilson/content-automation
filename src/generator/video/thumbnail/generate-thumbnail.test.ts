@@ -14,7 +14,9 @@ it("Generate a thumbnail", async () => {
   // const title = "Hello world!";
   // const title =
   // "Bank tellers of reddit: What is your plan if someone sends bees through the tube?";
-  const title = "Bank tellers, what if someone sends bees through the tube?";
+  // const title = "Bank tellers, what if someone sends bees through the tube?";
+  const title =
+    "A new dating app is launched. Instead of a photo of the person, it shows you a photo of their bedroom, car, kitchen, shoes, how they have their tea/coffee, things like that... what photo would tell you the most about someone, and would you be most interested to see to choose a potential date?";
   const thumbnail = await generateThumbnail(title, context);
   const output = fs.existsSync(thumbnail.filePath);
   expect(output).toBeTruthy();

@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "description": "Automated system to (1) scrape Reddit, (2) repackage the content, and (3) upload it to other platforms like YouTube.",
   "main": "index.js",
+  "bin": {
+    "bard": "./build/cli/index.js"
+  },
   "scripts": {
     "test": "jest -c jest.config.js",
     "build": "rm -rf ./build/ && tsc -b && cp -rf ./resources/ ./build/resources/",
-    "start": "npm run build && NODE_ENV=development && node ./build/index.js"
+    "start": "NODE_ENV=development && node ./build/cli/index.js",
+    "bs": "npm run build && npm run start",
+    "bsi": "npm run bs && npm install -g ./"
   },
   "repository": {
     "type": "git",
@@ -31,6 +36,7 @@
     "@nexrender/provider-s3": "^1.8.16",
     "azure-cognitiveservices-websearch": "^2.0.0",
     "canvas": "^2.6.1",
+    "commander": "^4.1.1",
     "config": "^3.2.5",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.1",
