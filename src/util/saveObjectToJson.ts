@@ -1,12 +1,12 @@
-import fs from "fs";
 import path from "path";
+import { writeFile } from "./writeFile";
 
-export function saveObjectToJson(
+export async function saveObjectToJson(
   object: Object,
   {
     fileName = `${new Date().toISOString()}.output.json`,
     outputDir = ""
   }: { fileName?: string; outputDir?: string }
 ) {
-  fs.writeFileSync(path.join(outputDir, fileName), JSON.stringify(object));
+  await writeFile(path.join(outputDir, fileName), JSON.stringify(object));
 }

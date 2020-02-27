@@ -1,8 +1,10 @@
 node_modules
 .DS_Store
 build
+lib
 .env
 coverage
 config
 resources/bg-videos
 resources/after-effects/Adobe\ After\ Effects\ Auto-Save
+temp

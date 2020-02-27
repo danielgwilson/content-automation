@@ -7,10 +7,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/build/index.js",
-      "preLaunchTask": "npm: build",
-      "outFiles": ["${workspaceFolder}/build/**/*.js"]
+      "name": "ryvb crawl",
+      "program": "${workspaceFolder}/bin/run",
+      "args": ["crawl"]
     }
   ]
 }

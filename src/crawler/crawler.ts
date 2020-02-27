@@ -1,21 +1,28 @@
+import path from "path";
 import snoowrap from "snoowrap";
-import { IPost, IPostComment } from "../types/post";
-import { Gildings } from "snoowrap/dist/objects/VoteableContent";
+import { v4 as uuidv4 } from "uuid";
+import { IContext, IPost, IPostComment, ICrawlOptions } from "../types";
 import { saveObjectToJson } from "../util";
+import { IPostDetails } from "../types/post";
 
 export default class {
+  context: IContext;
   private r: snoowrap;
-  constructor({
-    userAgent,
-    clientId,
-    clientSecret,
-    refreshToken
-  }: {
-    userAgent: string;
-    clientId: string;
-    clientSecret: string;
-    refreshToken: string;
-  }) {
+  constructor(
+    context: IContext,
+    {
+      userAgent,
+      clientId,
+      clientSecret,
+      refreshToken
+    }: {
+      userAgent: string;
+      clientId: string;
+      clientSecret: string;
+      refreshToken: string;
+    }
+  ) {
+    this.context = context;
     this.r = new snoowrap({
       userAgent,
       clientId,
@@ -24,35 +31,23 @@ export default class {
     });
   }
 
-  async getPost({
-    outputDir,
-    subredditName,
-    postIndex = 0,
-    minWords = 2.6 * 60 * 20,
-    maxReplyDepth = 0,
-    maxRepliesPerComment = 0,
-    sort = { type: "hot" },
-    saveOutputToFile = false
-  }: {
-    outputDir: string;
-    subredditName: string;
-    postIndex?: number;
-    minWords?: number;
-    maxReplyDepth?: number;
-    maxRepliesPerComment?: number;
-    sort?:
-      | { type: "hot" }
-      | {
-          type: "top";
-          time: "hour" | "day" | "week" | "month" | "year" | "all";
-        };
-    saveOutputToFile?: boolean;
-  }): Promise<IPost> {
+  async getPost(options: ICrawlOptions): Promise<IPost> {
+    const { saveOutputToFile } = this.context;
+    const {
+      subredditName = "AskReddit",
+      postIndex = 0,
+      minWords = 2.6 * 60 * 20,
+      maxReplyDepth = 0,
+      maxRepliesPerComment = 0,
+      sort = { type: "hot" } as { type: "hot" }
+    } = options;
+
     const subreddit = this.r.getSubreddit(subredditName);
     const posts =
       sort.type === "hot"
         ? await subreddit.getHot({ limit: postIndex + 1 })
         : await subreddit.getTop({ time: sort.time, limit: postIndex + 1 });
+
     const topPost = posts[postIndex];
 
     const {
@@ -66,36 +61,48 @@ export default class {
       gildings
     } = topPost;
 
-    const post = {
-      id,
-
-      dateCrawled: new Date(),
-
-      outputDir,
-      subredditName,
-      postIndex,
+    const cleanComments = await getCleanComments(comments, {
       minWords,
-      sort,
-
+      maxReplyDepth,
+      maxRepliesPerComment
+    });
+    const words = cleanComments
+      .map(cleanComment => getWordCountForCleanComment(cleanComment))
+      .reduce((a, b) => a + b);
+    const details = {
+      postId: id,
+      subredditName,
       subredditIconURI: await subreddit.icon_img,
       title,
       score,
       upvoteRatio: upvote_ratio,
       author: author.name,
       numComments: num_comments,
-      comments: await getCleanComments(comments, {
-        minWords,
-        maxReplyDepth,
-        maxRepliesPerComment
-      }),
       gildings
+    } as IPostDetails;
+
+    const post = {
+      id: uuidv4(),
+      dateCrawled: new Date(),
+      words,
+
+      context: this.context,
+      options,
+
+      details,
+      comments: cleanComments
     } as IPost;
 
-    if (saveOutputToFile)
-      saveObjectToJson(post, {
-        fileName: `${id}.${post.dateCrawled.toISOString()}.crawler.json`,
+    if (saveOutputToFile) {
+      const subDir = `/${post.id}/`;
+      const outputDir = path.join(this.context.outputDir, subDir);
+      const fileName = `${post.id}.crawler.json`;
+      await saveObjectToJson(post, {
+        fileName,
         outputDir
       });
+      console.log(`Saved output to file named ${fileName}`);
+    }
 
     return post;
   }
@@ -108,16 +115,10 @@ async function getCleanComments(
     maxReplyDepth = 0,
     maxRepliesPerComment = 0
   }: { minWords: number; maxReplyDepth?: number; maxRepliesPerComment?: number }
-) {
-  const cleanComments: {
-    author: string;
-    score: number;
-    body: string;
-    body_html: string;
-    gildings: Gildings;
-  }[] = [];
+): Promise<IPostComment[]> {
+  const cleanComments: IPostComment[] = [];
 
-  const commentBatchSize = 10;
+  const commentBatchSize = 20;
   let nWords = 0;
   let nextComments = comments;
 

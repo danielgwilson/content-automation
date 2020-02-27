@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import { IContext } from "../types";
 
 export function createContext({
@@ -13,11 +12,13 @@ export function createContext({
   saveOutputToFile?: boolean;
   debug?: boolean;
 } = {}) {
-  const outputDirPath = path.join(__dirname, "/../", outputDir);
+  const outputDirPath = outputDir;
+  // const outputDirPath = path.join(__dirname, "/../", "/../", outputDir);
   if (!fs.existsSync(outputDirPath)) {
     fs.mkdirSync(outputDirPath);
   }
-  const resourceDirPath = path.join(__dirname, "/../", resourceDir);
+  const resourceDirPath = resourceDir;
+  // const resourceDirPath = path.join(__dirname, "/../", "/../", resourceDir);
   if (!fs.existsSync(resourceDirPath)) {
     fs.mkdirSync(resourceDirPath);
   }

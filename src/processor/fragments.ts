@@ -1,4 +1,4 @@
-import { IPostSectionFragment } from "../types/post";
+import { IPostSectionFragment } from "../types";
 import VoiceOverClient from "./voice-over";
 
 export async function getFragments({
@@ -14,7 +14,6 @@ export async function getFragments({
 }) {
   const sentences = splitBySentence ? getSentences(text) : [text]; // Splits text by ending punctuation except for title
   const promises: Promise<IPostSectionFragment>[] = [];
-
   for (let [i, sentence] of sentences.entries()) {
     const textWithPriors = sentences.slice(0, i + 1).join(" ");
     promises.push(
@@ -31,7 +30,6 @@ export async function getFragments({
       })
     );
   }
-
   return await Promise.all(promises);
 }
 

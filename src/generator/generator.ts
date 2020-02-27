@@ -1,33 +1,20 @@
-import { IProcessedPost, IGeneratorOutput } from "../types/post";
+import { IContext, IProcessedPost, IGeneratorOutput } from "../types";
 import { generateVideo } from "./video/render/generate-video";
 import { saveObjectToJson } from "../util";
 import { performance } from "perf_hooks";
 
-export default class {
-  outputDir: string;
-  resourceDir: string;
-  constructor({
-    outputDir,
-    resourceDir
-  }: {
-    outputDir: string;
-    resourceDir: string;
-  }) {
-    this.outputDir = outputDir;
-    this.resourceDir = resourceDir;
+export default class Generator {
+  context: IContext;
+  constructor(context: IContext) {
+    this.context = context;
   }
 
-  async generate(
-    post: IProcessedPost,
-    {
-      saveOutputToFile = false,
-      debug = false
-    }: { saveOutputToFile?: boolean; debug?: boolean } = {}
-  ) {
+  async generate(post: IProcessedPost) {
+    const { outputDir, resourceDir, saveOutputToFile, debug } = this.context;
     const t0 = performance.now();
     const renderOutput = await generateVideo(post, {
-      outputDir: this.outputDir,
-      resourceDir: this.resourceDir,
+      outputDir,
+      resourceDir,
       debug
     });
     const generatorOutput = {
@@ -41,13 +28,14 @@ export default class {
     console.log(`Generation complete!`);
     console.log(`Elapsed Time: ${generatorOutput.elapsedTime}`);
 
-    if (saveOutputToFile)
-      saveObjectToJson(generatorOutput, {
-        fileName: `${
-          generatorOutput.id
-        }.${generatorOutput.dateGenerated.toISOString()}.generator.json`,
-        outputDir: this.outputDir
+    if (saveOutputToFile) {
+      const fileName = `${generatorOutput.id}.generator.json`;
+      await saveObjectToJson(generatorOutput, {
+        fileName,
+        outputDir
       });
+      console.log(`Saved output to file named ${fileName}`);
+    }
 
     return generatorOutput;
   }

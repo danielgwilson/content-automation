@@ -4,14 +4,28 @@
   "description": "Automated system to (1) scrape Reddit, (2) repackage the content, and (3) upload it to other platforms like YouTube.",
   "main": "index.js",
   "bin": {
-    "bard": "./build/cli/index.js"
+    "ryvb": "./lib/index.js"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "ryvb",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
+    ]
   },
   "scripts": {
     "test": "jest -c jest.config.js",
-    "build": "rm -rf ./build/ && tsc -b && cp -rf ./resources/ ./build/resources/",
-    "start": "NODE_ENV=development && node ./build/cli/index.js",
-    "bs": "npm run build && npm run start",
-    "bsi": "npm run bs && npm install -g ./"
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "version": "oclif-dev readme && git add README.md"
   },
   "repository": {
     "type": "git",
@@ -34,20 +48,31 @@
     "@nexrender/provider-ftp": "^1.10.0",
     "@nexrender/provider-gs": "^1.9.2",
     "@nexrender/provider-s3": "^1.8.16",
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.14.0",
+    "@oclif/plugin-autocomplete": "^0.1.5",
+    "@oclif/plugin-help": "^2.2.3",
+    "@oclif/plugin-not-found": "^1.2.3",
+    "@types/node-notifier": "^5.4.0",
+    "@types/uuid": "^7.0.0",
     "azure-cognitiveservices-websearch": "^2.0.0",
+    "bottleneck": "^2.19.5",
     "canvas": "^2.6.1",
-    "commander": "^4.1.1",
     "config": "^3.2.5",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.1",
     "eslint-plugin-react-hooks": "^2.3.0",
     "keyword-extractor": "0.0.18",
     "ms-rest-azure": "^3.0.0",
+    "node-notifier": "^6.0.0",
     "puppeteer": "^2.1.1",
     "snoowrap": "^1.20.1",
-    "types-for-adobe": "^1.5.0"
+    "tslib": "^1.11.0",
+    "types-for-adobe": "^1.5.0",
+    "uuid": "^7.0.1"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
     "@types/config": "0.0.36",
     "@types/jest": "^25.1.0",
     "@types/node": "^13.7.1",
@@ -57,13 +82,17 @@
     "@types/snoowrap": "^1.19.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-oclif": "^3.1.0",
+    "eslint-config-oclif-typescript": "^0.1.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "globby": "^11.0.0",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "ts-jest": "^25.0.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
-  }
+  },
+  "types": "lib/index.d.ts"
 }
