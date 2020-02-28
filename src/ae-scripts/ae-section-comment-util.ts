@@ -1,4 +1,4 @@
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 interface ContentComp {
   comp: CompItem;
@@ -11,7 +11,7 @@ interface ContentComp {
 function createCommentContentComp(
   refComp: CompItem,
   newCompName: string,
-  section: import("../types/post").IPostSection,
+  section: import("../types/processed-post").IPostSection,
   audioLevelVoice: number,
   subCommentLevel: number = 0
 ): ContentComp {
@@ -153,6 +153,9 @@ function createCommentContentComp(
 
   resizeCompToContents(thisComp);
 
+  // Change color scheme to light mode
+  setColorControls(thisComp);
+
   return { comp: thisComp, keyframes };
 }
 
@@ -206,7 +209,7 @@ function resizeCompToContents(comp: CompItem) {
 
 // Handle reply comments
 function addChildren(
-  children: import("../types/post").IPostSection[],
+  children: import("../types/processed-post").IPostSection[],
   comp: CompItem,
   refComp: CompItem,
   newCompName: string,

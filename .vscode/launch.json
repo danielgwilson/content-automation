@@ -10,6 +10,13 @@
       "name": "ryvb crawl",
       "program": "${workspaceFolder}/bin/run",
       "args": ["crawl"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "ryvb generate",
+      "program": "${workspaceFolder}/bin/run",
+      "args": ["generate", "temp"]
     }
   ]
 }

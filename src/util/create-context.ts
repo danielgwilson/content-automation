@@ -1,31 +1,29 @@
 import fs from "fs";
+import path from "path";
 import { IContext } from "../types";
 
 export function createContext({
   outputDir = "./temp/",
-  resourceDir = "./resources/",
+  resourceDir = "./lib/resources/",
   saveOutputToFile = true,
-  debug = false
+  debug = false,
+  useAbsolutePaths = true
 }: {
   outputDir?: string;
   resourceDir?: string;
   saveOutputToFile?: boolean;
   debug?: boolean;
+  useAbsolutePaths?: boolean;
 } = {}) {
-  const outputDirPath = outputDir;
-  // const outputDirPath = path.join(__dirname, "/../", "/../", outputDir);
-  if (!fs.existsSync(outputDirPath)) {
-    fs.mkdirSync(outputDirPath);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
   }
-  const resourceDirPath = resourceDir;
-  // const resourceDirPath = path.join(__dirname, "/../", "/../", resourceDir);
-  if (!fs.existsSync(resourceDirPath)) {
-    fs.mkdirSync(resourceDirPath);
+  if (!fs.existsSync(resourceDir)) {
+    fs.mkdirSync(resourceDir);
   }
-
   return {
-    outputDir: outputDirPath,
-    resourceDir: resourceDirPath,
+    outputDir: useAbsolutePaths ? path.resolve(outputDir) : outputDir,
+    resourceDir: useAbsolutePaths ? path.resolve(resourceDir) : resourceDir,
     saveOutputToFile,
     debug
   } as IContext;

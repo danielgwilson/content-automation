@@ -1,5 +1,5 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 (() => {
   // Check if required parameters are present
@@ -36,59 +36,6 @@
     copyLayerToComp({ index: i, comp: refComp }, { comp });
   }
 
-  // const postBGLayer = copyLayerToComp(
-  //   { name: "post-bg", comp: refComp },
-  //   { comp }
-  // ) as ShapeLayer;
-  // const subredditIconPlaceholderLayer = copyLayerToComp(
-  //   { name: "subreddit-icon-placeholder", comp: refComp },
-  //   { comp }
-  // ) as ShapeLayer;
-  // const subredditTextLayer = copyLayerToComp(
-  //   { name: "subreddit-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const subredditTextDotLayer = copyLayerToComp(
-  //   { name: "subreddit-text-dot", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const userTextLayer = copyLayerToComp(
-  //   { name: "user-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const upvoteArrowLayer = copyLayerToComp(
-  //   { name: "upvote-arrow", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const downvoteArrowLayer = copyLayerToComp(
-  //   { name: "downvote-arrow", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const scoreTextLayer = copyLayerToComp(
-  //   { name: "score-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const numCommentsIconLayer = copyLayerToComp(
-  //   { name: "num-comments-icon", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const numCommentsTextLayer = copyLayerToComp(
-  //   { name: "num-comments-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const pctUpvotedTextLayer = copyLayerToComp(
-  //   { name: "pct-upvoted-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const titleTextLayer = copyLayerToComp(
-  //   { name: "title-text", comp: refComp },
-  //   { comp }
-  // ) as TextLayer;
-  // const subredditIconLayer = copyLayerToComp(
-  //   { name: "subreddit-icon", comp: refComp },
-  //   { comp }
-  // ) as AVLayer;
-
   // Add voiceover audio file
   const voLayer = addLayer(importFootage(fragments[0].audio.filePath), comp, {
     name: `audio.${fragments[0].audio.filePath}`
@@ -115,17 +62,20 @@
   updateTextLayer({ name: "user-text", comp }, "u/" + author);
 
   // Update number of comments
+  const numCommentsText = get3Digits(postDetails.numComments);
   updateTextLayer(
     { name: "num-comments-text", comp },
-    postDetails.numComments > 999
-      ? `${Math.round(postDetails.numComments / 100) / 10}k Comments`
-      : `${postDetails.numComments} Comments`
+    `${numCommentsText} Comments`
   );
 
   // Update score
+  const scoreText = get3Digits(score);
+  updateTextLayer({ name: "score-text", comp }, scoreText);
+
+  // Update upvote ratio
   updateTextLayer(
-    { name: "score-text", comp },
-    score > 999 ? `${Math.round(score / 100) / 10}k` : `${score}`
+    { name: "pct-upvoted-text", comp },
+    `${Math.round(postDetails.upvoteRatio * 100)}% Upvoted`
   );
 
   // Add transition clip at outPoint of title comp
@@ -133,6 +83,9 @@
     name: "transition-ref.title"
   });
   transitionLayer.startTime = voLayer.outPoint;
+
+  // Change color scheme to light mode
+  setColorControls(comp);
 
   // Update comp outPoint to match voiceover outPoint
   comp.duration = transitionLayer.outPoint;

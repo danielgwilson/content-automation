@@ -1,8 +1,7 @@
-import fs from "fs";
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
+import { createContext, notify, getPosts } from "../util";
 import Processor from "../processor";
 
 export class ProcessCommand extends Command {
@@ -36,28 +35,16 @@ export class ProcessCommand extends Command {
       debug
     });
 
-    // Get one or multiple post objects depending on whether the FILE argument references a directory or a single file
-    const isDirectory = fs.lstatSync(path).isDirectory();
-    const posts = isDirectory
-      ? fs
-          .readdirSync(path)
-          .filter(file => {
-            const fileParts = file.split(".");
-            const extension = fileParts.pop();
-            const type = fileParts.pop();
-            return extension === "json" && type === "crawler";
-          })
-          .map(file => JSON.parse(fs.readFileSync(path + file, "utf8")))
-      : [JSON.parse(fs.readFileSync(path, "utf8"))];
-
     notify(`Started processing post at ${new Date().toLocaleTimeString()}`);
+
+    const posts = getPosts(path, { type: "crawler" });
 
     const processor = new Processor(context, {
       GOOGLE_APPLICATION_CREDENTIALS: config.get(
         "GOOGLE_APPLICATION_CREDENTIALS"
       )
     });
-    await Promise.all(posts.map(post => processor.process(post)));
+    await Promise.all(posts.map(async post => await processor.process(post)));
 
     notify(
       `Finished! Processing completed at ${new Date().toLocaleTimeString()}`

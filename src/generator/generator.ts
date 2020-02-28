@@ -1,3 +1,4 @@
+import path from "path";
 import { IContext, IProcessedPost, IGeneratorOutput } from "../types";
 import { generateVideo } from "./video/render/generate-video";
 import { saveObjectToJson } from "../util";
@@ -10,13 +11,17 @@ export default class Generator {
   }
 
   async generate(post: IProcessedPost) {
-    const { outputDir, resourceDir, saveOutputToFile, debug } = this.context;
+    const { resourceDir, saveOutputToFile, debug } = this.context;
+    const subDir = `/${post.id}/`;
+    const outputDir = path.join(this.context.outputDir, subDir);
     const t0 = performance.now();
+
     const renderOutput = await generateVideo(post, {
       outputDir,
       resourceDir,
       debug
     });
+
     const generatorOutput = {
       id: post.id,
       dateGenerated: new Date(),
@@ -26,7 +31,11 @@ export default class Generator {
 
     console.log(`---`);
     console.log(`Generation complete!`);
-    console.log(`Elapsed Time: ${generatorOutput.elapsedTime}`);
+    console.log(
+      `Elapsed Time: ${new Date(generatorOutput.elapsedTime)
+        .toISOString()
+        .slice(11, -1)}`
+    );
 
     if (saveOutputToFile) {
       const fileName = `${generatorOutput.id}.generator.json`;

@@ -10,12 +10,19 @@ export class CrawlCommand extends Command {
 
   static flags = {
     ...contextFlags,
+    postId: flags.string({
+      description: "id of the post to be crawled",
+      hidden: false,
+      multiple: false,
+      required: false
+    }),
     subredditName: flags.string({
       char: "n",
       description: "name of the subreddit to be crawled", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: "AskReddit", // default value if flag not passed (can be a function that returns a string or undefined)
+      exclusive: ["postId"],
       required: false // make flag required (this is not common and you should probably use an argument instead)
     }),
     postIndex: flags.integer({
@@ -77,6 +84,7 @@ export class CrawlCommand extends Command {
       resourceDir,
       saveOutputToFile,
       debug,
+      postId,
       subredditName,
       postIndex,
       nPosts,
@@ -107,19 +115,31 @@ export class CrawlCommand extends Command {
 
     notify(`Started crawling post at ${new Date().toLocaleTimeString()}`);
 
-    const postIndeces = [...Array(postIndex + nPosts).keys()].slice(postIndex);
-    await Promise.all(
-      postIndeces.map(i =>
-        crawlPost(context, {
-          subredditName,
-          postIndex: postIndex + i,
-          minWords,
-          maxReplyDepth,
-          maxRepliesPerComment,
-          sort
-        })
-      )
-    );
+    if (postId) {
+      await crawlPost(context, {
+        postId,
+        minWords,
+        maxReplyDepth,
+        maxRepliesPerComment,
+        sort
+      });
+    } else {
+      const postIndeces = [...Array(postIndex + nPosts).keys()].slice(
+        postIndex
+      );
+      await Promise.all(
+        postIndeces.map(i =>
+          crawlPost(context, {
+            subredditName,
+            postIndex: postIndex + i,
+            minWords,
+            maxReplyDepth,
+            maxRepliesPerComment,
+            sort
+          })
+        )
+      );
+    }
 
     notify(
       `Finished! Crawling completed at at ${new Date().toLocaleTimeString()}`

@@ -32,24 +32,32 @@ export default class {
   }
 
   async getPost(options: ICrawlOptions): Promise<IPost> {
-    const { saveOutputToFile } = this.context;
-    const {
-      subredditName = "AskReddit",
-      postIndex = 0,
-      minWords = 2.6 * 60 * 20,
-      maxReplyDepth = 0,
-      maxRepliesPerComment = 0,
-      sort = { type: "hot" } as { type: "hot" }
-    } = options;
+    let targetPost: snoowrap.Submission;
+    if (options.postId) {
+      // @ts-ignore - necessary due to snoowrap await / then bug
+      const submission = await this.r.getSubmission(options.postId).fetch();
+      targetPost = submission;
+    } else {
+      const {
+        subredditName = "AskReddit",
+        postIndex = 0,
+        sort = { type: "hot" } as { type: "hot" }
+      } = options;
 
-    const subreddit = this.r.getSubreddit(subredditName);
-    const posts =
-      sort.type === "hot"
-        ? await subreddit.getHot({ limit: postIndex + 1 })
-        : await subreddit.getTop({ time: sort.time, limit: postIndex + 1 });
+      const subreddit = this.r.getSubreddit(subredditName);
+      const posts =
+        sort.type === "hot"
+          ? await subreddit.getHot({ limit: postIndex + 1 })
+          : await subreddit.getTop({ time: sort.time, limit: postIndex + 1 });
 
-    const topPost = posts[postIndex];
+      // @ts-ignore - necessary due to snoowrap await / then bug
+      targetPost = await posts[postIndex].fetch();
+    }
 
+    return await this.parsePost(targetPost, options);
+  }
+
+  private async parsePost(post: snoowrap.Submission, options: ICrawlOptions) {
     const {
       id,
       title,
@@ -59,7 +67,13 @@ export default class {
       comments,
       upvote_ratio,
       gildings
-    } = topPost;
+    } = post;
+    const {
+      subredditName = "AskReddit",
+      minWords = 2.6 * 60 * 20,
+      maxReplyDepth = 0,
+      maxRepliesPerComment = 0
+    } = options;
 
     const cleanComments = await getCleanComments(comments, {
       minWords,
@@ -72,7 +86,7 @@ export default class {
     const details = {
       postId: id,
       subredditName,
-      subredditIconURI: await subreddit.icon_img,
+      subredditIconURI: await post.subreddit.icon_img, // need to await this - snoowrap has REALLY BAD promise consistency :/
       title,
       score,
       upvoteRatio: upvote_ratio,
@@ -81,7 +95,7 @@ export default class {
       gildings
     } as IPostDetails;
 
-    const post = {
+    const result = {
       id: uuidv4(),
       dateCrawled: new Date(),
       words,
@@ -93,18 +107,19 @@ export default class {
       comments: cleanComments
     } as IPost;
 
+    const { saveOutputToFile } = this.context;
     if (saveOutputToFile) {
-      const subDir = `/${post.id}/`;
+      const subDir = `/${result.id}/`;
       const outputDir = path.join(this.context.outputDir, subDir);
-      const fileName = `${post.id}.crawler.json`;
-      await saveObjectToJson(post, {
+      const fileName = `${result.id}.crawler.json`;
+      await saveObjectToJson(result, {
         fileName,
         outputDir
       });
       console.log(`Saved output to file named ${fileName}`);
     }
 
-    return post;
+    return result;
   }
 }
 

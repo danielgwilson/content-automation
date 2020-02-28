@@ -4,14 +4,7 @@ import { IContext, ICrawlOptions } from "../types";
 
 export async function crawlPost(
   context: IContext,
-  {
-    subredditName,
-    postIndex,
-    minWords,
-    maxReplyDepth,
-    maxRepliesPerComment,
-    sort
-  }: ICrawlOptions = {}
+  options: ICrawlOptions = {}
 ) {
   const crawler = new Crawler(context, {
     userAgent: config.get("REDDIT_USER_AGENT"),
@@ -20,14 +13,7 @@ export async function crawlPost(
     refreshToken: config.get("REDDIT_REFRESH_TOKEN")
   });
 
-  const post = await crawler.getPost({
-    subredditName,
-    postIndex,
-    minWords,
-    maxReplyDepth,
-    maxRepliesPerComment,
-    sort
-  });
+  const post = await crawler.getPost(options);
 
   console.log(`\n----------`);
   console.log(`Title: ${post.details.title}`);

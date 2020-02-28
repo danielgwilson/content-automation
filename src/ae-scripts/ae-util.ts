@@ -166,3 +166,29 @@ function getFootageItem(itemName: string) {
   if (!item) throw new Error(`Failed to find item named ${itemName}`);
   return item;
 }
+
+function get3Digits(num: number) {
+  if (num < 999) return `${num}`;
+  else if (num < 99999) return `${Math.round(num / 100) / 10}k`;
+  else return `${Math.round(num / 1000)}k`;
+}
+
+function setColorControls(comp: CompItem) {
+  const colorControlsLayer = comp.layer("color-controls");
+
+  setColorControl(colorControlsLayer, "text-color", [22, 22, 23]);
+  setColorControl(colorControlsLayer, "text-color-alt", [135, 138, 140]);
+  setColorControl(colorControlsLayer, "stroke-color", [204, 204, 204]);
+  setColorControl(colorControlsLayer, "bar-color", [237, 239, 241]);
+  setColorControl(colorControlsLayer, "main", [255, 255, 255]);
+  setColorControl(colorControlsLayer, "accent", [252, 252, 252]);
+  setColorControl(colorControlsLayer, "bg", [238, 238, 238]);
+}
+
+function setColorControl(layer: Layer, control: string, value: number[]) {
+  var adjustedValues = [value[0] / 255, value[1] / 255, value[2] / 255];
+  var effects = layer.property("Effects");
+  var colorControl = effects.property(control);
+  var color = colorControl.property("Color");
+  (color as any).setValue(adjustedValues);
+}

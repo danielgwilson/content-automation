@@ -25,27 +25,20 @@ interface ITextToSpeechRequest {
 }
 
 export default class VoiceOverClient {
-  context: IContext;
-
   limiter: Bottleneck;
 
   client: any;
   voice: IVoice;
   audioConfig: IAudioConfig;
-  constructor(
-    context: IContext,
-    {
-      GOOGLE_APPLICATION_CREDENTIALS
-    }: {
-      GOOGLE_APPLICATION_CREDENTIALS: string;
-    }
-  ) {
-    this.context = context;
-
+  constructor({
+    GOOGLE_APPLICATION_CREDENTIALS
+  }: {
+    GOOGLE_APPLICATION_CREDENTIALS: string;
+  }) {
     // Set up rate limiter
     this.limiter = new Bottleneck({
       maxConcurrent: 10,
-      minTime: 100,
+      minTime: 500,
       reservoir: 300,
       reservoirRefreshInterval: 1000 * 60,
       reservoirRefreshAmount: 300
@@ -67,9 +60,15 @@ export default class VoiceOverClient {
     };
   }
 
-  async fetchVoiceOver({ text, fileName }: { text: string; fileName: string }) {
-    const { outputDir } = this.context;
-
+  async fetchVoiceOver({
+    text,
+    fileName,
+    outputDir
+  }: {
+    text: string;
+    fileName: string;
+    outputDir: string;
+  }) {
     // Performs the text-to-speech request
     const request: ITextToSpeechRequest = {
       input: { text },
@@ -83,7 +82,7 @@ export default class VoiceOverClient {
     const [response] = await this.limiter.schedule(synthesizeSpeech, request);
 
     // Write the binary audio content to a local file
-    const filePath = path.join(outputDir, fileName);
+    const filePath = path.resolve(path.join(outputDir, fileName));
     await writeFile(filePath, response.audioContent, "binary");
 
     /* 

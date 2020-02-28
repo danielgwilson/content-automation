@@ -27,7 +27,7 @@ export default class {
     }
   ) {
     this.context = context;
-    this.voiceOverClient = new VoiceOverClient(context, {
+    this.voiceOverClient = new VoiceOverClient({
       GOOGLE_APPLICATION_CREDENTIALS
     });
   }
@@ -39,7 +39,7 @@ export default class {
     const dateProcessed = new Date();
 
     const [sections, subredditIcon] = await Promise.all([
-      await getSections(post, this.voiceOverClient),
+      await getSections(post, this.voiceOverClient, outputDir),
       await fetchAndSaveFile(post.details.subredditIconURI, {
         fileName: "subreddit-icon.png",
         outputDir

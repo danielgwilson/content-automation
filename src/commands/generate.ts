@@ -1,8 +1,6 @@
-import fs from "fs";
-import path from "path";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
+import { createContext, notify, getPosts } from "../util";
 import { generateVideo } from "../generator";
 
 export class GenerateCommand extends Command {
@@ -12,9 +10,10 @@ export class GenerateCommand extends Command {
 
   static args = [
     {
-      name: "file", // name of arg to show in help and reference with args[name]
+      name: "path", // name of arg to show in help and reference with args[name]
       required: true, // make the arg required with `required: true`
-      description: "name of (path to) processed post .json file to process", // help description
+      description:
+        "path to either (1) single processed post .json file, (2) directory containing multiple processed post .json files, or (3) directory of subdirectories containing processed post .json files.", // help description
       hidden: false // hide this arg from help
     }
   ];
@@ -25,17 +24,9 @@ export class GenerateCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(GenerateCommand);
-
-    // validate file name
-    const { file } = args;
-    const fileName = path.basename(file);
-    const fileNameParts = fileName.split(".");
-    const fileExtension = fileNameParts.pop();
-    const fileType = fileNameParts.pop();
-    if (fileExtension !== "json" || fileType !== "processor") {
-    }
-
+    const { path } = args;
     const { outputDir, resourceDir, saveOutputToFile, debug } = flags;
+
     const context = createContext({
       outputDir,
       resourceDir,
@@ -43,11 +34,12 @@ export class GenerateCommand extends Command {
       debug
     });
 
-    const processedPost = JSON.parse(fs.readFileSync(file, "utf8"));
-
     notify(`Started generating media at ${new Date().toLocaleTimeString()}`);
 
-    await generateVideo(processedPost, context);
+    const posts = getPosts(path, { type: "processor" });
+    await Promise.all(
+      posts.map(async post => await generateVideo(post, context))
+    );
 
     notify(`Finished! Job completed at ${new Date().toLocaleTimeString()}`);
   }

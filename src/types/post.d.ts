@@ -1,6 +1,7 @@
 export interface IPost {
   id: string;
   dateCrawled: Date;
+  words: number;
 
   context: import("./context").IContext;
   options: ICrawlOptions;
@@ -10,8 +11,11 @@ export interface IPost {
 }
 
 export interface ICrawlOptions {
+  postId?: string;
+
   subredditName?: string;
   postIndex?: number;
+
   minWords?: number;
   maxReplyDepth?: number;
   maxRepliesPerComment?: number;

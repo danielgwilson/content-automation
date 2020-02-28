@@ -6,7 +6,7 @@ import { getCleanText } from "./clean-text";
 export async function getSections(
   post: IPost,
   voiceOverClient: VoiceOverClient,
-  subDir?: string
+  outputDir: string
 ) {
   const sections = await Promise.all([
     getSectionForTitle(
@@ -18,14 +18,14 @@ export async function getSections(
       {
         voiceOverClient,
         fileNamePrefix: `${post.id}-${0}`,
-        subDir
+        outputDir
       }
     ),
     ...post.comments.map((comment, i) => {
       return getSectionForComment(comment, {
         voiceOverClient,
         fileNamePrefix: `${post.id}-${i + 1}`,
-        subDir
+        outputDir
       });
     })
   ]);
@@ -37,16 +37,19 @@ async function getSectionForTitle(
   { text, score, author }: { text: string; score: number; author: string },
   {
     voiceOverClient,
-    fileNamePrefix
+    fileNamePrefix,
+    outputDir
   }: {
     voiceOverClient: VoiceOverClient;
     fileNamePrefix: string;
+    outputDir: string;
   }
 ): Promise<IPostSection> {
   const fragments = await getFragments({
     text: getCleanText(text),
     voiceOverClient,
     fileNamePrefix,
+    outputDir,
     splitBySentence: false
   });
   return {
@@ -65,9 +68,11 @@ async function getSectionForComment(
   { body, score, author, replies }: IPostComment,
   {
     voiceOverClient,
+    outputDir,
     fileNamePrefix
   }: {
     voiceOverClient: VoiceOverClient;
+    outputDir: string;
     fileNamePrefix: string;
   }
 ): Promise<IPostSection> {
@@ -75,6 +80,7 @@ async function getSectionForComment(
     text: getCleanText(body),
     voiceOverClient,
     fileNamePrefix,
+    outputDir,
     splitBySentence: true
   });
   return {
@@ -89,8 +95,8 @@ async function getSectionForComment(
       replies.map((reply, i) =>
         getSectionForComment(reply, {
           voiceOverClient,
-          fileNamePrefix: `${fileNamePrefix}-${i}`,
-          subDir
+          outputDir,
+          fileNamePrefix: `${fileNamePrefix}-${i}`
         })
       )
     )

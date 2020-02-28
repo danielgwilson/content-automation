@@ -1,5 +1,5 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 (() => {
   // Check if required parameters are present
@@ -29,5 +29,16 @@
     bgVideoLayer.timeRemapEnabled = true;
     bgVideoLayer.timeRemap.expression = "loopOut()";
     bgVideoLayer.outPoint = comp.duration;
+  } else {
+    // Add BG solid if no BG video
+    // TODO: handle other color profiles
+    const bgSolidLayer = comp.layers.addSolid(
+      [238 / 255, 238 / 255, 238 / 255],
+      "bg-solid",
+      1920,
+      1080,
+      1.0
+    );
+    bgSolidLayer.moveToEnd();
   }
 })();

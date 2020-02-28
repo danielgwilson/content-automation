@@ -5,11 +5,13 @@ export async function getFragments({
   text,
   voiceOverClient,
   fileNamePrefix,
+  outputDir,
   splitBySentence = true
 }: {
   text: string;
   voiceOverClient: VoiceOverClient;
   fileNamePrefix: string;
+  outputDir: string;
   splitBySentence?: boolean;
 }) {
   const sentences = splitBySentence ? getSentences(text) : [text]; // Splits text by ending punctuation except for title
@@ -20,7 +22,8 @@ export async function getFragments({
       new Promise(async resolve => {
         const audio = await voiceOverClient.fetchVoiceOver({
           text: sentence,
-          fileName: `${fileNamePrefix}.${i}.mp3`
+          fileName: `${fileNamePrefix}.${i}.mp3`,
+          outputDir
         });
         return resolve({
           text: sentence,

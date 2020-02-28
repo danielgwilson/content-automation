@@ -11,7 +11,7 @@ export interface IProcessedPost {
 export interface IProcessedPostDetails {
   subredditName: string;
   numComments: number;
-  upvoteRatio?: number;
+  upvoteRatio: number;
   subredditIcon: { fileName: string; filePath: string };
 }
 
