@@ -16,7 +16,9 @@ export function getPosts(path: string, { type }: { type?: string } = {}) {
   const posts: any[] = [];
   if (isDirectory(path)) {
     const fileNames = fs.readdirSync(path);
-    const postFileNames = fileNames.filter(isPost);
+    const postFileNames = fileNames.filter(fileName =>
+      isPost(fileName, { type })
+    );
     if (postFileNames.length > 0) {
       // (2) a post subdirectory
       posts.push(parsePost(join(path, postFileNames[0])));
@@ -29,12 +31,7 @@ export function getPosts(path: string, { type }: { type?: string } = {}) {
           .map(dirPath => {
             const [post] = fs
               .readdirSync(dirPath)
-              .filter(fileName => {
-                const fileParts = fileName.split(".");
-                const extension = fileParts.pop();
-                const jobType = fileParts.pop();
-                return extension === "json" && (!type || jobType === type);
-              })
+              .filter(fileName => isPost(fileName, { type }))
               .map(fileName => parsePost(join(dirPath, fileName)));
             return post;
           })
@@ -52,11 +49,11 @@ function isDirectory(filePath: string) {
   return fs.lstatSync(filePath).isDirectory();
 }
 
-function isPost(filePath: string) {
+function isPost(filePath: string, { type }: { type?: string }) {
   const fileParts = filePath.split(".");
   const extension = fileParts.pop();
-  const type = fileParts.pop();
-  return extension === "json" && type === "crawler";
+  const jobType = fileParts.pop();
+  return extension === "json" && (!type || jobType === type);
 }
 
 function parsePost(filePath: string) {

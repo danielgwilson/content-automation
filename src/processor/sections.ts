@@ -1,7 +1,8 @@
 import { IPost, IPostSection, IPostComment } from "../types";
 import VoiceOverClient from "./voice-over";
 import { getFragments, getAudioLengthForFragments } from "./fragments";
-import { getCleanText } from "./clean-text";
+import { getCleanText } from "./util/clean-text";
+import { Gildings } from "snoowrap/dist/objects/VoteableContent";
 
 export async function getSections(
   post: IPost,
@@ -13,7 +14,8 @@ export async function getSections(
       {
         text: post.details.title,
         author: post.details.author,
-        score: post.details.score
+        score: post.details.score,
+        gildings: post.details.gildings
       },
       {
         voiceOverClient,
@@ -34,7 +36,12 @@ export async function getSections(
 }
 
 async function getSectionForTitle(
-  { text, score, author }: { text: string; score: number; author: string },
+  {
+    text,
+    score,
+    author,
+    gildings
+  }: { text: string; score: number; author: string; gildings: Gildings },
   {
     voiceOverClient,
     fileNamePrefix,
@@ -59,13 +66,14 @@ async function getSectionForTitle(
 
     score,
     author,
+    gildings,
 
     children: []
   } as IPostSection;
 }
 
 async function getSectionForComment(
-  { body, score, author, replies }: IPostComment,
+  { body, score, author, gildings, replies }: IPostComment,
   {
     voiceOverClient,
     outputDir,
@@ -90,6 +98,7 @@ async function getSectionForComment(
 
     score,
     author,
+    gildings,
 
     children: await Promise.all(
       replies.map((reply, i) =>

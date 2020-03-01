@@ -2,7 +2,7 @@ const { render } = require("@nexrender/core");
 import { IProcessedPost, IRenderOutput } from "../../../types";
 import { getJob } from "./job";
 
-export async function generateVideo(
+export async function renderVideo(
   post: IProcessedPost,
   {
     outputDir,

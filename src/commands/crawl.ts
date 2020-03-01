@@ -1,7 +1,9 @@
+import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
-import { crawlPost } from "../crawler/crawl-post";
+import { createContext, notify, logPost } from "../util";
+import Crawler from "../crawler";
+import { IPost } from "../types";
 
 export class CrawlCommand extends Command {
   static description = `
@@ -11,9 +13,10 @@ export class CrawlCommand extends Command {
   static flags = {
     ...contextFlags,
     postId: flags.string({
+      char: "p",
       description: "id of the post to be crawled",
       hidden: false,
-      multiple: false,
+      multiple: true,
       required: false
     }),
     subredditName: flags.string({
@@ -34,7 +37,7 @@ export class CrawlCommand extends Command {
       required: false // make flag required (this is not common and you should probably use an argument instead)
     }),
     nPosts: flags.integer({
-      char: "p",
+      char: "N",
       description: "number of posts to crawl", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
@@ -115,31 +118,48 @@ export class CrawlCommand extends Command {
 
     notify(`Started crawling post at ${new Date().toLocaleTimeString()}`);
 
-    if (postId) {
-      await crawlPost(context, {
-        postId,
-        minWords,
-        maxReplyDepth,
-        maxRepliesPerComment,
-        sort
-      });
+    const crawler = new Crawler(context, {
+      userAgent: config.get("REDDIT_USER_AGENT"),
+      clientId: config.get("REDDIT_CLIENT_ID"),
+      clientSecret: config.get("REDDIT_CLIENT_SECRET"),
+      refreshToken: config.get("REDDIT_REFRESH_TOKEN")
+    });
+
+    const promises: Promise<IPost>[] = [];
+    if (postId.length > 0) {
+      promises.push(
+        ...postId.map(async id => {
+          const post = await crawler.getPost({
+            postId: id,
+            minWords,
+            maxReplyDepth,
+            maxRepliesPerComment,
+            sort
+          });
+          logPost(post);
+          return post;
+        })
+      );
     } else {
       const postIndeces = [...Array(postIndex + nPosts).keys()].slice(
         postIndex
       );
-      await Promise.all(
-        postIndeces.map(i =>
-          crawlPost(context, {
+      promises.push(
+        ...postIndeces.map(async i => {
+          const post = await crawler.getPost({
             subredditName,
             postIndex: postIndex + i,
             minWords,
             maxReplyDepth,
             maxRepliesPerComment,
             sort
-          })
-        )
+          });
+          logPost(post);
+          return post;
+        })
       );
     }
+    await Promise.all(promises);
 
     notify(
       `Finished! Crawling completed at at ${new Date().toLocaleTimeString()}`

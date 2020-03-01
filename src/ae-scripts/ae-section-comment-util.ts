@@ -127,27 +127,6 @@ function createCommentContentComp(
     if (subCommentLevel === 0) updateBGSizeAndPos(thisComp, keyframe);
   }
 
-  // Update UI visibility
-  // Set inPoint and outPoint for all relevant layers
-  // Also parent the layers to the null object for alignment
-  // for (let layerName of [
-  //   "comment-text",
-  //   "user-text",
-  //   "score-text",
-  //   "upvote-arrow",
-  //   "downvote-arrow",
-  //   "collapse-comment-bar",
-  //   "null-parent"
-  // ]) {
-  //   const layer = thisComp.layer(layerName) as Layer;
-  //   if (!layer)
-  //     throw new Error(
-  //       `Failed to find layer named "${layerName}" in comp "${thisComp.name}"`
-  //     );
-  //   layer.outPoint = thisComp.layer(1).outPoint;
-  //   if (layerName !== "null-parent") layer.parent = nullLayer;
-  // }
-
   // Set the outPoint of the comment comp to match the length of the contents
   thisComp.duration = thisComp.layer(1).outPoint;
 
@@ -171,7 +150,7 @@ function resizeCompToContents(comp: CompItem) {
       layer instanceof AVLayer &&
       (layer as AVLayer).source instanceof CompItem
     ) {
-      const childLayer = comp.layer(1);
+      const childLayer = layer as AVLayer;
       const childComp = getComp(childLayer.name);
       width = Math.max(
         width,

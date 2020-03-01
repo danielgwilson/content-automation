@@ -1,20 +1,6 @@
-import config from "config";
-import Crawler from "./crawler";
-import { IContext, ICrawlOptions } from "../types";
+import { IPost } from "../types";
 
-export async function crawlPost(
-  context: IContext,
-  options: ICrawlOptions = {}
-) {
-  const crawler = new Crawler(context, {
-    userAgent: config.get("REDDIT_USER_AGENT"),
-    clientId: config.get("REDDIT_CLIENT_ID"),
-    clientSecret: config.get("REDDIT_CLIENT_SECRET"),
-    refreshToken: config.get("REDDIT_REFRESH_TOKEN")
-  });
-
-  const post = await crawler.getPost(options);
-
+export function logPost(post: IPost) {
   console.log(`\n----------`);
   console.log(`Title: ${post.details.title}`);
   console.log(`Score: ${post.details.score}`);
@@ -32,6 +18,4 @@ export async function crawlPost(
   console.log(`Author: ${post.details.author}`);
   console.log(`Upvote ratio: ${post.details.upvoteRatio}`);
   console.log(`Number of comments: ${post.details.numComments}`);
-
-  return post;
 }

@@ -1,7 +1,7 @@
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
 import { createContext, notify, getPosts } from "../util";
-import { generateVideo } from "../generator";
+import Generator from "../generator";
 
 export class GenerateCommand extends Command {
   static description = `
@@ -19,13 +19,35 @@ export class GenerateCommand extends Command {
   ];
 
   static flags = {
-    ...contextFlags
+    ...contextFlags,
+    video: flags.boolean({
+      char: "v",
+      description: "output video(s) for the target processed post(s)", // help description for flag
+      hidden: false, // hide from help
+      default: true,
+      allowNo: true,
+      required: false // make flag required (this is not common and you should probably use an argument instead)
+    }),
+    thumbnail: flags.boolean({
+      char: "t",
+      description: "output thumbnail(s) for the target processed post(s)", // help description for flag
+      hidden: false, // hide from help
+      default: false,
+      required: false // make flag required (this is not common and you should probably use an argument instead)
+    })
   };
 
   async run() {
     const { args, flags } = this.parse(GenerateCommand);
     const { path } = args;
-    const { outputDir, resourceDir, saveOutputToFile, debug } = flags;
+    const {
+      outputDir,
+      resourceDir,
+      saveOutputToFile,
+      debug,
+      video,
+      thumbnail
+    } = flags;
 
     const context = createContext({
       outputDir,
@@ -37,9 +59,21 @@ export class GenerateCommand extends Command {
     notify(`Started generating media at ${new Date().toLocaleTimeString()}`);
 
     const posts = getPosts(path, { type: "processor" });
-    await Promise.all(
-      posts.map(async post => await generateVideo(post, context))
-    );
+
+    // Create new Generator and output results
+    const generator = new Generator(context);
+    const promises: Promise<any>[] = [];
+    if (video) {
+      promises.push(
+        ...posts.map(async post => await generator.generateVideo(post))
+      );
+    }
+    if (thumbnail) {
+      promises.push(
+        ...posts.map(async post => await generator.generateThumbnail(post))
+      );
+    }
+    await Promise.all(promises);
 
     notify(`Finished! Job completed at ${new Date().toLocaleTimeString()}`);
   }

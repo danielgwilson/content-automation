@@ -1,6 +1,7 @@
 import path from "path";
 import { IContext, IProcessedPost, IGeneratorOutput } from "../types";
-import { generateVideo } from "./video/render/generate-video";
+import { renderVideo } from "./video/render";
+import { renderThumbnail } from "./video/thumbnail";
 import { saveObjectToJson } from "../util";
 import { performance } from "perf_hooks";
 
@@ -10,13 +11,13 @@ export default class Generator {
     this.context = context;
   }
 
-  async generate(post: IProcessedPost) {
+  async generateVideo(post: IProcessedPost) {
     const { resourceDir, saveOutputToFile, debug } = this.context;
     const subDir = `/${post.id}/`;
     const outputDir = path.join(this.context.outputDir, subDir);
     const t0 = performance.now();
 
-    const renderOutput = await generateVideo(post, {
+    const renderOutput = await renderVideo(post, {
       outputDir,
       resourceDir,
       debug
@@ -38,7 +39,7 @@ export default class Generator {
     );
 
     if (saveOutputToFile) {
-      const fileName = `${generatorOutput.id}.generator.json`;
+      const fileName = `${generatorOutput.id}.video.generator.json`;
       await saveObjectToJson(generatorOutput, {
         fileName,
         outputDir
@@ -47,5 +48,18 @@ export default class Generator {
     }
 
     return generatorOutput;
+  }
+
+  async generateThumbnail(post: IProcessedPost) {
+    const { resourceDir, saveOutputToFile, debug } = this.context;
+    const subDir = `/${post.id}/`;
+    const outputDir = path.join(this.context.outputDir, subDir);
+
+    const thumbnail = await renderThumbnail(post.details.title, {
+      outputDir,
+      resourceDir,
+      saveOutputToFile,
+      debug
+    } as IContext);
   }
 }

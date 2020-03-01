@@ -2,7 +2,7 @@ import path from "path";
 import puppeteer from "puppeteer";
 import { IContext } from "../../../types";
 
-export async function generateThumbnail(title: string, context: IContext) {
+export async function renderThumbnail(title: string, context: IContext) {
   const { outputDir, debug } = context;
   const { page, browser } = await getTemplatePage(context);
 

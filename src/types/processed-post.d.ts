@@ -9,6 +9,8 @@ export interface IProcessedPost {
 }
 
 export interface IProcessedPostDetails {
+  postId: string;
+  title: string;
   subredditName: string;
   numComments: number;
   upvoteRatio: number;
@@ -28,6 +30,7 @@ export interface IPostSection {
 
   author: string;
   score: number;
+  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
 
   children: IPostSection[];
 }

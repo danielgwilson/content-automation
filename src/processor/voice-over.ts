@@ -38,7 +38,7 @@ export default class VoiceOverClient {
     // Set up rate limiter
     this.limiter = new Bottleneck({
       maxConcurrent: 10,
-      minTime: 500,
+      minTime: 250,
       reservoir: 300,
       reservoirRefreshInterval: 1000 * 60,
       reservoirRefreshAmount: 300

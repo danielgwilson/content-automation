@@ -29,9 +29,13 @@ export default class {
       clientSecret,
       refreshToken
     });
+    this.r.config({
+      requestDelay: 25, // 40/sec
+      continueAfterRatelimitError: true
+    });
   }
 
-  async getPost(options: ICrawlOptions): Promise<IPost> {
+  async getPost(options: ICrawlOptions = {}): Promise<IPost> {
     let targetPost: snoowrap.Submission;
     if (options.postId) {
       // @ts-ignore - necessary due to snoowrap await / then bug

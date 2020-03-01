@@ -1,1 +1,1 @@
-export { generateThumbnail } from "./generate-thumbnail";
+export { renderThumbnail } from "./render-thumbnail";

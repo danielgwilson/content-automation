@@ -59,6 +59,8 @@ export default class {
     } as IProcessedPostStats;
 
     const postDetails = {
+      postId: post.details.postId,
+      title: post.details.title,
       subredditName: post.details.subredditName,
       numComments: post.details.numComments,
       upvoteRatio: post.details.upvoteRatio,

@@ -1,10 +1,11 @@
+import config from "config";
 import Command from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
 import { createContext, notify } from "../util";
-import { processPost } from "../processor";
-import { generateVideo } from "../generator";
-import { generateThumbnail } from "../generator/video/thumbnail";
-import { crawlPost } from "../crawler/crawl-post";
+import Processor from "../processor";
+import Generator from "../generator";
+import Crawler from "../crawler";
+import { logPost } from "../util";
 
 export class DemoCommand extends Command {
   static description = `
@@ -27,10 +28,28 @@ export class DemoCommand extends Command {
       debug
     });
 
-    const post = await crawlPost(context);
-    const processedPost = await processPost(post, context);
-    await generateVideo(processedPost, context);
-    await generateThumbnail(post.details.title, context);
+    // Crawl first AskReddit post sorted by "hot"
+    const crawler = new Crawler(context, {
+      userAgent: config.get("REDDIT_USER_AGENT"),
+      clientId: config.get("REDDIT_CLIENT_ID"),
+      clientSecret: config.get("REDDIT_CLIENT_SECRET"),
+      refreshToken: config.get("REDDIT_REFRESH_TOKEN")
+    });
+    const post = await crawler.getPost();
+    logPost(post);
+
+    // Process post
+    const processor = new Processor(context, {
+      GOOGLE_APPLICATION_CREDENTIALS: config.get(
+        "GOOGLE_APPLICATION_CREDENTIALS"
+      )
+    });
+    const processedPost = await processor.process(post);
+
+    // Generate video and thumbnail
+    const generator = new Generator(context);
+    await generator.generateVideo(processedPost);
+    await generator.generateThumbnail(processedPost);
 
     notify(`Finished! Demo completed at ${new Date().toLocaleTimeString()}`);
   }

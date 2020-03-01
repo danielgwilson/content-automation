@@ -1,5 +1,6 @@
 import { IPostSectionFragment } from "../types";
 import VoiceOverClient from "./voice-over";
+import { getSentences } from "./util";
 
 export async function getFragments({
   text,
@@ -40,10 +41,4 @@ export function getAudioLengthForFragments(fragments: IPostSectionFragment[]) {
   return fragments
     .map(fragment => fragment.audio.length)
     .reduce((a, b) => a + b, 0);
-}
-
-function getSentences(text: string) {
-  return text
-    .replace(/(\.+|\:|\!|\?)(\"*|\'*|\)*|}*|]*)(\s|\n|\r|\r\n)/gm, "$1$2|")
-    .split("|");
 }
