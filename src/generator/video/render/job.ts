@@ -1,11 +1,9 @@
 import path from "path";
-import { IProcessedPost } from "../../../types/post";
-import {
-  getAssetForMatchCompDurationToContents,
-  getAssetForSetAttribute,
-  getAssetForSetAttributeToParentAttribute
-} from "./assets/assets";
-import { getSrcForPath } from "./assets/util";
+import { IProcessedPost } from "../../../types";
+
+function getSrcForPath(filePath: string) {
+  return `file://${filePath}`;
+}
 
 export function getJob(
   post: IProcessedPost,
@@ -15,12 +13,13 @@ export function getJob(
     compName
   }: { outputDir: string; resourceDir: string; compName: string }
 ) {
+  const resourceDirPath = path.resolve(resourceDir);
   const AUDIO_LEVEL_BG = -10.0;
   const AUDIO_LEVEL_VOICE = 3.0;
   const job: any = {
     template: {
       src: getSrcForPath(
-        path.join(resourceDir, "/after-effects/", "reddit-template.aep")
+        path.join(resourceDirPath, "/after-effects/", "reddit-template.aep")
       ),
       composition: compName
     },
@@ -44,7 +43,7 @@ export function getJob(
   job.assets.push({
     type: "script",
     src: getSrcForPath(
-      path.join(resourceDir, "/ae-scripts/", "ae-section-title.js")
+      path.join(resourceDirPath, "/ae-scripts/", "ae-section-title.js")
     ),
     keyword: "SECTION_TITLE_PARAMS",
     parameters: [
@@ -61,7 +60,7 @@ export function getJob(
     job.assets.push({
       type: "script",
       src: getSrcForPath(
-        path.join(resourceDir, "/ae-scripts/", "ae-section-comment.js")
+        path.join(resourceDirPath, "/ae-scripts/", "ae-section-comment.js")
       ),
       keyword: "SECTION_COMMENT_PARAMS",
       parameters: [
@@ -75,7 +74,7 @@ export function getJob(
   job.assets.push({
     type: "script",
     src: getSrcForPath(
-      path.join(resourceDir, "/ae-scripts/", "ae-assemble-main.js")
+      path.join(resourceDirPath, "/ae-scripts/", "ae-assemble-main.js")
     ),
     keyword: "ASSEMBLE_MAIN_PARAMS",
     parameters: [
@@ -95,13 +94,13 @@ export function getJob(
   // Background
   job.assets.push({
     type: "script",
-    src: getSrcForPath(path.join(resourceDir, "/ae-scripts/", "ae-bg.js")),
+    src: getSrcForPath(path.join(resourceDirPath, "/ae-scripts/", "ae-bg.js")),
     keyword: "BG_PARAMS",
     parameters: [
       { key: "compName", value: compName },
       {
         key: "filePath",
-        value: path.join(resourceDir, "/bg-music/", "Sunshine_Samba.mp3")
+        value: path.join(resourceDirPath, "/bg-music/", "Sunshine_Samba.mp3")
       },
       { key: "audioLevel", value: AUDIO_LEVEL_BG }
       // {

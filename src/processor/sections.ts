@@ -1,52 +1,62 @@
-import { IPost, IPostSection, IPostComment } from "../types/post";
+import { IPost, IPostSection, IPostComment } from "../types";
 import VoiceOverClient from "./voice-over";
 import { getFragments, getAudioLengthForFragments } from "./fragments";
-import { getCleanText } from "./clean-text";
+import { getCleanText } from "./util/clean-text";
+import { Gildings } from "snoowrap/dist/objects/VoteableContent";
 
 export async function getSections(
   post: IPost,
-  voiceOverClient: VoiceOverClient
+  voiceOverClient: VoiceOverClient,
+  outputDir: string
 ) {
   const sections = await Promise.all([
     getSectionForTitle(
       {
-        text: post.title,
-        author: post.author,
-        score: post.score
+        text: post.details.title,
+        author: post.details.author,
+        score: post.details.score,
+        gildings: post.details.gildings
       },
-      { voiceOverClient, fileNamePrefix: `${post.id}-${0}` }
+      {
+        voiceOverClient,
+        fileNamePrefix: `${post.id}-${0}`,
+        outputDir
+      }
     ),
     ...post.comments.map((comment, i) => {
       return getSectionForComment(comment, {
         voiceOverClient,
-        fileNamePrefix: `${post.id}-${i + 1}`
+        fileNamePrefix: `${post.id}-${i + 1}`,
+        outputDir
       });
     })
   ]);
-
-  const totalCharacters = getCharacters(sections);
-  const totalAudioLength = getAudioLengthForSections(sections);
-  console.log(`\nTotal characters converted to audio: ${totalCharacters}`);
-  console.log(
-    `Aggregate length of audio files: ${new Date(totalAudioLength * 1000)
-      .toISOString()
-      .substr(11, 8)}\n`
-  );
 
   return sections;
 }
 
 async function getSectionForTitle(
-  { text, score, author }: { text: string; score: number; author: string },
+  {
+    text,
+    score,
+    author,
+    gildings
+  }: { text: string; score: number; author: string; gildings: Gildings },
   {
     voiceOverClient,
-    fileNamePrefix
-  }: { voiceOverClient: VoiceOverClient; fileNamePrefix: string }
+    fileNamePrefix,
+    outputDir
+  }: {
+    voiceOverClient: VoiceOverClient;
+    fileNamePrefix: string;
+    outputDir: string;
+  }
 ): Promise<IPostSection> {
   const fragments = await getFragments({
     text: getCleanText(text),
     voiceOverClient,
     fileNamePrefix,
+    outputDir,
     splitBySentence: false
   });
   return {
@@ -56,22 +66,29 @@ async function getSectionForTitle(
 
     score,
     author,
+    gildings,
 
     children: []
   } as IPostSection;
 }
 
 async function getSectionForComment(
-  { body, score, author, replies }: IPostComment,
+  { body, score, author, gildings, replies }: IPostComment,
   {
     voiceOverClient,
+    outputDir,
     fileNamePrefix
-  }: { voiceOverClient: VoiceOverClient; fileNamePrefix: string }
+  }: {
+    voiceOverClient: VoiceOverClient;
+    outputDir: string;
+    fileNamePrefix: string;
+  }
 ): Promise<IPostSection> {
   const fragments = await getFragments({
     text: getCleanText(body),
     voiceOverClient,
     fileNamePrefix,
+    outputDir,
     splitBySentence: true
   });
   return {
@@ -81,11 +98,13 @@ async function getSectionForComment(
 
     score,
     author,
+    gildings,
 
     children: await Promise.all(
       replies.map((reply, i) =>
         getSectionForComment(reply, {
           voiceOverClient,
+          outputDir,
           fileNamePrefix: `${fileNamePrefix}-${i}`
         })
       )
@@ -103,6 +122,11 @@ export function getCharacters(sections: IPostSection[]) {
     .reduce((a, b) => a + b, 0);
 }
 
-export function getAudioLengthForSections(sections: IPostSection[]) {
-  return sections.map(section => section.length).reduce((a, b) => a + b, 0);
+export function getAudioLengthForSections(sections: IPostSection[]): number {
+  return sections
+    .map(section => {
+      const childLength = getAudioLengthForSections(section.children);
+      return section.length + childLength;
+    })
+    .reduce((a, b) => a + b, 0);
 }

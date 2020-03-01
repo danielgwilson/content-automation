@@ -1,29 +1,48 @@
 import fs from "fs";
 import util from "util";
 import path from "path";
+import Bottleneck from "bottleneck";
 import textToSpeech from "@google-cloud/text-to-speech";
-import { IPost, IPostSectionFragmentAudio } from "../types/post";
+import { writeFile } from "../util";
+import { IPostSectionFragmentAudio } from "../types";
+import { IContext } from "../types";
 
-export default class {
-  outputDir: string;
+interface IVoice {
+  languageCode: string;
+  name: string;
+  ssmlGender: string;
+}
+
+interface IAudioConfig {
+  audioEncoding: string;
+  speakingRate: number;
+}
+
+interface ITextToSpeechRequest {
+  input: { text: string };
+  voice: IVoice;
+  audioConfig: IAudioConfig;
+}
+
+export default class VoiceOverClient {
+  limiter: Bottleneck;
+
   client: any;
-  voice: {
-    languageCode: string;
-    name: string;
-    ssmlGender: string;
-  };
-  audioConfig: {
-    audioEncoding: string;
-    speakingRate: number;
-  };
+  voice: IVoice;
+  audioConfig: IAudioConfig;
   constructor({
-    outputDir,
     GOOGLE_APPLICATION_CREDENTIALS
   }: {
-    outputDir: string;
     GOOGLE_APPLICATION_CREDENTIALS: string;
   }) {
-    this.outputDir = outputDir;
+    // Set up rate limiter
+    this.limiter = new Bottleneck({
+      maxConcurrent: 10,
+      minTime: 250,
+      reservoir: 300,
+      reservoirRefreshInterval: 1000 * 60,
+      reservoirRefreshAmount: 300
+    });
 
     // Creates a Google Cloud Text-to-Speech client
     process.env[
@@ -41,21 +60,29 @@ export default class {
     };
   }
 
-  async fetchVoiceOver({ text, fileName }: { text: string; fileName: string }) {
+  async fetchVoiceOver({
+    text,
+    fileName,
+    outputDir
+  }: {
+    text: string;
+    fileName: string;
+    outputDir: string;
+  }) {
     // Performs the text-to-speech request
-    const request = {
+    const request: ITextToSpeechRequest = {
       input: { text },
       voice: this.voice,
       audioConfig: this.audioConfig
     };
-    const [response] = await this.client.synthesizeSpeech(request);
+    const { client } = this;
+    const synthesizeSpeech = async (request: ITextToSpeechRequest) => {
+      return await client.synthesizeSpeech(request);
+    };
+    const [response] = await this.limiter.schedule(synthesizeSpeech, request);
 
     // Write the binary audio content to a local file
-    const writeFile = util.promisify(fs.writeFile);
-    const filePath = path.join(this.outputDir, fileName);
-    if (!fs.existsSync(this.outputDir)) {
-      fs.mkdirSync(this.outputDir);
-    }
+    const filePath = path.resolve(path.join(outputDir, fileName));
     await writeFile(filePath, response.audioContent, "binary");
 
     /* 

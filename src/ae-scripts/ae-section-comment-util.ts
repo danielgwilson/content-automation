@@ -1,4 +1,4 @@
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 interface ContentComp {
   comp: CompItem;
@@ -11,7 +11,7 @@ interface ContentComp {
 function createCommentContentComp(
   refComp: CompItem,
   newCompName: string,
-  section: import("../types/post").IPostSection,
+  section: import("../types/processed-post").IPostSection,
   audioLevelVoice: number,
   subCommentLevel: number = 0
 ): ContentComp {
@@ -127,31 +127,13 @@ function createCommentContentComp(
     if (subCommentLevel === 0) updateBGSizeAndPos(thisComp, keyframe);
   }
 
-  // Update UI visibility
-  // Set inPoint and outPoint for all relevant layers
-  // Also parent the layers to the null object for alignment
-  // for (let layerName of [
-  //   "comment-text",
-  //   "user-text",
-  //   "score-text",
-  //   "upvote-arrow",
-  //   "downvote-arrow",
-  //   "collapse-comment-bar",
-  //   "null-parent"
-  // ]) {
-  //   const layer = thisComp.layer(layerName) as Layer;
-  //   if (!layer)
-  //     throw new Error(
-  //       `Failed to find layer named "${layerName}" in comp "${thisComp.name}"`
-  //     );
-  //   layer.outPoint = thisComp.layer(1).outPoint;
-  //   if (layerName !== "null-parent") layer.parent = nullLayer;
-  // }
-
   // Set the outPoint of the comment comp to match the length of the contents
   thisComp.duration = thisComp.layer(1).outPoint;
 
   resizeCompToContents(thisComp);
+
+  // Change color scheme to light mode
+  setColorControls(thisComp);
 
   return { comp: thisComp, keyframes };
 }
@@ -168,7 +150,7 @@ function resizeCompToContents(comp: CompItem) {
       layer instanceof AVLayer &&
       (layer as AVLayer).source instanceof CompItem
     ) {
-      const childLayer = comp.layer(1);
+      const childLayer = layer as AVLayer;
       const childComp = getComp(childLayer.name);
       width = Math.max(
         width,
@@ -206,7 +188,7 @@ function resizeCompToContents(comp: CompItem) {
 
 // Handle reply comments
 function addChildren(
-  children: import("../types/post").IPostSection[],
+  children: import("../types/processed-post").IPostSection[],
   comp: CompItem,
   refComp: CompItem,
   newCompName: string,

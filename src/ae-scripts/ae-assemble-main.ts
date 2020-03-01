@@ -1,5 +1,5 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/build/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 (() => {
   // Check if required parameters are present

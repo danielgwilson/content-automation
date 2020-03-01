@@ -15,6 +15,21 @@ function getComp(compName: string) {
   return comp;
 }
 
+function getAVItem(itemName: string) {
+  let item: AVItem | undefined;
+  for (let i = 1; i <= app.project.numItems; i++) {
+    if (
+      app.project.item(i) instanceof AVItem &&
+      app.project.item(i).name === itemName
+    ) {
+      item = app.project.item(i) as AVItem;
+      break;
+    }
+  }
+  if (!item) throw new Error(`Failed to find comp named ${itemName}`);
+  return item;
+}
+
 function importFootage(filePath: string) {
   const file = new File(filePath);
 
@@ -166,3 +181,57 @@ function getFootageItem(itemName: string) {
   if (!item) throw new Error(`Failed to find item named ${itemName}`);
   return item;
 }
+
+function get3Digits(num: number) {
+  if (num < 999) return `${num}`;
+  else if (num < 99999) return `${Math.round(num / 100) / 10}k`;
+  else return `${Math.round(num / 1000)}k`;
+}
+
+function setColorControls(comp: CompItem) {
+  const colorControlsLayer = comp.layer("color-controls");
+
+  setColorControl(colorControlsLayer, "text-color", [22, 22, 23]);
+  setColorControl(colorControlsLayer, "text-color-alt", [135, 138, 140]);
+  setColorControl(colorControlsLayer, "stroke-color", [204, 204, 204]);
+  setColorControl(colorControlsLayer, "bar-color", [237, 239, 241]);
+  setColorControl(colorControlsLayer, "main", [255, 255, 255]);
+  setColorControl(colorControlsLayer, "accent", [252, 252, 252]);
+  setColorControl(colorControlsLayer, "bg", [238, 238, 238]);
+}
+
+function setColorControl(
+  layer: Layer,
+  control: string,
+  value: [number, number, number]
+) {
+  var adjustedValues = [value[0] / 255, value[1] / 255, value[2] / 255];
+  var effects = layer.property("Effects");
+  var colorControl = effects.property(control);
+  var color = colorControl.property("Color");
+  (color as any).setValue(adjustedValues);
+}
+
+// function addGold(
+//   comp: CompItem,
+//   referenceLayer: Layer,
+//   amounts: [number, number, number]
+// ) {
+//   let refLayer = referenceLayer;
+//   const types = ["silver", "gold", "platinum"];
+//   for (let i = types.length - 1; i >= 0; i--) {
+//     const type = types[i];
+//     if (amounts[i] > 0) {
+//       const item = getAVItem(`${type}_512.png`);
+//       const itemLayer = comp.layers.add(item);
+//       itemLayer.scale.setValue([0.078125, 0.078125]); // 40px / 512px
+//       if (amounts[i] > 1) {
+//         const textDoc = new TextDocument(`${amounts[i]}`);
+//         textDoc.
+//         const textLayer = comp.layers.addText("");
+//       }
+
+//       xOffset;
+//     }
+//   }
+// }

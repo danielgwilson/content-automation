@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`voice-over Fetches voice over audio files 1`] = `
+Object {
+  "audioConfig": Object {
+    "audioEncoding": "MP3",
+    "speakingRate": 1,
+  },
+  "fileName": "test-voice-over.mp3",
+  "filePath": "temp/test/test-voice-over.mp3",
+  "length": 2.544,
+  "voice": Object {
+    "languageCode": "en-US",
+    "name": "en-US-Wavenet-B",
+    "ssmlGender": "MALE",
+  },
+}
+`;
