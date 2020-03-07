@@ -15,6 +15,7 @@ export interface ICrawlOptions {
 
   subredditName?: string;
   postIndex?: number;
+  nPosts?: number;
 
   minWords?: number;
   maxReplyDepth?: number;
@@ -29,21 +30,30 @@ export interface ICrawlOptions {
 
 export interface IPostDetails {
   postId: string;
-  subredditName: string;
-  subredditIconURI: string;
+  subreddit: ISubreddit;
   title: string;
   score: number;
   upvoteRatio: number;
   author: string;
   numComments: number;
-  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
+  gildings: IGildings;
 }
 
 export interface IPostComment {
   author: string;
   score: number;
   body: string;
-  body_html: string;
-  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
+  gildings: IGildings;
   replies: IPostComment[];
+}
+
+export interface ISubreddit {
+  name: string;
+  iconUri: string;
+}
+
+export interface IGildings {
+  silver?: number;
+  gold?: number;
+  platinum?: number;
 }

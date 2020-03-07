@@ -1,5 +1,3 @@
-import fs from "fs";
-import util from "util";
 import path from "path";
 import Bottleneck from "bottleneck";
 import textToSpeech from "@google-cloud/text-to-speech";
@@ -82,7 +80,7 @@ export default class VoiceOverClient {
     const [response] = await this.limiter.schedule(synthesizeSpeech, request);
 
     // Write the binary audio content to a local file
-    const filePath = path.resolve(path.join(outputDir, fileName));
+    const filePath = path.resolve(path.join(outputDir, "voice-over", fileName));
     await writeFile(filePath, response.audioContent, "binary");
 
     /* 

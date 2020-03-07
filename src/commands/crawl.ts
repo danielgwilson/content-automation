@@ -1,4 +1,3 @@
-import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
 import { createContext, notify, logPost } from "../util";
@@ -118,15 +117,10 @@ export class CrawlCommand extends Command {
 
     notify(`Started crawling post at ${new Date().toLocaleTimeString()}`);
 
-    const crawler = new Crawler(context, {
-      userAgent: config.get("REDDIT_USER_AGENT"),
-      clientId: config.get("REDDIT_CLIENT_ID"),
-      clientSecret: config.get("REDDIT_CLIENT_SECRET"),
-      refreshToken: config.get("REDDIT_REFRESH_TOKEN")
-    });
+    const crawler = new Crawler(context);
 
     const promises: Promise<IPost>[] = [];
-    if (postId.length > 0) {
+    if (postId && postId.length > 0) {
       promises.push(
         ...postId.map(async id => {
           const post = await crawler.getPost({
@@ -145,17 +139,18 @@ export class CrawlCommand extends Command {
         postIndex
       );
       promises.push(
-        ...postIndeces.map(async i => {
-          const post = await crawler.getPost({
+        new Promise(async resolve => {
+          const posts = await crawler.getPostsFromSubreddit({
             subredditName,
-            postIndex: postIndex + i,
+            postIndex: postIndex,
+            nPosts: nPosts,
             minWords,
             maxReplyDepth,
             maxRepliesPerComment,
             sort
           });
-          logPost(post);
-          return post;
+          posts.map(post => logPost(post));
+          return resolve(...posts);
         })
       );
     }

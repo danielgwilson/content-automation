@@ -3,5 +3,6 @@
   "files.associations": {
     "*.jsx": "javascript",
     "*.debug": "xml"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

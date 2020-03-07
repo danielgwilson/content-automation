@@ -55,7 +55,7 @@
   // Update subreddit name
   updateTextLayer(
     { name: "subreddit-text", comp },
-    "r/" + postDetails.subredditName
+    "r/" + postDetails.subreddit.name
   );
 
   // Update author name

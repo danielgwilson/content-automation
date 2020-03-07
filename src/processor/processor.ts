@@ -40,7 +40,7 @@ export default class {
 
     const [sections, subredditIcon] = await Promise.all([
       await getSections(post, this.voiceOverClient, outputDir),
-      await fetchAndSaveFile(post.details.subredditIconURI, {
+      await fetchAndSaveFile(post.details.subreddit.iconUri, {
         fileName: "subreddit-icon.png",
         outputDir
       })
@@ -61,7 +61,7 @@ export default class {
     const postDetails = {
       postId: post.details.postId,
       title: post.details.title,
-      subredditName: post.details.subredditName,
+      subredditName: post.details.subreddit.name,
       numComments: post.details.numComments,
       upvoteRatio: post.details.upvoteRatio,
       subredditIcon
