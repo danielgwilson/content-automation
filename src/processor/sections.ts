@@ -1,8 +1,7 @@
-import { IPost, IPostSection, IPostComment } from "../types";
+import { IPost, IPostSection, IPostComment, IGildings } from "../types";
 import VoiceOverClient from "./voice-over";
 import { getFragments, getAudioLengthForFragments } from "./fragments";
 import { getCleanText } from "./util/clean-text";
-import { Gildings } from "snoowrap/dist/objects/VoteableContent";
 
 export async function getSections(
   post: IPost,
@@ -41,7 +40,7 @@ async function getSectionForTitle(
     score,
     author,
     gildings
-  }: { text: string; score: number; author: string; gildings: Gildings },
+  }: { text: string; score: number; author: string; gildings: IGildings },
   {
     voiceOverClient,
     fileNamePrefix,

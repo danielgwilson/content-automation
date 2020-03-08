@@ -9,6 +9,7 @@ export {
 } from "./post";
 export {
   IProcessedPost,
+  IProcessedPostOptions,
   IProcessedPostDetails,
   IPostSection,
   IPostSectionFragment,

@@ -4,6 +4,7 @@ import { IContext } from "../../../types";
 const context: IContext = {
   outputDir: "./",
   resourceDir: "./resources/",
+  saveOutputToFile: true,
   debug: false
 };
 

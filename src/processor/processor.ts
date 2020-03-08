@@ -4,7 +4,8 @@ import {
   IPost,
   IProcessedPost,
   IProcessedPostDetails,
-  IProcessedPostStats
+  IProcessedPostStats,
+  IProcessedPostOptions
 } from "../types";
 import VoiceOverClient from "./voice-over";
 import {
@@ -13,7 +14,7 @@ import {
   getAudioLengthForSections
 } from "./sections";
 import { saveObjectToJson } from "../util";
-import { fetchAndSaveFile } from "./fetch-and-save-file";
+import { fetchAndSaveFile } from "./util/fetch-and-save-file";
 
 export default class {
   context: IContext;
@@ -32,8 +33,12 @@ export default class {
     });
   }
 
-  async process(post: IPost): Promise<IProcessedPost> {
+  async process(
+    post: IPost,
+    options: IProcessedPostOptions
+  ): Promise<IProcessedPost> {
     const { saveOutputToFile } = this.context;
+    const { maxRepliesPerComment, maxReplyDepth, minAudioLength } = options;
     const subDir = `/${post.id}/`;
     const outputDir = path.join(this.context.outputDir, subDir);
     const dateProcessed = new Date();

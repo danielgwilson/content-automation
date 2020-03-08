@@ -1,3 +1,4 @@
+import { URL, URLSearchParams } from "url";
 import fetch from "node-fetch";
 import { ISubreddit } from "../../types";
 
@@ -10,8 +11,10 @@ export async function getSubreddit(name: string) {
 
 async function fetchSubredditJson(subreddit: string) {
   const uri = "https://www.reddit.com";
+  const endpoint = "about";
+  const url = new URL(`${uri}/r/${subreddit}/about.json`);
 
-  const result = await fetch(`${uri}/r/${subreddit}.json`);
+  const result = await fetch(url);
   const json = await result.json();
 
   return json;

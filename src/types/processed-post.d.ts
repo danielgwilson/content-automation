@@ -10,6 +10,12 @@ export interface IProcessedPost {
   sections: IPostSection[];
 }
 
+export interface IProcessedPostOptions {
+  maxReplyDepth?: number;
+  maxRepliesPerComment?: number;
+  minAudioLength?: number;
+}
+
 export interface IProcessedPostDetails {
   postId: string;
   title: string;

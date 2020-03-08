@@ -57,6 +57,7 @@
     "@types/node-notifier": "^5.4.0",
     "@types/remove-markdown": "^0.1.1",
     "@types/uuid": "^7.0.0",
+    "acorn": "^7.1.1",
     "azure-cognitiveservices-websearch": "^2.0.0",
     "bottleneck": "^2.19.5",
     "canvas": "^2.6.1",

@@ -52,7 +52,7 @@ function parseComments(comments: any[]): IPostComment[] {
         score,
         body,
         gildings: parseGildings(gildings),
-        replies: replies.length > 0 ? parseComments(replies.data.children) : []
+        replies: replies.data ? parseComments(replies.data.children) : []
       } as IPostComment;
     });
 }

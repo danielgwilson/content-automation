@@ -17,9 +17,6 @@ export interface ICrawlOptions {
   postIndex?: number;
   nPosts?: number;
 
-  minWords?: number;
-  maxReplyDepth?: number;
-  maxRepliesPerComment?: number;
   sort?:
     | { type: "hot" }
     | {
