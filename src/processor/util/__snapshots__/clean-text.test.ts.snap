@@ -1,3 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Clean Text Produce clean text 1`] = `"Fuck, does markdown work? I hope not."`;
+
+exports[`Clean Text Removes quotes 1`] = `
+"
+       My cool quote here.
+      This should all be fine! :D
+"
+`;

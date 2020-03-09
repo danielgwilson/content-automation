@@ -9,7 +9,7 @@ describe("Trim Comments", () => {
 
   it("Trims excess replies", () => {
     const trimmedPost = trimComments(samplePost, {
-      maxCommentDepth: 3,
+      maxReplyDepth: 3,
       maxRepliesPerComment: 2
     });
     expect(trimmedPost).toMatchSnapshot();

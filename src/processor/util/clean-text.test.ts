@@ -7,4 +7,14 @@ describe("Clean Text", () => {
     const cleanText = getCleanText(text);
     expect(cleanText).toMatchSnapshot();
   });
+
+  it("Removes quotes", () => {
+    const text = `
+      &gt; My cool quote here.
+      This should all be fine! :D
+    `;
+    const cleanText = getCleanText(text);
+
+    expect(cleanText).toMatchSnapshot();
+  });
 });

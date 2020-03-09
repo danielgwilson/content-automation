@@ -6,6 +6,7 @@ export function getCleanText(text: string) {
   cleanText = removeBadCharacters(cleanText);
   // cleanText = removeProfanity(cleanText);
   cleanText = removeMd(cleanText);
+  cleanText = removeQuotes(cleanText);
 
   return cleanText;
 }
@@ -34,4 +35,9 @@ function removeProfanity(text: string) {
     cleanText = cleanText.replace(new RegExp(item.word, "gi"), item.alt);
   }
   return cleanText;
+}
+
+// TODO: should actually render quotes
+function removeQuotes(text: string) {
+  return text.replace(new RegExp("&gt;", "gi"), "");
 }

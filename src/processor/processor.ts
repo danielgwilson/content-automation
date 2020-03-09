@@ -14,7 +14,7 @@ import {
   getAudioLengthForSections
 } from "./sections";
 import { saveObjectToJson } from "../util";
-import { fetchAndSaveFile } from "./util/fetch-and-save-file";
+import { fetchAndSaveFile, trimComments } from "./util";
 
 export default class {
   context: IContext;
@@ -35,13 +35,19 @@ export default class {
 
   async process(
     post: IPost,
-    options: IProcessedPostOptions
+    options: IProcessedPostOptions = {}
   ): Promise<IProcessedPost> {
     const { saveOutputToFile } = this.context;
-    const { maxRepliesPerComment, maxReplyDepth, minAudioLength } = options;
+    const {
+      maxRepliesPerComment = 2,
+      maxReplyDepth = 2,
+      minAudioLength
+    } = options;
     const subDir = `/${post.id}/`;
     const outputDir = path.join(this.context.outputDir, subDir);
     const dateProcessed = new Date();
+
+    post = trimComments(post, { maxRepliesPerComment, maxReplyDepth });
 
     const [sections, subredditIcon] = await Promise.all([
       await getSections(post, this.voiceOverClient, outputDir),

@@ -1,10 +1,10 @@
-import { IPost, IPostComment, IProcessedPostOptions } from "../../types";
+import { IPost, IPostComment } from "../../types";
 
 export function trimnComments() {}
 
 export function trimComments(
   post: IPost,
-  options: { maxRepliesPerComment?: number; maxCommentDepth?: number } = {}
+  options: { maxRepliesPerComment?: number; maxReplyDepth?: number } = {}
 ): IPost {
   const { comments, ...postPart } = post;
   const trimmedComments = comments.map(comment => {
@@ -18,11 +18,11 @@ export function trimComments(
 
 export function trimReplies(
   replies: IPostComment[],
-  options: { maxRepliesPerComment?: number; maxCommentDepth?: number } = {}
+  options: { maxRepliesPerComment?: number; maxReplyDepth?: number } = {}
 ): IPostComment[] {
-  const { maxRepliesPerComment, maxCommentDepth } = options;
+  const { maxRepliesPerComment, maxReplyDepth } = options;
 
-  if (maxCommentDepth === undefined || maxCommentDepth > 1) {
+  if (maxReplyDepth === undefined || maxReplyDepth > 1) {
     const trimmedReplies = maxRepliesPerComment
       ? replies.slice(0, maxRepliesPerComment)
       : replies;
@@ -34,7 +34,7 @@ export function trimReplies(
         ...replyPart,
         replies: trimReplies(replies, {
           maxRepliesPerComment,
-          maxCommentDepth: maxCommentDepth ? maxCommentDepth - 1 : undefined
+          maxReplyDepth: maxReplyDepth ? maxReplyDepth - 1 : undefined
         })
       };
     });
