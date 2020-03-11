@@ -15,6 +15,7 @@ import {
 } from "./sections";
 import { saveObjectToJson } from "../util";
 import { fetchAndSaveFile, trimComments } from "./util";
+import { trimAudio } from "./util/trim-audio";
 
 export default class {
   context: IContext;
@@ -41,7 +42,7 @@ export default class {
     const {
       maxRepliesPerComment = 2,
       maxReplyDepth = 2,
-      minAudioLength
+      maxAudioLength = 15 * 1000 * 60
     } = options;
     const subDir = `/${post.id}/`;
     const outputDir = path.join(this.context.outputDir, subDir);
@@ -56,8 +57,11 @@ export default class {
         outputDir
       })
     ]);
-    const totalCharacters = getCharacters(sections);
-    const totalAudioLength = getAudioLengthForSections(sections);
+
+    const trimmedSections = trimAudio(sections, { maxAudioLength });
+
+    const totalCharacters = getCharacters(trimmedSections);
+    const totalAudioLength = getAudioLengthForSections(trimmedSections);
     console.log(`\nTotal characters converted to audio: ${totalCharacters}`);
     console.log(
       `Aggregate length of audio files: ${new Date(totalAudioLength * 1000)
@@ -85,7 +89,7 @@ export default class {
       stats: postStats,
 
       details: postDetails,
-      sections
+      sections: trimmedSections
     } as IProcessedPost;
 
     if (saveOutputToFile) {

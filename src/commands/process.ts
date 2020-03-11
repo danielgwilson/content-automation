@@ -20,13 +20,45 @@ export class ProcessCommand extends Command {
   ];
 
   static flags = {
-    ...contextFlags
+    ...contextFlags,
+    maxRepliesPerComment: flags.integer({
+      char: "r",
+      description: "maximum number of replies to each comment (breadth)", // help description for flag
+      hidden: false, // hide from help
+      multiple: false, // allow setting this flag multiple times
+      default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
+      required: false // make flag required (this is not common and you should probably use an argument instead)
+    }),
+    maxReplyDepth: flags.integer({
+      char: "d",
+      description: "maximum number of replies deep per chain (depth)", // help description for flag
+      hidden: false, // hide from help
+      multiple: false, // allow setting this flag multiple times
+      default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
+      required: false // make flag required (this is not common and you should probably use an argument instead)
+    }),
+    maxAudioLength: flags.integer({
+      char: "l",
+      description: "maximum number of replies to each comment (breadth)", // help description for flag
+      hidden: false, // hide from help
+      multiple: false, // allow setting this flag multiple times
+      default: 15 * 1000 * 60, // default value if flag not passed (can be a function that returns a string or undefined)
+      required: false // make flag required (this is not common and you should probably use an argument instead)
+    })
   };
 
   async run() {
     const { args, flags } = this.parse(ProcessCommand);
     const { path } = args;
-    const { outputDir, resourceDir, saveOutputToFile, debug } = flags;
+    const {
+      outputDir,
+      resourceDir,
+      saveOutputToFile,
+      debug,
+      maxRepliesPerComment,
+      maxReplyDepth,
+      maxAudioLength
+    } = flags;
 
     const context = createContext({
       outputDir,
@@ -44,7 +76,16 @@ export class ProcessCommand extends Command {
         "GOOGLE_APPLICATION_CREDENTIALS"
       )
     });
-    await Promise.all(posts.map(async post => await processor.process(post)));
+    await Promise.all(
+      posts.map(
+        async post =>
+          await processor.process(post, {
+            maxRepliesPerComment,
+            maxReplyDepth,
+            maxAudioLength
+          })
+      )
+    );
 
     notify(
       `Finished! Processing completed at ${new Date().toLocaleTimeString()}`

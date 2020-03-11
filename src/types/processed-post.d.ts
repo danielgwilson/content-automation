@@ -13,7 +13,7 @@ export interface IProcessedPost {
 export interface IProcessedPostOptions {
   maxReplyDepth?: number;
   maxRepliesPerComment?: number;
-  minAudioLength?: number;
+  maxAudioLength?: number;
 }
 
 export interface IProcessedPostDetails {

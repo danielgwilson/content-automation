@@ -90,9 +90,6 @@ export class CrawlCommand extends Command {
       subredditName,
       postIndex,
       nPosts,
-      minWords,
-      maxReplyDepth,
-      maxRepliesPerComment,
       top
     } = flags;
 
@@ -125,9 +122,6 @@ export class CrawlCommand extends Command {
         ...postId.map(async id => {
           const post = await crawler.getPost({
             postId: id,
-            minWords,
-            maxReplyDepth,
-            maxRepliesPerComment,
             sort
           });
           logPost(post);
@@ -135,18 +129,12 @@ export class CrawlCommand extends Command {
         })
       );
     } else {
-      const postIndeces = [...Array(postIndex + nPosts).keys()].slice(
-        postIndex
-      );
       promises.push(
         new Promise(async resolve => {
           const posts = await crawler.getPostsFromSubreddit({
             subredditName,
             postIndex: postIndex,
             nPosts: nPosts,
-            minWords,
-            maxReplyDepth,
-            maxRepliesPerComment,
             sort
           });
           posts.map(post => logPost(post));
