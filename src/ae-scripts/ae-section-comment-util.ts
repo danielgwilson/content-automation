@@ -133,7 +133,7 @@ function createCommentContentComp(
   resizeCompToContents(thisComp);
 
   // Change color scheme to light mode
-  setColorControls(thisComp);
+  // setColorControls(thisComp);
 
   return { comp: thisComp, keyframes };
 }

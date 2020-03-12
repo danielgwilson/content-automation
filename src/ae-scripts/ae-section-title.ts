@@ -55,7 +55,7 @@
   // Update subreddit name
   updateTextLayer(
     { name: "subreddit-text", comp },
-    "r/" + postDetails.subreddit.name
+    "r/" + postDetails.subredditName
   );
 
   // Update author name
@@ -85,7 +85,7 @@
   transitionLayer.startTime = voLayer.outPoint;
 
   // Change color scheme to light mode
-  setColorControls(comp);
+  // setColorControls(comp);
 
   // Update comp outPoint to match voiceover outPoint
   comp.duration = transitionLayer.outPoint;

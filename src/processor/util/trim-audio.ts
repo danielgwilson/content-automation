@@ -1,4 +1,5 @@
 import { IPostSection } from "../../types";
+import { getAudioLengthForSections } from "../sections";
 
 export function trimAudio(
   sections: IPostSection[],
@@ -14,7 +15,9 @@ export function trimAudio(
       break;
     }
     trimmedSections.push(section);
-    totalAudioLength += section.length;
+    const sectionAudioLength =
+      section.length + getAudioLengthForSections(section.children);
+    totalAudioLength += sectionAudioLength * 1000;
   }
 
   return trimmedSections;

@@ -33,7 +33,8 @@
     // Add BG solid if no BG video
     // TODO: handle other color profiles
     const bgSolidLayer = comp.layers.addSolid(
-      [238 / 255, 238 / 255, 238 / 255],
+      // [238 / 255, 238 / 255, 238 / 255],
+      [22 / 255, 22 / 255, 23 / 255],
       "bg-solid",
       1920,
       1080,

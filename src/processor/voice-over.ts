@@ -36,7 +36,7 @@ export default class VoiceOverClient {
     // Set up rate limiter
     this.limiter = new Bottleneck({
       maxConcurrent: 10,
-      minTime: 250,
+      minTime: 200,
       reservoir: 300,
       reservoirRefreshInterval: 1000 * 60,
       reservoirRefreshAmount: 300
@@ -48,8 +48,8 @@ export default class VoiceOverClient {
     ] = GOOGLE_APPLICATION_CREDENTIALS;
     this.client = new textToSpeech.TextToSpeechClient();
     this.voice = {
-      languageCode: "en-US",
-      name: "en-US-Wavenet-B",
+      languageCode: "en-GB",
+      name: "en-GB-Wavenet-B",
       ssmlGender: "MALE"
     };
     this.audioConfig = {
