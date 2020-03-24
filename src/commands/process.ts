@@ -76,16 +76,13 @@ export class ProcessCommand extends Command {
         "GOOGLE_APPLICATION_CREDENTIALS"
       )
     });
-    await Promise.all(
-      posts.map(
-        async post =>
-          await processor.process(post, {
-            maxRepliesPerComment,
-            maxReplyDepth,
-            maxAudioLength
-          })
-      )
-    );
+    for (let post of posts) {
+      await processor.process(post, {
+        maxRepliesPerComment,
+        maxReplyDepth,
+        maxAudioLength
+      });
+    }
 
     notify(
       `Finished! Processing completed at ${new Date().toLocaleTimeString()}`

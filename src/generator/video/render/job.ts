@@ -15,7 +15,7 @@ export function getJob(
 ) {
   const resourceDirPath = path.resolve(resourceDir);
   const AUDIO_LEVEL_BG = -10.0;
-  const AUDIO_LEVEL_VOICE = 3.0;
+  const AUDIO_LEVEL_VOICE = 1.5;
   const job: any = {
     template: {
       src: getSrcForPath(
