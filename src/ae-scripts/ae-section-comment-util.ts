@@ -40,10 +40,22 @@ function createCommentContentComp(
 
     // Add voice-over audio file
     const voLayer = addLayer(importFootage(fragment.audio.filePath), thisComp, {
-      name: `audio.${fragment.audio.filePath}`
+      name: `audio.${fragment.audio.filePath}`,
     });
     voLayer.startTime = i === 0 ? 0 : thisComp.layer(2).outPoint;
     voLayer.audio.audioLevels.setValue([audioLevelVoice, audioLevelVoice]);
+
+    // Add fade out expression to avoid zero crossover point popping sounds
+    voLayer.audio.audioLevels.expression = `
+    fadeTime = 3; //frames for fade
+    audio.audioLevelsMin = -48.0; 
+    audio.audioLevelsMax = audio.audioLevels[0];
+    layerDuration = outPoint - inPoint;
+    singleFrame = thisComp.frameDuration;
+    animateOut = linear(time, (outPoint - framesToTime(fadeTime+1)), (outPoint-singleFrame), audio.audioLevelsMax, audio.audioLevelsMin);
+    [animateOut, animateOut];
+    `;
+
     voLayers.push(voLayer);
   }
   const voOutPoint = voLayers[voLayers.length - 1].outPoint;
@@ -58,7 +70,7 @@ function createCommentContentComp(
     const commentTextDoc = commentTextLayer.text.sourceText.value as any;
     commentTextDoc.boxTextSize = [
       commentTextDoc.boxTextSize[0] - xOffset,
-      commentTextDoc.boxTextSize[1]
+      commentTextDoc.boxTextSize[1],
     ];
     commentTextLayer.text.sourceText.setValue(commentTextDoc);
   }
@@ -245,7 +257,7 @@ function addChildren(
       const { time, height } = keyframe;
       adjustedKeyframes.push({
         time: time + contentCompLayer.startTime,
-        height: height + (contentCompLayer.position.value as number[])[1]
+        height: height + (contentCompLayer.position.value as number[])[1],
       });
     }
     contentComps.push({ comp: contentComp.comp, keyframes: adjustedKeyframes });

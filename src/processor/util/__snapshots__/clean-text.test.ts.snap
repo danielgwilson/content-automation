@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Clean Text Keeps line breaks 1`] = `
+"Line1
+
+Line2"
+`;
+
 exports[`Clean Text Produce clean text 1`] = `"Fuck, does markdown work? I hope not."`;
 
 exports[`Clean Text Removes quotes 1`] = `

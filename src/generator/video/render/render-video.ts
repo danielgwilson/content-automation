@@ -7,13 +7,20 @@ export async function renderVideo(
   {
     outputDir,
     resourceDir,
-    debug = false
-  }: { outputDir: string; resourceDir: string; debug?: boolean }
+    debug = false,
+    bgMusic
+  }: {
+    outputDir: string;
+    resourceDir: string;
+    debug?: boolean;
+    bgMusic: string;
+  }
 ) {
   const job = getJob(post, {
     outputDir,
     resourceDir,
-    compName: "reddit-template-01"
+    compName: "reddit-template-01",
+    bgMusic
   });
   const settings = {
     workpath: outputDir,

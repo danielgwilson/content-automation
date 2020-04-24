@@ -19,7 +19,7 @@
     author,
     score,
     audioLevelVoice,
-    postDetails
+    postDetails,
   } = SECTION_TITLE_PARAMS;
 
   const refComp = getComp(compName);
@@ -38,9 +38,20 @@
 
   // Add voiceover audio file
   const voLayer = addLayer(importFootage(fragments[0].audio.filePath), comp, {
-    name: `audio.${fragments[0].audio.filePath}`
+    name: `audio.${fragments[0].audio.filePath}`,
   });
   voLayer.audio.audioLevels.setValue([audioLevelVoice, audioLevelVoice]);
+
+  // Add fade out expression to avoid zero crossover point popping sounds
+  voLayer.audio.audioLevels.expression = `
+  fadeTime = 3; //frames for fade
+  audio.audioLevelsMin = -48.0; 
+  audio.audioLevelsMax = audio.audioLevels[0];
+  layerDuration = outPoint - inPoint;
+  singleFrame = thisComp.frameDuration;
+  animateOut = linear(time, (outPoint - framesToTime(fadeTime+1)), (outPoint-singleFrame), audio.audioLevelsMax, audio.audioLevelsMin);
+  [animateOut, animateOut];
+  `;
 
   // Add subreddit icon
   const iconLayer = comp.layer("subreddit-icon") as AVLayer;
@@ -80,7 +91,7 @@
 
   // Add transition clip at outPoint of title comp
   const transitionLayer = addLayer(getFootageItem("transition-1s.mp4"), comp, {
-    name: "transition-ref.title"
+    name: "transition-ref.title",
   });
   transitionLayer.startTime = voLayer.outPoint;
 

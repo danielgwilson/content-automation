@@ -17,4 +17,10 @@ describe("Clean Text", () => {
 
     expect(cleanText).toMatchSnapshot();
   });
+
+  it("Keeps line breaks", () => {
+    const text = "Line1\n\nLine2";
+    const cleanText = getCleanText(text);
+    expect(cleanText).toMatchSnapshot();
+  });
 });

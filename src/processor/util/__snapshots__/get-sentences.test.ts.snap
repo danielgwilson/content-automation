@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sentences Gets sentences without removing line break 1`] = `
+Array [
+  "Sentence 1.
+",
+  "
+Sentence 2.",
+]
+`;

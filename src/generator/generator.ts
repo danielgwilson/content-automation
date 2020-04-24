@@ -20,14 +20,15 @@ export default class Generator {
     const renderOutput = await renderVideo(post, {
       outputDir,
       resourceDir,
-      debug
+      debug,
+      bgMusic: "lakey-inspired_better-days.mp3",
     });
 
     const generatorOutput = {
       id: post.id,
       dateGenerated: new Date(),
       elapsedTime: performance.now() - t0,
-      media: { metadata: {}, thumbnail: {}, render: renderOutput }
+      media: { metadata: {}, thumbnail: {}, render: renderOutput },
     } as IGeneratorOutput;
 
     console.log(`---`);
@@ -42,7 +43,7 @@ export default class Generator {
       const fileName = `${generatorOutput.id}.video.generator.json`;
       await saveObjectToJson(generatorOutput, {
         fileName,
-        outputDir
+        outputDir,
       });
       console.log(`Saved output to file named ${fileName}`);
     }
@@ -59,7 +60,7 @@ export default class Generator {
       outputDir,
       resourceDir,
       saveOutputToFile,
-      debug
+      debug,
     } as IContext);
   }
 }
