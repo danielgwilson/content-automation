@@ -1,5 +1,5 @@
 import path from "path";
-import { IProcessedPost } from "../../../types";
+import { IProcessedPost, IVideoSettings } from "../../../types";
 
 function getSrcForPath(filePath: string) {
   return `file://${filePath}`;
@@ -11,21 +11,20 @@ export function getJob(
     outputDir,
     resourceDir,
     compName,
-    bgMusic,
+    settings,
   }: {
     outputDir: string;
     resourceDir: string;
     compName: string;
-    bgMusic: string;
+    settings: IVideoSettings;
   }
 ) {
+  const { BG_MUSIC, AUDIO_LEVEL_BG, AUDIO_LEVEL_VOICE, TEMPLATE } = settings;
   const resourceDirPath = path.resolve(resourceDir);
-  const AUDIO_LEVEL_BG = -18.0;
-  const AUDIO_LEVEL_VOICE = 0.1; // Bug here - if 0.0, parameter check fails. TODO.
   const job: any = {
     template: {
       src: getSrcForPath(
-        path.join(resourceDirPath, "/after-effects/", "reddit-template.aep")
+        path.join(resourceDirPath, "/after-effects/", TEMPLATE)
       ),
       composition: compName,
     },
@@ -106,7 +105,7 @@ export function getJob(
       { key: "compName", value: compName },
       {
         key: "filePath",
-        value: path.join(resourceDirPath, "/bg-music/", bgMusic),
+        value: path.join(resourceDirPath, "/bg-music/", BG_MUSIC),
       },
       { key: "audioLevel", value: AUDIO_LEVEL_BG },
       // {

@@ -11,12 +11,12 @@ export function trimAudio(
   const trimmedSections: IPostSection[] = [];
   let totalAudioLength = 0;
   for (let section of sections) {
-    if (totalAudioLength >= maxAudioLength) {
+    const sectionAudioLength =
+      section.length + getAudioLengthForSections(section.children);
+    if (totalAudioLength + sectionAudioLength >= maxAudioLength) {
       break;
     }
     trimmedSections.push(section);
-    const sectionAudioLength =
-      section.length + getAudioLengthForSections(section.children);
     totalAudioLength += sectionAudioLength * 1000;
   }
 

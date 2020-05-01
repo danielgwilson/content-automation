@@ -1,10 +1,18 @@
 import { URL, URLSearchParams } from "url";
 import fetch from "node-fetch";
 
-export async function fetchPostJson(postId: string, queryParams?: any) {
+export async function fetchPostJson(
+  postId: string,
+  {
+    commentSuffix,
+    queryParams,
+  }: { commentSuffix?: string; queryParams?: any } = {}
+) {
   const uri = "https://www.reddit.com";
   const endpoint = "comments";
-  const url = new URL(`${uri}/${endpoint}/${postId}.json`);
+  const url = new URL(
+    `${uri}/${endpoint}/${postId}${commentSuffix ? commentSuffix : ""}.json`
+  );
   url.search = new URLSearchParams(queryParams).toString();
 
   const result = await fetch(url);
@@ -31,7 +39,7 @@ export async function fetchPostJsonsForSubreddit(
   const ids: string[] = links.map((link: any) => link.data.id);
 
   const jsons = await Promise.all(
-    ids.map(async id => await fetchPostJson(id, postQueryParams))
+    ids.map(async (id) => await fetchPostJson(id, postQueryParams))
   );
 
   return jsons;

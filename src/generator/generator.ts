@@ -1,5 +1,10 @@
 import path from "path";
-import { IContext, IProcessedPost, IGeneratorOutput } from "../types";
+import {
+  IContext,
+  IProcessedPost,
+  IGeneratorOutput,
+  IVideoSettings,
+} from "../types";
 import { renderVideo } from "./video/render";
 import { renderThumbnail } from "./video/thumbnail";
 import { saveObjectToJson } from "../util";
@@ -17,11 +22,19 @@ export default class Generator {
     const outputDir = path.join(this.context.outputDir, subDir);
     const t0 = performance.now();
 
+    const settings = {
+      BG_MUSIC: "lakey-inspired_better-days_loop.mp3",
+      AUDIO_LEVEL_BG: -18.0,
+      AUDIO_LEVEL_VOICE: 0.1, // Bug here - if 0.0, parameter check fails. TODO.
+      // TEMPLATE: "reddit-template.aep",
+      TEMPLATE: "reddit-template_tiktok.aep",
+    } as IVideoSettings;
+
     const renderOutput = await renderVideo(post, {
       outputDir,
       resourceDir,
       debug,
-      bgMusic: "lakey-inspired_better-days.mp3",
+      settings,
     });
 
     const generatorOutput = {

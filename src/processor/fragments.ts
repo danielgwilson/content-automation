@@ -7,29 +7,32 @@ export async function getFragments({
   voiceOverClient,
   fileNamePrefix,
   outputDir,
-  splitBySentence = true
+  splitBySentence = true,
+  speakingRate,
 }: {
   text: string;
   voiceOverClient: VoiceOverClient;
   fileNamePrefix: string;
   outputDir: string;
   splitBySentence?: boolean;
+  speakingRate?: number;
 }) {
   const sentences = splitBySentence ? getSentences(text) : [text]; // Splits text by ending punctuation except for title
   const promises: Promise<IPostSectionFragment>[] = [];
   for (let [i, sentence] of sentences.entries()) {
     const textWithPriors = sentences.slice(0, i + 1).join(" ");
     promises.push(
-      new Promise(async resolve => {
+      new Promise(async (resolve) => {
         const audio = await voiceOverClient.fetchVoiceOver({
           text: sentence,
           fileName: `${fileNamePrefix}.${i}.mp3`,
-          outputDir
+          outputDir,
+          speakingRate,
         });
         return resolve({
           text: sentence,
           textWithPriors,
-          audio
+          audio,
         });
       })
     );
@@ -39,6 +42,6 @@ export async function getFragments({
 
 export function getAudioLengthForFragments(fragments: IPostSectionFragment[]) {
   return fragments
-    .map(fragment => fragment.audio.length)
+    .map((fragment) => fragment.audio.length)
     .reduce((a, b) => a + b, 0);
 }

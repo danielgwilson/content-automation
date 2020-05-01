@@ -302,7 +302,7 @@ function updateBGSizeAndPos(
     .content("Rectangle 1")
     .content("Rectangle Path 1").size;
   const paddingBottom = 60;
-  const bgWidth = 1536;
+  const bgWidth = bgSize.value[0];
 
   // Update BG height
   const bgHeight = keyframe.height + paddingBottom;

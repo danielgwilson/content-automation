@@ -6,4 +6,10 @@ describe("Parse Post", () => {
     const parsedPost = parsePost(samplePostJson);
     expect(parsedPost).toMatchSnapshot();
   });
+
+  it("Correctly parses post comment JSON", () => {
+    const samplePostJson = require("../../tests/sample-post-comment-json.json");
+    const parsedPost = parsePost(samplePostJson);
+    expect(parsedPost).toMatchSnapshot();
+  });
 });

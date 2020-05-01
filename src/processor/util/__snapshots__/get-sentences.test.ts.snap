@@ -1,10 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Sentences Doesn't add extra spaces 1`] = `
+Array [
+  "Sentence 1.",
+  "Sentence 2.",
+]
+`;
+
 exports[`Sentences Gets sentences without removing line break 1`] = `
 Array [
   "Sentence 1.
 ",
   "
 Sentence 2.",
+]
+`;
+
+exports[`Sentences Splits on newlines and doesn't lose any or add extra spaces 1`] = `
+Array [
+  "Priority one is to deal with the chickens that my Step-daughter has to deal with.",
+  "She's 4.",
+  "I think she could go 1 vs 1, but 2 vs 1 she'd need a little help.
+",
+  "
+
+
+Then once I get one down, I pick it up and use it like a club.
+",
+  "
+
+
+It's time to reassert the pecking order.",
 ]
 `;

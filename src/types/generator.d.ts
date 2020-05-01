@@ -8,10 +8,17 @@ export interface IGeneratorOutput {
 
 export interface IRenderOutput {
   job: any;
-  settings: {
+  renderSettings: {
     workpath: string;
     maxMemoryPercent: number;
     skipCleanup: boolean;
     debug: boolean;
   };
+}
+
+export interface IVideoSettings {
+  BG_MUSIC: string;
+  AUDIO_LEVEL_BG: number;
+  AUDIO_LEVEL_VOICE: number;
+  TEMPLATE: string;
 }

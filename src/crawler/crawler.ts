@@ -10,10 +10,7 @@ export default class {
   }
 
   async getPost(options: ICrawlOptions = {}): Promise<IPost> {
-    if (!options.postId)
-      throw new Error("You must call getPost() with a valid postId.");
-
-    const post = await getPost(options.postId, options, this.context);
+    const post = await getPost(options, this.context);
 
     const { saveOutputToFile } = this.context;
     if (saveOutputToFile) this.saveToFile(post);
@@ -25,7 +22,7 @@ export default class {
     const posts = await getPostsFromSubreddit(options, this.context);
 
     const { saveOutputToFile } = this.context;
-    if (saveOutputToFile) posts.map(async post => this.saveToFile(post));
+    if (saveOutputToFile) posts.map(async (post) => this.saveToFile(post));
 
     return posts;
   }
@@ -36,7 +33,7 @@ export default class {
     const fileName = `${post.id}.crawler.json`;
     await saveObjectToJson(post, {
       fileName,
-      outputDir
+      outputDir,
     });
     console.log(`Saved output to file named ${fileName}`);
   }

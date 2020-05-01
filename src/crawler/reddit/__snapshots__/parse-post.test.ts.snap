@@ -2609,3 +2609,2306 @@ Pretty much everyone I told this story to is shocked I didn't at least hit her. 
   },
 }
 `;
+
+exports[`Parse Post Correctly parses post comment JSON 1`] = `
+Object {
+  "comments": Array [
+    Object {
+      "author": "Derpman2099",
+      "body": "[This picture](https://www.gannett-cdn.com/-mm-/e748dce3228a84bf759b36f1f7109e3746048323/c=0-53-1024-632/local/-/media/2015/05/14/USATODAY/USATODAY/635672168951439150-1024px-MSH80-david-johnston-at-camp-05-17-80-med.jpg?width=660&amp;height=374&amp;fit=crop&amp;format=pjpg&amp;auto=webp) taken of David A. johnston 13 hours before the eruption of Mount St. Helens in 1980. his last words were over radio \\"Vancouver, Vancouver, this is it!\\" before going silent and his remains never found.",
+      "gildings": Object {
+        "gold": undefined,
+        "platinum": undefined,
+        "silver": undefined,
+      },
+      "replies": Array [
+        Object {
+          "author": "thefuzzybunny1",
+          "body": "I always thought his death had a certain poetry to it. He'd spent months convincing people that the mountain was dangerously close to erupting. He and his colleagues were taking turns camping out to observe it, and on his last night he swapped shifts with someone who wanted to attend a party.
+
+He was right about the eruption being imminent...",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "gentlybeepingheart",
+              "body": "The man he swapped with was Harry Glicken, who took the photo, and who was devastated when the volcano erupted and blamed himself for Johnston’s death. He died in a different eruption in Japan and he and Johnston are the only two American volcanologists to die in a volcanic eruption.
+
+edit: He also left to attend an interview, not a party. He did not get the job.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "ThatGoddamnLeftist",
+                  "body": "&gt; He died in a different eruption in Japan
+
+That’s some Final Destination shit",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "gentlybeepingheart",
+                      "body": "Yeah I had to do a brief presentation on him last year for geology and it was fucked up. He was with two other scientists when the volcano went off and was killed by the pyroclastic flow.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "Rowger00",
+                          "body": "by the *what* now?",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "cuntarino",
+                              "body": "A pyroclastic flow is a huge ‘wave’ of hot ash and gas. You can see one in the videos of Mt St. Helens erupting. They can travel for hundreds of miles over land and sea and destroy pretty much everything in their path. Scary stuff",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 89,
+                            },
+                            Object {
+                              "author": "gentlybeepingheart",
+                              "body": "Imagine a giant mass of toxic gas, ash, and rocks. Now imagine that it's superheated to around 1,000 degrees and moving at about 50mph.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "scientallahjesus",
+                                  "body": "It would be great if I could outrun one in my Subaru but sadly that’s not the case. 
+
+Try more like 400MPH+.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 1,
+                                },
+                              ],
+                              "score": 60,
+                            },
+                            Object {
+                              "author": "ChristopherPoontang",
+                              "body": "by this hellish creeping death:https://www.youtube.com/watch?v=EZdFqvnzClU",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "tway15q1",
+                                  "body": "I fucking hate the voiceover. It sounds like a children's cartoon. Why is so much informational progamming so fucking childlish?",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "Ack72",
+                                      "body": "Because adults are not the target demographic a lot of the time",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "TheSilverAxe",
+                                          "body": "Might be one of the many reasons for trumps signature style of speaking",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 1,
+                                        },
+                                      ],
+                                      "score": 1,
+                                    },
+                                  ],
+                                  "score": 32,
+                                },
+                              ],
+                              "score": 24,
+                            },
+                            Object {
+                              "author": "tomj1404",
+                              "body": "What's the definition of a pyroclastic flow?
+That's what happens when a volcano blow",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 1,
+                            },
+                          ],
+                          "score": 48,
+                        },
+                        Object {
+                          "author": "LazerX7",
+                          "body": "There's a great documentary on volcanic disasters by Werner Herzog called \\"Into the Inferno\\" that features him and the Kraffts (the other french scientists who died at Mt. Unzen) as well as the Mt. St. Helens eruption. We had to watch a ton of that sort of thing in my volcanology course, crazy stuff.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 11,
+                        },
+                      ],
+                      "score": 205,
+                    },
+                    Object {
+                      "author": "ROAR_AT_MONKEYS",
+                      "body": "Is it? I have a feeling that people who live camping near volcanos that are about to erupt are at a comparatively higher risk of dying from volcanos that erupt.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 12,
+                    },
+                    Object {
+                      "author": "GodSavesZelda",
+                      "body": "What's the chances that he let himself die in that eruption to forgive himself about David's death ?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "gentlybeepingheart",
+                          "body": "I don't think so, because he was with two other scientists at the time and a film crew. However, he absolutely was messed up by David's death. He was one of the first people on site with helicopter crews trying to find survivors and only stopped searching when they wouldn't fly any closer because of the danger. Afterwards he was described as \\"eccentric\\" and threw himself into his work documenting volcanic landslides which had killed Johnston. He had taken off the day of the St. Helens eruption for an interview, and ended up not getting the job because he seemed pretty eccentric, which I think is pretty understandable considering all that happened.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 68,
+                        },
+                      ],
+                      "score": 53,
+                    },
+                    Object {
+                      "author": "Pearberr",
+                      "body": "Well for you &amp; I sure. But I'm sure volcano accidents are more common for people who make their living spending time in &amp; around volcano's.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 5,
+                    },
+                    Object {
+                      "author": "SeanG909",
+                      "body": "The Lava gets its due, one way or another.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "okaypost",
+                          "body": "Pele was appeased",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 1,
+                        },
+                      ],
+                      "score": 6,
+                    },
+                    Object {
+                      "author": "SubtleMockery",
+                      "body": "Probably more a case of a self fulfilling prophecy. The man had a guilt borne death wish and probably sought out every imminent eruption he could find.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 1,
+                    },
+                  ],
+                  "score": 2381,
+                },
+                Object {
+                  "author": "NovaDr3amz",
+                  "body": "He died in another eruption ThATS crazy af omg",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 13,
+                },
+                Object {
+                  "author": "Notamanager",
+                  "body": "That’s some Final Destination shit right there. Death was going to take Glicken by volcano eruption. Death missed the first time and then followed him to Japan.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 7,
+                },
+                Object {
+                  "author": "hopskipjump123",
+                  "body": "That's some serious poetic shit",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 3,
+                },
+              ],
+              "score": 3332,
+            },
+            Object {
+              "author": "DarlinMermaidDarlin",
+              "body": "This is the most dangerous game of hot potato I've ever heard of.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 83,
+            },
+            Object {
+              "author": "smallscat",
+              "body": "The story is very interesting. A lot of stuff went on, and there is a short video soon to be released by the local newspaper where I live to commemorate the 40th anniversary of the eruption, since the paper won a Pulitzer for covering the eruption.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 2,
+            },
+            Object {
+              "author": "tiga4life22",
+              "body": "How is this not a Hollywood Movie",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "thefuzzybunny1",
+                  "body": "It is, but his family thought the adaptation was very unfair to him.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 1,
+                },
+              ],
+              "score": 1,
+            },
+            Object {
+              "author": "did_you_read_it",
+              "body": "&gt; He'd spent months convincing people that the mountain was dangerously close to erupting. He and his colleagues were taking turns camping out to observe it,
+
+wait, if you thought it was going to erupt why would you be on the mountain?",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "thefuzzybunny1",
+                  "body": "He wasn't on it. He was watching it from 6 miles away, because they thought the blast radius would be 5 miles. That was an underestimate.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 1,
+                },
+              ],
+              "score": 1,
+            },
+          ],
+          "score": 5514,
+        },
+        Object {
+          "author": "nWo1997",
+          "body": "He's the one who knew he couldn't escape, right?",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "srry_didnt_hear_you",
+              "body": "What do you mean?",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "TRJF",
+                  "body": "There were a handful of vulcanologists and photographers killed in the eruption; I'm not sure if this was who the last poster was referring to but photographer [Robert Landsburg](https://en.m.wikipedia.org/wiki/Robert_Landsburg) famously, instead of making a futile effort to escape, rewound his film, packaged it back up in its case, put it in his backpack, and laid down on top of it before the blast hit him.  The film was recovered 17 days later and developed, providing valuable info on the eruption when most other footage was unusable.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "StinkyKittyBreath",
+                      "body": "Holy shit, that is equally sad and heroic.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "SuidRhino",
+                          "body": "Absolutely legendary!",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 233,
+                        },
+                        Object {
+                          "author": "RED_COPPER_CRAB",
+                          "body": "Leave an exclamation point not a question mark.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "allothernamestaken",
+                              "body": "I'm Ron Burgundy?",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 26,
+                            },
+                          ],
+                          "score": 117,
+                        },
+                        Object {
+                          "author": "Norville_Rogers1969",
+                          "body": "Right? Couldn't even link the pics.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 21,
+                        },
+                        Object {
+                          "author": "lobroblaw",
+                          "body": "Very magmanimous",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 3,
+                        },
+                      ],
+                      "score": 1904,
+                    },
+                    Object {
+                      "author": "Mythdefied",
+                      "body": "Landsburg was both incredible and admirable. I don't know if I'd be self-possessed enough in that situation to not only accept my own mortality, but take more pictures, then do everything I could to conserve them, including protecting them with what would soon be my corpse. Wonder if they ever found the wheelbarrow he needed to cart his balls up that mountain.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 115,
+                    },
+                    Object {
+                      "author": "HeapOfBitchin",
+                      "body": "So where can we see this footage??",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "Jhenning04",
+                          "body": "[Here](http://imgur.com/gallery/QjauwdE)",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 104,
+                        },
+                        Object {
+                          "author": "kinger9119",
+                          "body": "Good question",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "kalakun",
+                              "body": "https://huckberry.com/journal/posts/robert-landsburg-s-brave-final-shots",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "KoolKarmaKollector",
+                                  "body": "[Much better resource than a website that makes you create an account](https://www.reddit.com/r/todayilearned/comments/k7ehf/til_that_during_the_mount_st_helens_eruption_a/)",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "TheBrettFavre4",
+                                      "body": "Hmm this Reddit place is neat. I’m gonna have to check it out.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 25,
+                                    },
+                                    Object {
+                                      "author": "Memito_Tortellini",
+                                      "body": "Couldn't you just save us the hoop and post the imgur link itself?  
+[https://i.imgur.com/csxNX.jpg](https://i.imgur.com/csxNX.jpg)",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "aza9999",
+                                          "body": "Hoop jumping is my main source of cardio",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 16,
+                                        },
+                                      ],
+                                      "score": 52,
+                                    },
+                                  ],
+                                  "score": 85,
+                                },
+                              ],
+                              "score": 68,
+                            },
+                          ],
+                          "score": 65,
+                        },
+                        Object {
+                          "author": "kalakun",
+                          "body": "https://huckberry.com/journal/posts/robert-landsburg-s-brave-final-shots",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "Woolfus",
+                              "body": "These images are great, but who in the world wrote this?
+
+&gt;Seeing the *immanent* explosion in the *not-so-distant distance*[...]",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "Hiko1391",
+                                  "body": "literally no writer name found that angers me",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 25,
+                                },
+                                Object {
+                                  "author": "Memito_Tortellini",
+                                  "body": "&gt;not-so-distant distance
+
+That's me trying to hit the word count requirement in an essay.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 23,
+                                },
+                                Object {
+                                  "author": "turkeyfox",
+                                  "body": "&gt;buried in ash with his film in tact
+
+Good to know that his film was inside the tact.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "Kythulhu",
+                                      "body": "Tact was a good man. Had a nice and wide asshole.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 16,
+                                    },
+                                  ],
+                                  "score": 24,
+                                },
+                              ],
+                              "score": 65,
+                            },
+                          ],
+                          "score": 22,
+                        },
+                        Object {
+                          "author": "cloistered_around",
+                          "body": "It's not footage, it's a sequence of black and white photographs.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "CTeam19",
+                              "body": "Which when you think about it is \\"still footage\\"",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 17,
+                            },
+                          ],
+                          "score": 11,
+                        },
+                        Object {
+                          "author": "ScratchinWarlok",
+                          "body": "Pretty sure you can just google last picture before st helens erupted.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 6,
+                        },
+                      ],
+                      "score": 222,
+                    },
+                    Object {
+                      "author": "Klavierdude",
+                      "body": "/r/praisethecameraman",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 49,
+                    },
+                    Object {
+                      "author": "mind_killaz",
+                      "body": "I remember Robert Landsburg. Died to get the work to the people. Amazing!",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 15,
+                    },
+                    Object {
+                      "author": "AnastasiaTheSexy",
+                      "body": "Wait what blast? Shockwave? Pyroclastic Ash? Or lava?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "Chief_Givesnofucks",
+                          "body": "Pyroclastic flow.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 35,
+                        },
+                        Object {
+                          "author": "ediblesprysky",
+                          "body": "The linked Wikipedia article says pyroclastic flow.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 12,
+                        },
+                        Object {
+                          "author": "silverrfire09",
+                          "body": "pyroclastic ash",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 17,
+                        },
+                        Object {
+                          "author": "g-g-g-g-ghost",
+                          "body": "The pyroclastic flow",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "AnastasiaTheSexy",
+                              "body": "Was it R-A-W?",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 4,
+                            },
+                          ],
+                          "score": 5,
+                        },
+                        Object {
+                          "author": "TheBallSlapper",
+                          "body": "Pyroclastic",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 2,
+                        },
+                        Object {
+                          "author": "TRJF",
+                          "body": "Yes forgive my layman's imprecision!",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 2,
+                        },
+                        Object {
+                          "author": "wootwaat",
+                          "body": "Pyroclastic ash",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 2,
+                        },
+                      ],
+                      "score": 19,
+                    },
+                    Object {
+                      "author": "nWo1997",
+                      "body": "I think it was Landsburg that I meant, thanks! I just remember at least one person saying that it was too late for him.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 7,
+                    },
+                    Object {
+                      "author": "Giant_Anteaters",
+                      "body": "Just wondering, do you know the cause of death for people who die in volcanic eruptions? Do they drown, burn, die of smoke inhalation, etc.?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "skyeliam",
+                          "body": "Depends. Some will be boiled alive in a fraction of a second by a pyroclastic flow. Some will die getting bludgeoned by rocks. Some will die from poisonous gasses. Most ways are probably not too painful.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 1,
+                        },
+                      ],
+                      "score": 5,
+                    },
+                    Object {
+                      "author": "Euchre",
+                      "body": "I was recently trying to find the video one person was taking as they ran in futility from the eruption of Mt. St. Helens, as the ash clouds loomed overhead and the rain of hot ash and I believe a pyroclastic flow eventually overtook them. I thought I remembered them also not surviving.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 1,
+                    },
+                    Object {
+                      "author": "brodie21",
+                      "body": "Why is there no pic of him? A photographer who died for his craft and his wiki page doesnt have a picture of him at the top?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 8,
+                    },
+                  ],
+                  "score": 4364,
+                },
+                Object {
+                  "author": "ShellShockBP",
+                  "body": "&gt;Before being struck by a series of flows that, at their fastest, would have taken less than a minute to reach his position, Johnston managed to radio his USGS co-workers with the message: \\"Vancouver! Vancouver! This is it!\\" Seconds later, the signal from the radio went silent, and all contact with the geologist was lost.
+
+He absolutely knew he would be killed where he was stationed, but stayed to make sure USGS had early-ish warning.
+
+https://en.wikipedia.org/wiki/David_A._Johnston",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "supershutze",
+                      "body": "I don't think anyone really expected the mountain to literally *explode*.
+
+He was 10km away from the mountain.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "ShellShockBP",
+                          "body": "&gt;Though a careful analyst, Johnston strongly believed that scientists needed to take this risk for themselves in order to prevent civilian deaths, and therefore chose to take part in dangerous on-site monitoring. He and several other volcanologists prevented people from being near the volcano during the few months of pre-eruptive activity, and successfully fought pressure to re-open the area. Their work kept the death toll at a few tens of individuals, instead of the thousands who possibly could have been killed had the region not been sealed off. Johnston supported the lateral blast theory: he believed the explosive eruption would be ejected sideways out of the volcano, not upward. He also believed that the eruption would originate from the bulge. Because of this, he was more aware than most of the threat of a north-directed eruption.
+
+Nobody predicted it except him.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "Chief_Givesnofucks",
+                              "body": "What a goddamn legend.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "ShellShockBP",
+                                  "body": "He's a personal hero of mine. Absolutely zero fucks given about laughing in the face of God.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "underscore5000",
+                                      "body": "I mean, he had a lot of fucks to give.  He did that to save lives.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 63,
+                                    },
+                                    Object {
+                                      "author": "sshvfbdjsiiifh",
+                                      "body": "Seems more he was like \\"sup bud. kind of a dick move, but let's do this.\\"",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 3,
+                                    },
+                                  ],
+                                  "score": 50,
+                                },
+                              ],
+                              "score": 82,
+                            },
+                            Object {
+                              "author": "cords55",
+                              "body": "Why were people trying to reopen the area?",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "underpantsbandit",
+                                  "body": "People lived in the exclusion zone and nobody likes to be forbidden from returning to their homes. 
+
+It was also a very very popular hiking/fishing/recreational area. People were getting super annoyed it was closed, and the average person just didn't believe that the volcano was really going to be as destructive as it was. 
+
+It was extremely lucky the eruption happened on a Sunday. Hundreds of loggers were still working in the area on weekdays.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "CaptainKirk1701",
+                                      "body": "because they where essential hmmmmm",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 16,
+                                    },
+                                  ],
+                                  "score": 49,
+                                },
+                                Object {
+                                  "author": "ShellShockBP",
+                                  "body": "Same reason Florida is reopening its beaches, people don't understand danger.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "moal09",
+                                      "body": "They do understand. They just dont care.  Profit is more important.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 6,
+                                    },
+                                  ],
+                                  "score": 91,
+                                },
+                                Object {
+                                  "author": "Flyer770",
+                                  "body": "Not only the residents of the surrounding area, but most of the acreage at the time, including Mt St Helens itself, were owned by the Weyerhaeuser logging company.  You better believe that the logging industry had a loud voice at the time and was demanding that they be allowed to continue cutting before fire season.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "Paavo_Nurmi",
+                                      "body": "The red zone (no entry under any circumstances) conveniently followed the property lines of Weyerhaeuser and allowed them to keep logging.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 3,
+                                    },
+                                  ],
+                                  "score": 7,
+                                },
+                              ],
+                              "score": 18,
+                            },
+                            Object {
+                              "author": "KeiranC2000",
+                              "body": "Remember learning about this in Geography like any other lesson, for whatever reason reading here 7 years later I’m only just not realising how heroic it actually was.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 23,
+                            },
+                            Object {
+                              "author": "Diogenes-of-Synapse",
+                              "body": "Gave his life and helped saved thousands and inspired others. What a bright life!",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 7,
+                            },
+                            Object {
+                              "author": "moal09",
+                              "body": "He also died needlessly because politicians didnt want to listen to him.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 4,
+                            },
+                            Object {
+                              "author": "supershutze",
+                              "body": "And presumably he still thought 10km was a safe distance.
+
+He didn't *need* to be there: All the equipment was mobile",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 10,
+                            },
+                            Object {
+                              "author": "initramakdov",
+                              "body": "\\"a few tens\\" is such an awkward phrase when \\"a few dozen\\" means pretty much the same thing.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 2,
+                            },
+                          ],
+                          "score": 477,
+                        },
+                        Object {
+                          "author": "detroitvelvetslim",
+                          "body": "Well, I think a lot of geologists literally did expect it to explode. Most of the mountain and surrounding areas was closed off to the public. 
+
+However, some people, like owner of the Spirit Lake Lodge didn't want to leave, because he was a stubborn old man, and other thrill seekers thought they would get a front row seat to a fantastic explosion, which they did, and was far larger than expected, and they got a spectacular show before they were incinerated by 300 mile per hour gusts of boiling Ash and superheated carbon monoxide.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "supershutze",
+                              "body": "I mean there's a hole in the ground where a mountain used to be.
+
+There's explode, and then there's *Explode*.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "detroitvelvetslim",
+                                  "body": "Most people can't comprehend the power of an explosion taking 1300 feet off of a mountain and pushing it miles outward. The explosion was literally larger than most hydrogen bombs, and gave you similar chances of survival",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "Butane_",
+                                      "body": "For the people that are having trouble comprehending the eruption, I offer you [this.](https://imgur.com/a/FRJPqz0)
+
+Photos A &amp; F are approximately 4 minutes apart taken from a distance of 53 km.  The \\"GO\\" in the 1st photo is Goat Mountain, 20 km North of the summit.
+
+*Photo credit:  John Christiansen and Vince Larson*",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 10,
+                                    },
+                                  ],
+                                  "score": 31,
+                                },
+                                Object {
+                                  "author": "Themighty452",
+                                  "body": "\\"KafuckinBOOM\\" is the technical term you're looking for.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 16,
+                                },
+                              ],
+                              "score": 51,
+                            },
+                            Object {
+                              "author": "Confirmation_By_Us",
+                              "body": "&gt;	However, some people, like owner of the Spirit Lake Lodge 
+
+You mean [Harry Truman](https://en.wikipedia.org/wiki/Harry_R._Truman).",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "notwutiwantd",
+                                  "body": "Harry **R** Truman, the immediate older brother of the president, Harry **S** Truman.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 9,
+                                },
+                                Object {
+                                  "author": "AbeTheGreat412",
+                                  "body": "Some old man didnt believe the hippy scientist?
+In this day and age? Absurd!",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 8,
+                                },
+                              ],
+                              "score": 16,
+                            },
+                          ],
+                          "score": 105,
+                        },
+                        Object {
+                          "author": "surecmeregoway",
+                          "body": "Wasn't the side of the volcano literally bulging outward though? 
+
+I think I read or saw somewhere that this bulge was expanding by several feet every day. And from what I remember, many scientists at the time said that explosion was very likely.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 1,
+                        },
+                      ],
+                      "score": 215,
+                    },
+                    Object {
+                      "author": "Mythdefied",
+                      "body": "He's never been far from my mind since it happened. He knew that if his theory was right - and he believed it was - being there was a death sentence if the eruption happened while he was on shift. But he was there anyway, and even when he knew he was dead he used the seconds he had left to alert the base that it was going down. That was a scientist.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "CougarStick",
+                          "body": "I had a crush on him back then. I was a boy crazy teen. He had been in King 5 news doing interviews and in the newspaper. We were a science family and I remember my Dad saying it was really important he was there. My family camped on St Helens all through the 70s and my Dad was fishing on the Toutle the day before she blew.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 1,
+                        },
+                      ],
+                      "score": 54,
+                    },
+                    Object {
+                      "author": "senior_manglement",
+                      "body": "I wonder how we would do it today. remote cameras? drones?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "drunk98",
+                          "body": "A big ring of grad students to block his body from the blast.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 13,
+                        },
+                        Object {
+                          "author": "ShellShockBP",
+                          "body": "Drones and satellites",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 2,
+                        },
+                      ],
+                      "score": 7,
+                    },
+                  ],
+                  "score": 823,
+                },
+                Object {
+                  "author": "ShitItsReverseFlash",
+                  "body": "He knew that he couldn't outrun the eruption.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "piratepants1388",
+                      "body": "For context [this](https://lh3.googleusercontent.com/proxy/tI_ggd82z9l55Gu3CT9YRmKbMk3Mzt_iX6b4l3Tdnd3IlkaFT4XAPQvLIHhS0I5DEzYmyYNVmh_4TLAwcCQHeDjuLvNYD7BJluHQalRVW7CW5SnrktGqsNX2YU6YulcCGry8vq95PaPgmFLDoCpi-0o) is the current view of the mountain from where he was at approximately",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "ShitItsReverseFlash",
+                          "body": "Yeesh. That's eerie. My mom lived in Spokane when it erupted, she said it was crazy.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "piratepants1388",
+                              "body": "I've been to the observatory on that ridge and they have a small theater that plays a recreation of the eruption. When it's over the screen rolls up and reveals a window looking out right at the mountain. It's powerful.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 5,
+                            },
+                          ],
+                          "score": 4,
+                        },
+                      ],
+                      "score": 21,
+                    },
+                    Object {
+                      "author": "srry_didnt_hear_you",
+                      "body": "Fuck how big was that eruption, was 13 hours not enough to drive away?",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "ShitItsReverseFlash",
+                          "body": "Ah I see where you're confused. So this photo was taken in the morning, 12 hours before the eruption *started*. By the time he felt the eruption, he knew he didn't have time to run from it.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "srry_didnt_hear_you",
+                              "body": "Ah, that makes sense. I assumed the radio call was from before the explosion or something",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "Mythdefied",
+                                  "body": "Seconds after.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 9,
+                                },
+                              ],
+                              "score": 25,
+                            },
+                          ],
+                          "score": 149,
+                        },
+                        Object {
+                          "author": "raspberrykoolaid",
+                          "body": "Big....
+
+[Mount St. Helens is most notorious for its major eruption on May 18th 1980, the deadliest and most economically destructive volcanic event in U.S. history](https://en.m.wikipedia.org/wiki/Mount_St._Helens)",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "pm_me_n0Od",
+                              "body": "Yellowstone: hold my beer",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "raspberrykoolaid",
+                                  "body": "Do you have that one on your 2020 apocalypse bingo card too?",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "ediblesprysky",
+                                      "body": "Pls no",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 27,
+                                    },
+                                    Object {
+                                      "author": "drunk98",
+                                      "body": "I just removed the free square &amp; penciled it in.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 6,
+                                    },
+                                  ],
+                                  "score": 68,
+                                },
+                                Object {
+                                  "author": "ShellShockBP",
+                                  "body": "Don't threaten me with a good time. I hope it blasts me to mars.",
+                                  "gildings": Object {
+                                    "gold": 1,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "JoeLunchpail",
+                                      "body": "Live Free or Die, amiright",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 9,
+                                    },
+                                    Object {
+                                      "author": "automongoose",
+                                      "body": "It's strangely comforting to know that not only would I and everyone in my surrounding communities die, but all evidence of my life would be destroyed as well. Just wipe me from the planet entirely, it doesn't even matter.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "greyjackal",
+                                          "body": "Apart from the reddit, gmail, facebook etc caches around the globe.",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 3,
+                                        },
+                                      ],
+                                      "score": 16,
+                                    },
+                                    Object {
+                                      "author": "WigglestonTheFourth",
+                                      "body": "In 30 seconds.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 4,
+                                    },
+                                  ],
+                                  "score": 43,
+                                },
+                                Object {
+                                  "author": "OutInTheBlack",
+                                  "body": "Yellowstone could nurse that beer for thousands of years to come.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "yeah_yeah_therabbit",
+                                      "body": "Haha, I always liked what Robin Williams said about that.  ... ‘everybody’s always talking about the “Big One”, it could either happen today, or 10,000 yrs from now, a bit of a window of opportunity there.’",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 28,
+                                    },
+                                    Object {
+                                      "author": "mycatwinky",
+                                      "body": "Look into the earthquakes that have been going on in south eastern Idaho. About a month ago there was a magnitude 6 earthquake centered near a park called Craters of the Moon, which is the site of a ton of dormant volcanoes. That is only about 200 miles away from Yellowstone. The region has since had fairly significant aftershocks multiple times a day. Upwards of magnitude 4 when I last talked to my aunt who lives in the area. There haven't been earthquakes like that in nearly 100 years.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "OutInTheBlack",
+                                          "body": "We're in the middle of a pandemic wtf are you trying to do to me",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 19,
+                                        },
+                                        Object {
+                                          "author": "God_Damnit_Nappa",
+                                          "body": "While I doubt those earthquakes are a sign Yellowstone is about to erupt, it would be peak 2020 for us to be wiped out by a supervolcano.",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 16,
+                                        },
+                                        Object {
+                                          "author": "intergalactic_spork",
+                                          "body": "Beautiful! It looks very much like the volcanic areas of Northern Iceland.",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 3,
+                                        },
+                                        Object {
+                                          "author": "kittypuppet",
+                                          "body": "[USGS has put out a statement that no, those earthquakes are not a sign of an imminent eruption of Yellowstone.](https://volcanoes.usgs.gov/volcanoes/yellowstone/status.html)",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 1,
+                                        },
+                                      ],
+                                      "score": 25,
+                                    },
+                                    Object {
+                                      "author": "potentialprimary",
+                                      "body": "&gt;Yellowstone could nurse that beer for thousands of years to come.
+
+Or not",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 12,
+                                    },
+                                    Object {
+                                      "author": "InfinitelyThirsting",
+                                      "body": "Insert \\"April NO!\\" meme here.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 5,
+                                    },
+                                  ],
+                                  "score": 39,
+                                },
+                              ],
+                              "score": 64,
+                            },
+                          ],
+                          "score": 73,
+                        },
+                        Object {
+                          "author": "TexasAvocadoToast",
+                          "body": "Others have explained, but my grandma lived in Yakima at the time and they had 4 inches of volcanic ash... Not even close to the mountain",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "Just_Treading_Water",
+                              "body": "I actually remember ash landing in Calgary over 800km away from the eruption.",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [
+                                Object {
+                                  "author": "Mythdefied",
+                                  "body": "It landed here in Missouri.",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [],
+                                  "score": 5,
+                                },
+                                Object {
+                                  "author": "DontTouchTheWalrus",
+                                  "body": "Can you please convert to freedom units?",
+                                  "gildings": Object {
+                                    "gold": undefined,
+                                    "platinum": undefined,
+                                    "silver": undefined,
+                                  },
+                                  "replies": Array [
+                                    Object {
+                                      "author": "ediblesprysky",
+                                      "body": "About 500 miles. Where’s converterbot when you need him?",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "Powered_by_JetA",
+                                          "body": "We set him free! Now he doesn’t understand metric anymore.",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 8,
+                                        },
+                                      ],
+                                      "score": 9,
+                                    },
+                                    Object {
+                                      "author": "MadKingOni",
+                                      "body": "approx  31496000 big macs",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [
+                                        Object {
+                                          "author": "DontTouchTheWalrus",
+                                          "body": "Much better.",
+                                          "gildings": Object {
+                                            "gold": undefined,
+                                            "platinum": undefined,
+                                            "silver": undefined,
+                                          },
+                                          "replies": Array [],
+                                          "score": 4,
+                                        },
+                                      ],
+                                      "score": 17,
+                                    },
+                                    Object {
+                                      "author": "firebirdsatellite",
+                                      "body": "4-500 miles ish",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 3,
+                                    },
+                                    Object {
+                                      "author": "foolhardycoma",
+                                      "body": "I wasn’t around, but my parents said there was ash from the explosion all the way down in the Four Corners, over 1000 miles away.",
+                                      "gildings": Object {
+                                        "gold": undefined,
+                                        "platinum": undefined,
+                                        "silver": undefined,
+                                      },
+                                      "replies": Array [],
+                                      "score": 2,
+                                    },
+                                  ],
+                                  "score": 13,
+                                },
+                              ],
+                              "score": 22,
+                            },
+                          ],
+                          "score": 31,
+                        },
+                        Object {
+                          "author": "Darknayse",
+                          "body": "I wasn't around back then, but considering it actually blew half of the mountain off, I think 13 hours was a bit too fast.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 14,
+                        },
+                        Object {
+                          "author": "Tigrsh",
+                          "body": "Obviously he didn't know about the eruption yet when this photo was taken.",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "srry_didnt_hear_you",
+                              "body": "Ah, okay I guess I didn't realize what the initial comment mean about the radio call, I assumed that was from before the explosion or something",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 2,
+                            },
+                          ],
+                          "score": 8,
+                        },
+                      ],
+                      "score": 40,
+                    },
+                  ],
+                  "score": 85,
+                },
+                Object {
+                  "author": "greatdivide",
+                  "body": "He was on and around the mountain doing studies for the United States Geological Survey as a volcanologist. He wouldn't have had enough time to escape anyway.
+
+https://en.wikipedia.org/wiki/David_A._Johnston",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 29,
+                },
+              ],
+              "score": 705,
+            },
+            Object {
+              "author": "EmergencyAdvance",
+              "body": "Then photographer who took the picture of the bulge? Couldn't be, they found his body because he wrapped himself round his camera because he knew he was doomed and he wanted to try and preserve the footage",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "Foxtrotalpha2412",
+                  "body": "there was a Reddit post about him I saw once. Very brave guy.
+
+EDIT: [Here](https://www.reddit.com/r/lastimages/comments/g2sh5r/robert_landsberg_photograph_of_mt_st_helens/?utm_source=share&amp;utm_medium=ios_app&amp;utm_name=iossmf)",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "Jhenning04",
+                      "body": "[Here's more](http://imgur.com/gallery/QjauwdE)",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "Foxtrotalpha2412",
+                          "body": "Thank you",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [
+                            Object {
+                              "author": "EmergencyAdvance",
+                              "body": "Ah so he got the full eruption? Crazy that this is the only footage",
+                              "gildings": Object {
+                                "gold": undefined,
+                                "platinum": undefined,
+                                "silver": undefined,
+                              },
+                              "replies": Array [],
+                              "score": 2,
+                            },
+                          ],
+                          "score": 1,
+                        },
+                      ],
+                      "score": 4,
+                    },
+                  ],
+                  "score": 34,
+                },
+                Object {
+                  "author": "TranquiloMeng",
+                  "body": "Different person",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 1,
+                },
+              ],
+              "score": 59,
+            },
+            Object {
+              "author": "justme24601",
+              "body": "Yeah didn't he lay over his recording device so they could try and preserve the video?",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 2,
+            },
+          ],
+          "score": 3346,
+        },
+        Object {
+          "author": "Douger91",
+          "body": "Is this the inspiration for Woody Harrelson's character in 2012?",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "chiefsassy",
+              "body": "Must have been, I'm pretty sure he even said \\"this is it\\" at some point",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "christiang____",
+                  "body": "Well he was offered to leave on the plane but said “no I’ll think I’ll stay” because he thought it was awesome lol",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 16,
+                },
+              ],
+              "score": 53,
+            },
+            Object {
+              "author": "reallyConfusedPanda",
+              "body": "I'm pretty sure that is the most logical origin",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 15,
+            },
+          ],
+          "score": 167,
+        },
+        Object {
+          "author": "BombAssTurdCutter",
+          "body": "https://cdn.geekwire.com/wp-content/uploads/2017/05/sthelens.png
+
+This picture is a trip also, you can see the massive wall of smoke/ash.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 34,
+        },
+        Object {
+          "author": "Jealentuss",
+          "body": "Was he radioing Vancouver, WA?",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "thefuzzybunny1",
+              "body": "Yup, that was the closest US Geological Survey office.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "Jealentuss",
+                  "body": "Oh cool. That's where I live.",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "ontopofyourmom",
+                      "body": "In that case I’m not surprised that you had to take a second glance when someone said that anybody contacted the city.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 8,
+                    },
+                    Object {
+                      "author": "IMissHanSolo",
+                      "body": "Mt. St Helens is in Washington so it makes sense that he'd be contacting Vancouver.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [
+                        Object {
+                          "author": "AFRUITPIE",
+                          "body": "Vancouver is my hometown. It’s mixed up with Vancouver, BC a lot, even by Washingtonians!",
+                          "gildings": Object {
+                            "gold": undefined,
+                            "platinum": undefined,
+                            "silver": undefined,
+                          },
+                          "replies": Array [],
+                          "score": 3,
+                        },
+                      ],
+                      "score": 4,
+                    },
+                  ],
+                  "score": 11,
+                },
+              ],
+              "score": 29,
+            },
+          ],
+          "score": 25,
+        },
+        Object {
+          "author": "tdw91",
+          "body": "So that’s what the crazy guy from the movie 2012 was inspired by...",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "Geosaysbye",
+              "body": "I still can’t believe how many people watched 2012",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [
+                Object {
+                  "author": "shmehdit",
+                  "body": "Why is it surprising?",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [],
+                  "score": 15,
+                },
+                Object {
+                  "author": "natopotato123",
+                  "body": "Seriously? You can't believe how many people watched a movie about an apocalypse that was predicted to happen? Shits cool, until you actually watch the film, hot garbage, but yeah...I can't believe you can't believe! Like why bother?",
+                  "gildings": Object {
+                    "gold": undefined,
+                    "platinum": undefined,
+                    "silver": undefined,
+                  },
+                  "replies": Array [
+                    Object {
+                      "author": "LopazSolidus",
+                      "body": "I thought it a very watchable disaster flick.",
+                      "gildings": Object {
+                        "gold": undefined,
+                        "platinum": undefined,
+                        "silver": undefined,
+                      },
+                      "replies": Array [],
+                      "score": 8,
+                    },
+                  ],
+                  "score": 9,
+                },
+              ],
+              "score": 21,
+            },
+          ],
+          "score": 21,
+        },
+        Object {
+          "author": "gentlybeepingheart",
+          "body": "The photo was taken by Harry Glicken, a student of his. The day of the eruption Glicken was supposed to be at that post but had received an invite to attend a ~~lecture~~ interview and asked Johnston to cover his shift.
+
+He felt insanely guilty about it and had a (incredibly understandable) breakdown after hearing about the eruption and joined helicopter crews to try and find survivors for *hours* before they refused to allow him to continue.
+
+He died years later during the eruption of a different volcano.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 13,
+        },
+        Object {
+          "author": "GustavDaMutt",
+          "body": "I had a college professor who knew and worked with this guy back in the day. He showed us pictures and the video of Mount St. Helens erupting that day.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 7,
+        },
+        Object {
+          "author": "ArunavDs",
+          "body": "Found this on YouTube https://youtu.be/Ec30uU0G56U",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 5,
+        },
+        Object {
+          "author": "T1000runner",
+          "body": "How was the photo found/preserved?",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "AngriestManinWestTX",
+              "body": "Pretty sure it was taken a few hours prior by the last person who saw him alive given he is probably buried under several dozen feet minimum of debris and ash.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 2,
+            },
+            Object {
+              "author": "gentlybeepingheart",
+              "body": "Photo was taken by a student of his who later left to attend a lecture.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 2,
+            },
+          ],
+          "score": 5,
+        },
+        Object {
+          "author": "nonlinearsaxophone",
+          "body": "I went down a Mt St Helen's rabbit hole the other day because I never really knew anything about it. A fellow researcher who was friends with this guy but further from the eruption said they did find pieces of that trailer in the photo, but if I'm remember right it was ripped apart and big pieces were found more than a kilometer from where the trailer was parked pre-eruption.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 4,
+        },
+        Object {
+          "author": "BKKpoly",
+          "body": "I've posted this before, but this video from a photographer on the mountain is amazing. However didn't die, but he certainly thought he was going to. 
+[Mount St Helens](https://youtu.be/njV9ski1gB4)",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 6,
+        },
+        Object {
+          "author": "NovaDr3amz",
+          "body": "It’s crazy to have pictures of people who are now dead it’s like their souls are still in those pictures but they don’t exist anymore...",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "gurumel",
+              "body": "There will come a point when nearly every analog photo is of someone dead",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 4,
+            },
+          ],
+          "score": 5,
+        },
+        Object {
+          "author": "BananaVenom",
+          "body": "I grew up in Vancouver, this guy is a local hero. Contrary to a lot of news stories at the time saying the USGS had misjudged the size of the blast and put their monitoring station too close, Johnston and his colleagues knew full well the only way to get accurate data was to be well within the blast radius. He volunteered anyways, because the safety of others mattered to him.
+
+A local bluegrass band has an absolutely haunting song about him:
+https://m.youtube.com/watch?v=czt_Qv8pI00",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 7,
+        },
+        Object {
+          "author": "mypurplelighter",
+          "body": "As someone who lives near an active volcano, this one scares me a lot.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [
+            Object {
+              "author": "natopotato123",
+              "body": "Sounds like it's always a good time to move.",
+              "gildings": Object {
+                "gold": undefined,
+                "platinum": undefined,
+                "silver": undefined,
+              },
+              "replies": Array [],
+              "score": 3,
+            },
+          ],
+          "score": 5,
+        },
+        Object {
+          "author": "LeviWiz",
+          "body": "There’s a observatory named after him too right next to the mountain",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 5,
+        },
+        Object {
+          "author": "ShinzoAbeFroman",
+          "body": "I met a lady..
+
+Basically her daughter was maybe about four years older than me at the same school. This woman had started coming to tell maybe all the 5th grade students each year her Mount St. Helens story. Basically she lived somewhere nearby, not too near. She had out of town people coming to visit and took them to see the mountain. She said something, I can't remember the details, but ended with \\"And if it were going to erupt it would do so right there.\\" As she said that she pointed with her finger and that's exactly when the mountain blew.
+
+We called her Ms. Biscuit because her daughter's nickname was Biscuit.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 6,
+        },
+        Object {
+          "author": "MusicWithL-uSi-D",
+          "body": "Feels like they used his background for the hippy in the movie 2012",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 3,
+        },
+        Object {
+          "author": "YouBeFired",
+          "body": "I thought that was the last picture of the dude who ditched everything he owned, went up to Alaska and died in a bus after eating poisonous stuff, made a movie out of it too.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 5,
+        },
+        Object {
+          "author": "eljefe1628",
+          "body": "I think that’s who the bloke who got blown up by a mountain was based off of in 2012",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 2,
+        },
+        Object {
+          "author": "Brelalanana",
+          "body": "Just looks like a man camping enjoying life.. not waiting to die..",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 2,
+        },
+        Object {
+          "author": "dutchboyChris",
+          "body": "That's so... sad... looked like a cool dude, too.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 2,
+        },
+        Object {
+          "author": "EmileZ",
+          "body": "Thank you. For the longest time I thought this was an album cover  glad to know the actual story.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 2,
+        },
+        Object {
+          "author": "illaqueable",
+          "body": "He could warn others of volcanoes, but not himself. Ironic.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 2,
+        },
+        Object {
+          "author": "cjrand1122",
+          "body": "Is there a picture of him standing up? His legs look exceptionally long.",
+          "gildings": Object {
+            "gold": undefined,
+            "platinum": undefined,
+            "silver": undefined,
+          },
+          "replies": Array [],
+          "score": 1,
+        },
+      ],
+      "score": 15689,
+    },
+  ],
+  "link": Object {
+    "author": "Aqua_Fucker",
+    "gildings": Object {
+      "gold": 1,
+      "platinum": undefined,
+      "silver": 1,
+    },
+    "numComments": 9400,
+    "postId": "g8d51s",
+    "score": 39351,
+    "subredditName": "AskReddit",
+    "title": "[Serious] What are some seemingly normal images with disturbing backstories?",
+    "upvoteRatio": 0.93,
+  },
+}
+`;

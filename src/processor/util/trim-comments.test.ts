@@ -10,7 +10,16 @@ describe("Trim Comments", () => {
   it("Trims excess replies", () => {
     const trimmedPost = trimComments(samplePost, {
       maxReplyDepth: 3,
-      maxRepliesPerComment: 2
+      maxRepliesPerComment: 2,
+    });
+    expect(trimmedPost).toMatchSnapshot();
+  });
+
+  it("Trims excess comments", () => {
+    const trimmedPost = trimComments(samplePost, {
+      maxReplyDepth: 0,
+      maxRepliesPerComment: 0,
+      maxComments: 1,
     });
     expect(trimmedPost).toMatchSnapshot();
   });

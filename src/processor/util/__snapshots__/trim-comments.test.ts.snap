@@ -1,5 +1,54 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Trim Comments Trims excess comments 1`] = `
+Object {
+  "comments": Array [
+    Object {
+      "author": "yaarty",
+      "body": "Where she keeps her dildos. It’s not obvious.",
+      "gildings": Object {},
+      "replies": Array [],
+      "score": 5865,
+    },
+  ],
+  "context": Object {
+    "debug": false,
+    "outputDir": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp",
+    "resourceDir": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources",
+    "saveOutputToFile": true,
+  },
+  "dateCrawled": "2020-03-07T02:54:18.648Z",
+  "details": Object {
+    "author": "Hunterofshadows",
+    "gildings": Object {
+      "silver": 1,
+    },
+    "numComments": 1232,
+    "postId": "fegzlq",
+    "score": 7071,
+    "subreddit": Object {
+      "iconUri": "https://b.thumbs.redditmedia.com/EndDxMGB-FTZ2MGtjepQ06cQEkZw_YQAsOUudpb9nSQ.png",
+      "name": "AskReddit",
+    },
+    "title": "Housekeepers of reddit, what do you know about the owners of the houses that they don’t know you know?",
+    "upvoteRatio": 0.97,
+  },
+  "id": "45e3dc1e-a34c-4372-9c2e-f9b035e6ee6c",
+  "options": Object {
+    "maxRepliesPerComment": 2,
+    "maxReplyDepth": 2,
+    "minWords": 3120,
+    "nPosts": 3,
+    "postIndex": 0,
+    "sort": Object {
+      "type": "hot",
+    },
+    "subredditName": "AskReddit",
+  },
+  "words": 6355,
+}
+`;
+
 exports[`Trim Comments Trims excess replies 1`] = `
 Object {
   "comments": Array [
@@ -17,14 +66,39 @@ Object {
               "author": "yaarty",
               "body": "One day I noticed that whenever I used the toilet the water was barely enough to send away my “deposit” so I opened the water tank to adjust it and I found not only one but several... well they are waterproof I thought 😂",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "VAShumpmaker",
+                  "body": "That’s pretty funny actually. 
+
+Also gross. I know it’s the clean water tank but still...",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 1997,
+                },
+                Object {
+                  "author": "tesseract4",
+                  "body": "She's just trying to save water!",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 61,
+                },
+              ],
               "score": 3153,
             },
             Object {
               "author": "hellissomeoneelse",
               "body": "I reckon her bum.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "VAShumpmaker",
+                  "body": "Nature’s pocket.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 76,
+                },
+              ],
               "score": 68,
             },
           ],
@@ -47,7 +121,15 @@ Object {
               "author": "Thesugarsky",
               "body": "It was for internet porn addiction. Yes. I worked there another 4 years. All is good.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "Ridara",
+                  "body": "Kudos to him for getting help. That shit's not easy, especially when the world minimizes how devastating it can be",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 570,
+                },
+              ],
               "score": 1206,
             },
           ],
@@ -124,7 +206,15 @@ My parents old house had that, it's called \\"the attic hatch is in the bedroom 
               "author": "VAShumpmaker",
               "body": "Penises for teeth.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "goatsarefuckingdicks",
+                  "body": "I was thinking a penis hat, kind of like a garden gnome.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 104,
+                },
+              ],
               "score": 213,
             },
           ],
@@ -156,7 +246,15 @@ My parents old house had that, it's called \\"the attic hatch is in the bedroom 
               "author": "Kantotheotter",
               "body": "He was a doll! He had some fancy grey hound name. But mayonaise fit him He was off whiteish",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "GUYWHOTYPESTOLOUD",
+                  "body": "HAPPY CAKEDAY!!!",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 256,
+                },
+              ],
               "score": 1473,
             },
           ],
@@ -226,7 +324,15 @@ I freaked a little after he just said “I know you do marijuana”. I was like 
               "author": "420Minions",
               "body": "Of course I did lmao. We moved like a month later so I never really saw him face to face again. Hope he enjoyed it. They were good people and appreciated us more than they ever had to",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "overkill",
+                  "body": "Just checked the username. Of course you did.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 260,
+                },
+              ],
               "score": 1034,
             },
             Object {
@@ -240,7 +346,15 @@ Just make sure its LSD and not that 2CB stuff or any other random hallucinogen.
   
 Edit: I can structure sentences and tell stories better than this, I swear. Lol.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "umylotus",
+                  "body": "Acid is the best. It's perfect for a day long staycation. Or even a weekend camping trip. So relaxing and beautiful.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 60,
+                },
+              ],
               "score": 502,
             },
           ],
@@ -280,7 +394,26 @@ Just get yourself on a healthy diet that allows you to cheat a little here and t
               "author": "MediumSpaces",
               "body": "Right? That's the way I look at it. I eat super healthy about 90% of the time. I've lost a significant amount of weight, and people always ask me what my secret is. They get so disappointed when the answer is, \\"Don't eat like a jackass, move your body, and pick up and put down heavy things a couple times a week.\\"",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "live_to_frolic",
+                  "body": "Absolutely!
+
+I lost 80+lbs 5 years ago and have kept it off. All I did was walk/hike, and cut my calorie intake. The hardest part for me was avoiding boredom eating. But even that wasn't much of an issue when I switched chips and ice cream with fruits and veggies.
+
+No one ever got fat off carrot sticks.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 294,
+                },
+                Object {
+                  "author": "smokinbbq",
+                  "body": "I also think that a regular CICO diet is what helps build a better relationship with food, and understanding about it.  Once you realize that the \\"Cheeseburger, fries, and gravy\\" is a LOT of calories, you can have that cheat, but then the next couple of days you can easily back off a bit and make up for it.  The decisions I make when I'm not behaving are totally different now, and even when I'm going to an event and \\"not counting\\", it's now embeded into my brain and eating habits and I just can't eat as poorly as I would have before.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 92,
+                },
+              ],
               "score": 511,
             },
           ],
@@ -391,7 +524,15 @@ Disclaimer/edit: She’s like family to me and has been with us for over a decad
               "author": "-Uniquely-Generic-",
               "body": "Assfuck-ception.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "themaker-shaihulud",
+                  "body": "real question is did the dildo stop spinning.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 78,
+                },
+              ],
               "score": 271,
             },
           ],
@@ -427,7 +568,15 @@ I wanna hear *ALL* of Bruce’s secrets.
               "author": "TannedCroissant",
               "body": "“Secrets Worth More than a Penny: The Wayne’s World”",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "-Uniquely-Generic-",
+                  "body": "I want a signed copy.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 53,
+                },
+              ],
               "score": 222,
             },
           ],
@@ -452,7 +601,15 @@ Handcuffs and a 6 month old Tupperware container full of meatballs and marinara 
               "author": "rageofheaven",
               "body": "When I gather the courage, I will throw the entire container in the garbage along with the contents.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "Jungleman6",
+                  "body": "That’s what I had to do. I made the mistake of opening it to clean it though. Smell could have gagged a maggot.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 11,
+                },
+              ],
               "score": 72,
             },
           ],
@@ -647,7 +804,22 @@ I almost wish it weren't so prevalent. I have a bit of the \\"nice guy\\" proble
 
 Many women have a ton of emotional labor and management work, both in their work and in their relationships. You taking charge for half an hour is incredibly relaxing and such a turn on.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "aham42",
+                  "body": "As a dude that last sentence is exactly how I feel. I manage big organizations and I just want to not be in charge for a hot minute",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 55,
+                },
+                Object {
+                  "author": "Capt_Hawkeye_Pierce",
+                  "body": "That last paragraph makes a lot of sense. I never thought of it that way.",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 106,
+                },
+              ],
               "score": 413,
             },
           ],
@@ -679,7 +851,15 @@ Many women have a ton of emotional labor and management work, both in their work
 Teach your girls not to toss used tampons on the floor?
 Basic shit.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "shaniballickedher",
+                  "body": "I feel like I have met these failed adults several times. They seriously don't understand why everything is disgusting when they move out on their own. I don't come from money but my mom inadvertently did this to me as well. Our house was always impeccable and I thought she was just being an anal bitch when I left any of my belongings in the common areas. Turns out she just only cleaned when no one was around so I never saw how much work she did. I had zero concept of how fast houses become vile and disgusting until I was on my own. I still kind of suck at house keeping and I totally get pissed when my husband and daughter fuck up my hard work when I do clean... Sorry Mom... Also this is till your fault lol",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 182,
+                },
+              ],
               "score": 303,
             },
           ],
@@ -848,7 +1028,15 @@ Shocking.",
               "author": "Cameron_Black",
               "body": "The lack of a *serious* tag.",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "iDrink_alot",
+                  "body": "I hadn't caught that. Thank you haha",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 55,
+                },
+              ],
               "score": 195,
             },
           ],
@@ -981,7 +1169,15 @@ Asking for a friend.",
               "author": "prettyfly4aporkpie",
               "body": "Bits of sloughed off skin in the teeth",
               "gildings": Object {},
-              "replies": Array [],
+              "replies": Array [
+                Object {
+                  "author": "A_lunch_lady",
+                  "body": "Ew",
+                  "gildings": Object {},
+                  "replies": Array [],
+                  "score": 62,
+                },
+              ],
               "score": 166,
             },
             Object {

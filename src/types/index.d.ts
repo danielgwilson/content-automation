@@ -5,7 +5,7 @@ export {
   IPostComment,
   ICrawlOptions,
   ISubreddit,
-  IGildings
+  IGildings,
 } from "./post";
 export {
   IProcessedPost,
@@ -14,6 +14,6 @@ export {
   IPostSection,
   IPostSectionFragment,
   IPostSectionFragmentAudio,
-  IProcessedPostStats
+  IProcessedPostStats,
 } from "./processed-post";
-export { IGeneratorOutput, IRenderOutput } from "./generator";
+export { IGeneratorOutput, IRenderOutput, IVideoSettings } from "./generator";

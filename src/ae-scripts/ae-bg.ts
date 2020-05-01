@@ -12,7 +12,7 @@
 
   // Add voiceover audio file
   const bgMusicLayer = addLayer(importFootage(filePath), comp, {
-    name: "audio.bg-music"
+    name: "audio.bg-music",
   });
   bgMusicLayer.moveToEnd();
   bgMusicLayer.audio.audioLevels.setValue([audioLevel, audioLevel]);
@@ -23,7 +23,7 @@
   // Background video
   if (videoPath) {
     const bgVideoLayer = addLayer(importFootage(videoPath), comp, {
-      name: `bg-video`
+      name: `bg-video`,
     });
     bgVideoLayer.moveToEnd();
     bgVideoLayer.timeRemapEnabled = true;
@@ -36,8 +36,8 @@
       // [238 / 255, 238 / 255, 238 / 255],
       [22 / 255, 22 / 255, 23 / 255],
       "bg-solid",
-      1920,
-      1080,
+      comp.width,
+      comp.height,
       1.0
     );
     bgSolidLayer.moveToEnd();

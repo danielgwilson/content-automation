@@ -1,0 +1,3 @@
+./bin/run crawl -u "https://www.reddit.com/r/AskReddit/comments/g79cmj/what_do_you_think_is_scarier_the_idea_that_we_are/fofy0x3?utm_source=share&utm_medium=web2x" -u "https://www.reddit.com/r/AskReddit/comments/dcxylq/anthony_bourdain_once_said_theres_a_guy_in_my/f2cscbk?utm_source=share&utm_medium=web2x" -u "https://www.reddit.com/r/AskReddit/comments/ejr5rg/african_proverb_says_the_child_who_is_not/fd04n8m?utm_source=share&utm_medium=web2x"
+./bin/run process temp -d 0 -r 0 -l 60000
+./bin/run generate temp

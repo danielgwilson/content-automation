@@ -12,6 +12,7 @@ export interface IPost {
 
 export interface ICrawlOptions {
   postId?: string;
+  postUri?: string;
 
   subredditName?: string;
   postIndex?: number;

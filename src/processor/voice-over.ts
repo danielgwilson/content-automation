@@ -27,9 +27,8 @@ export default class VoiceOverClient {
 
   client: any;
   voice: IVoice;
-  audioConfig: IAudioConfig;
   constructor({
-    GOOGLE_APPLICATION_CREDENTIALS
+    GOOGLE_APPLICATION_CREDENTIALS,
   }: {
     GOOGLE_APPLICATION_CREDENTIALS: string;
   }) {
@@ -39,7 +38,7 @@ export default class VoiceOverClient {
       minTime: 1000,
       reservoir: 300,
       reservoirRefreshInterval: 1000 * 60,
-      reservoirRefreshAmount: 300
+      reservoirRefreshAmount: 300,
     });
 
     // Creates a Google Cloud Text-to-Speech client
@@ -50,28 +49,30 @@ export default class VoiceOverClient {
     this.voice = {
       languageCode: "en-GB",
       name: "en-GB-Wavenet-B",
-      ssmlGender: "MALE"
-    };
-    this.audioConfig = {
-      audioEncoding: "MP3",
-      speakingRate: 1.0
+      ssmlGender: "MALE",
     };
   }
 
   async fetchVoiceOver({
     text,
     fileName,
-    outputDir
+    outputDir,
+    speakingRate = 1.0,
   }: {
     text: string;
     fileName: string;
     outputDir: string;
+    speakingRate?: number;
   }) {
+    const audioConfig = {
+      audioEncoding: "MP3",
+      speakingRate,
+    } as IAudioConfig;
     // Performs the text-to-speech request
     const request: ITextToSpeechRequest = {
       input: { text },
       voice: this.voice,
-      audioConfig: this.audioConfig
+      audioConfig,
     };
     const { client } = this;
     const synthesizeSpeech = async (request: ITextToSpeechRequest) => {
@@ -99,7 +100,7 @@ export default class VoiceOverClient {
       fileName,
       length: fragmentLength,
       voice: this.voice,
-      audioConfig: this.audioConfig
+      audioConfig: audioConfig,
     } as IPostSectionFragmentAudio;
   }
 }

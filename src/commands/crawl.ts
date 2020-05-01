@@ -16,7 +16,14 @@ export class CrawlCommand extends Command {
       description: "id of the post to be crawled",
       hidden: false,
       multiple: true,
-      required: false
+      required: false,
+    }),
+    postUri: flags.string({
+      char: "u",
+      description: "uri of the post or comment to be crawled",
+      hidden: false,
+      multiple: true,
+      required: false,
     }),
     subredditName: flags.string({
       char: "n",
@@ -25,7 +32,7 @@ export class CrawlCommand extends Command {
       multiple: false, // allow setting this flag multiple times
       default: "AskReddit", // default value if flag not passed (can be a function that returns a string or undefined)
       exclusive: ["postId"],
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     postIndex: flags.integer({
       char: "i",
@@ -33,7 +40,7 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 0, // default value if flag not passed (can be a function that returns a string or undefined)
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     nPosts: flags.integer({
       char: "N",
@@ -41,7 +48,7 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 1, // default value if flag not passed (can be a function that returns a string or undefined)
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     minWords: flags.integer({
       char: "w",
@@ -49,7 +56,7 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2.6 * 60 * 20, // default value if flag not passed (can be a function that returns a string or undefined)
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxReplyDepth: flags.integer({
       char: "d",
@@ -58,7 +65,7 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxRepliesPerComment: flags.integer({
       char: "r",
@@ -67,7 +74,7 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
-      required: false // make flag required (this is not common and you should probably use an argument instead)
+      required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     top: flags.string({
       char: "t",
@@ -75,8 +82,8 @@ export class CrawlCommand extends Command {
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       required: false, // make flag required (this is not common and you should probably use an argument instead)
-      options: ["hour", "day", "week", "month", "year", "all"]
-    })
+      options: ["hour", "day", "week", "month", "year", "all"],
+    }),
   };
 
   async run() {
@@ -87,17 +94,18 @@ export class CrawlCommand extends Command {
       saveOutputToFile,
       debug,
       postId,
+      postUri,
       subredditName,
       postIndex,
       nPosts,
-      top
+      top,
     } = flags;
 
     const context = createContext({
       outputDir,
       resourceDir,
       saveOutputToFile,
-      debug
+      debug,
     });
 
     const sort:
@@ -108,7 +116,7 @@ export class CrawlCommand extends Command {
         } = top
       ? {
           type: "top",
-          time: top as "week" | "hour" | "day" | "month" | "year" | "all"
+          time: top as "week" | "hour" | "day" | "month" | "year" | "all",
         }
       : { type: "hot" };
 
@@ -117,27 +125,43 @@ export class CrawlCommand extends Command {
     const crawler = new Crawler(context);
 
     const promises: Promise<IPost>[] = [];
+
     if (postId && postId.length > 0) {
       promises.push(
-        ...postId.map(async id => {
+        ...postId.map(async (id) => {
           const post = await crawler.getPost({
             postId: id,
-            sort
+            sort,
           });
           logPost(post);
           return post;
         })
       );
-    } else {
+    }
+
+    if (postUri && postUri.length > 0) {
       promises.push(
-        new Promise(async resolve => {
+        ...postUri.map(async (uri) => {
+          const post = await crawler.getPost({
+            postUri: uri,
+            sort,
+          });
+          logPost(post);
+          return post;
+        })
+      );
+    }
+
+    if (promises.length === 0) {
+      promises.push(
+        new Promise(async (resolve) => {
           const posts = await crawler.getPostsFromSubreddit({
             subredditName,
             postIndex: postIndex,
             nPosts: nPosts,
-            sort
+            sort,
           });
-          posts.map(post => logPost(post));
+          posts.map((post) => logPost(post));
           return resolve(...posts);
         })
       );
