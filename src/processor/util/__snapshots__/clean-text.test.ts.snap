@@ -1,3 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Clean Text Produce clean text 1`] = `"Fuck, does markdown work? I hope not."`;
+exports[`Clean Text Fixes HTML character reference for '&' 1`] = `"Penn & Teller are great."`;
+
+exports[`Clean Text Keeps line breaks 1`] = `
+"Line1
+
+Line2"
+`;
+
+exports[`Clean Text Produce clean text 1`] = `"Shoot, does markdown work? I hope not."`;
+
+exports[`Clean Text Removes quotes 1`] = `
+"
+       My cool quote here.
+      This should all be fine! :D
+    "
+`;

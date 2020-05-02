@@ -1,5 +1,5 @@
 import path from "path";
-import { IProcessedPost } from "../../../types";
+import { IProcessedPost, IVideoSettings } from "../../../types";
 
 function getSrcForPath(filePath: string) {
   return `file://${filePath}`;
@@ -10,18 +10,23 @@ export function getJob(
   {
     outputDir,
     resourceDir,
-    compName
-  }: { outputDir: string; resourceDir: string; compName: string }
+    compName,
+    settings,
+  }: {
+    outputDir: string;
+    resourceDir: string;
+    compName: string;
+    settings: IVideoSettings;
+  }
 ) {
+  const { BG_MUSIC, AUDIO_LEVEL_BG, AUDIO_LEVEL_VOICE, TEMPLATE } = settings;
   const resourceDirPath = path.resolve(resourceDir);
-  const AUDIO_LEVEL_BG = -10.0;
-  const AUDIO_LEVEL_VOICE = 3.0;
   const job: any = {
     template: {
       src: getSrcForPath(
-        path.join(resourceDirPath, "/after-effects/", "reddit-template.aep")
+        path.join(resourceDirPath, "/after-effects/", TEMPLATE)
       ),
-      composition: compName
+      composition: compName,
     },
     assets: [],
     actions: {
@@ -29,15 +34,15 @@ export function getJob(
         {
           module: "@nexrender/action-encode",
           preset: "mp4",
-          output: "encoded.mp4"
+          output: "encoded.mp4",
         },
         {
           module: "@nexrender/action-copy",
           input: "encoded.mp4",
-          output: path.join(outputDir, "output.mp4")
-        }
-      ]
-    }
+          output: path.join(outputDir, "output.mp4"),
+        },
+      ],
+    },
   };
 
   job.assets.push({
@@ -52,8 +57,8 @@ export function getJob(
       { key: "author", value: post.sections[0].author },
       { key: "score", value: post.sections[0].score },
       { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE },
-      { key: "postDetails", value: post.details }
-    ]
+      { key: "postDetails", value: post.details },
+    ],
   });
 
   for (let section of post.sections.slice(1)) {
@@ -66,8 +71,8 @@ export function getJob(
       parameters: [
         { key: "compName", value: `${compName}.comment-comp` },
         { key: "section", value: section },
-        { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE }
-      ]
+        { key: "audioLevelVoice", value: AUDIO_LEVEL_VOICE },
+      ],
     });
   }
 
@@ -86,9 +91,9 @@ export function getJob(
             i === 0 ? `${compName}.title-comp` : `${compName}.comment-comp`;
           const suffix = section.fragments[0].audio.fileName;
           return `${prefix}.${suffix}`;
-        })
-      }
-    ]
+        }),
+      },
+    ],
   });
 
   // Background
@@ -100,9 +105,9 @@ export function getJob(
       { key: "compName", value: compName },
       {
         key: "filePath",
-        value: path.join(resourceDirPath, "/bg-music/", "Sunshine_Samba.mp3")
+        value: path.join(resourceDirPath, "/bg-music/", BG_MUSIC),
       },
-      { key: "audioLevel", value: AUDIO_LEVEL_BG }
+      { key: "audioLevel", value: AUDIO_LEVEL_BG },
       // {
       //   key: "videoPath",
       //   value: path.join(
@@ -111,7 +116,7 @@ export function getJob(
       //     "bg-03-rocks-waves-1080p.mp4"
       //   )
       // }
-    ]
+    ],
   });
 
   return job;

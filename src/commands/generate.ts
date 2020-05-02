@@ -62,18 +62,28 @@ export class GenerateCommand extends Command {
 
     // Create new Generator and output results
     const generator = new Generator(context);
-    const promises: Promise<any>[] = [];
     if (video) {
-      promises.push(
-        ...posts.map(async post => await generator.generateVideo(post))
-      );
+      for (let post of posts) {
+        await generator.generateVideo(post);
+      }
     }
     if (thumbnail) {
-      promises.push(
-        ...posts.map(async post => await generator.generateThumbnail(post))
-      );
+      for (let post of posts) {
+        await generator.generateThumbnail(post);
+      }
     }
-    await Promise.all(promises);
+    // const promises: Promise<any>[] = [];
+    // if (video) {
+    //   promises.push(
+    //     ...posts.map(async post => await generator.generateVideo(post))
+    //   );
+    // }
+    // if (thumbnail) {
+    //   promises.push(
+    //     ...posts.map(async post => await generator.generateThumbnail(post))
+    //   );
+    // }
+    // await Promise.all(promises);
 
     notify(`Finished! Job completed at ${new Date().toLocaleTimeString()}`);
   }

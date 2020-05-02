@@ -193,6 +193,7 @@ function setColorControls(comp: CompItem) {
 
   setColorControl(colorControlsLayer, "text-color", [22, 22, 23]);
   setColorControl(colorControlsLayer, "text-color-alt", [135, 138, 140]);
+  setColorControl(colorControlsLayer, "text-color-alt-2", [135, 138, 140]);
   setColorControl(colorControlsLayer, "stroke-color", [204, 204, 204]);
   setColorControl(colorControlsLayer, "bar-color", [237, 239, 241]);
   setColorControl(colorControlsLayer, "main", [255, 255, 255]);
@@ -210,6 +211,25 @@ function setColorControl(
   var colorControl = effects.property(control);
   var color = colorControl.property("Color");
   (color as any).setValue(adjustedValues);
+}
+
+/**
+ * Adds a transition clip at outPoint of last voice-over audio clip.
+ * @param comp the target composition to add a transition to
+ * @param refLayer the layer to use as a reference for the outPoint
+ * @param options
+ */
+function addTransition(
+  comp: CompItem,
+  refLayer: Layer,
+  { footageName = "transition-1s_1080-1920.mp4" }: { footageName?: string } = {}
+): Layer {
+  const transitionLayer = addLayer(getFootageItem(footageName), comp, {
+    name: "transition",
+  });
+  transitionLayer.startTime = refLayer.outPoint;
+
+  return transitionLayer;
 }
 
 // function addGold(

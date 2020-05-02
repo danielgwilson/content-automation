@@ -1,5 +1,3 @@
-import fs from "fs";
-import util from "util";
 import path from "path";
 import Bottleneck from "bottleneck";
 import textToSpeech from "@google-cloud/text-to-speech";
@@ -29,19 +27,18 @@ export default class VoiceOverClient {
 
   client: any;
   voice: IVoice;
-  audioConfig: IAudioConfig;
   constructor({
-    GOOGLE_APPLICATION_CREDENTIALS
+    GOOGLE_APPLICATION_CREDENTIALS,
   }: {
     GOOGLE_APPLICATION_CREDENTIALS: string;
   }) {
     // Set up rate limiter
     this.limiter = new Bottleneck({
-      maxConcurrent: 10,
-      minTime: 250,
+      maxConcurrent: 5,
+      minTime: 1000,
       reservoir: 300,
       reservoirRefreshInterval: 1000 * 60,
-      reservoirRefreshAmount: 300
+      reservoirRefreshAmount: 300,
     });
 
     // Creates a Google Cloud Text-to-Speech client
@@ -50,30 +47,32 @@ export default class VoiceOverClient {
     ] = GOOGLE_APPLICATION_CREDENTIALS;
     this.client = new textToSpeech.TextToSpeechClient();
     this.voice = {
-      languageCode: "en-US",
-      name: "en-US-Wavenet-B",
-      ssmlGender: "MALE"
-    };
-    this.audioConfig = {
-      audioEncoding: "MP3",
-      speakingRate: 1.0
+      languageCode: "en-GB",
+      name: "en-GB-Wavenet-B",
+      ssmlGender: "MALE",
     };
   }
 
   async fetchVoiceOver({
     text,
     fileName,
-    outputDir
+    outputDir,
+    speakingRate = 1.0,
   }: {
     text: string;
     fileName: string;
     outputDir: string;
+    speakingRate?: number;
   }) {
+    const audioConfig = {
+      audioEncoding: "MP3",
+      speakingRate,
+    } as IAudioConfig;
     // Performs the text-to-speech request
     const request: ITextToSpeechRequest = {
       input: { text },
       voice: this.voice,
-      audioConfig: this.audioConfig
+      audioConfig,
     };
     const { client } = this;
     const synthesizeSpeech = async (request: ITextToSpeechRequest) => {
@@ -82,7 +81,7 @@ export default class VoiceOverClient {
     const [response] = await this.limiter.schedule(synthesizeSpeech, request);
 
     // Write the binary audio content to a local file
-    const filePath = path.resolve(path.join(outputDir, fileName));
+    const filePath = path.resolve(path.join(outputDir, "voice-over", fileName));
     await writeFile(filePath, response.audioContent, "binary");
 
     /* 
@@ -101,7 +100,7 @@ export default class VoiceOverClient {
       fileName,
       length: fragmentLength,
       voice: this.voice,
-      audioConfig: this.audioConfig
+      audioConfig: audioConfig,
     } as IPostSectionFragmentAudio;
   }
 }

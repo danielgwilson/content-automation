@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trim Audio Trims audio to max length parameter 1`] = `
+Array [
+  Object {
+    "author": "skopein",
+    "children": Array [],
+    "fragments": Array [
+      Object {
+        "audio": Object {
+          "audioConfig": Object {
+            "audioEncoding": "MP3",
+            "speakingRate": 1,
+          },
+          "fileName": "1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
+          "filePath": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
+          "length": 960,
+          "voice": Object {
+            "languageCode": "en-US",
+            "name": "en-US-Wavenet-B",
+            "ssmlGender": "MALE",
+          },
+        },
+        "text": "Why do you like to be alive?",
+        "textWithPriors": "Why do you like to be alive?",
+      },
+    ],
+    "gildings": Object {
+      "gold": 19,
+      "platinum": 13,
+      "silver": 214,
+    },
+    "length": 960,
+    "score": 124447,
+    "type": "title",
+  },
+]
+`;

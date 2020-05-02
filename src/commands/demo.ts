@@ -29,12 +29,7 @@ export class DemoCommand extends Command {
     });
 
     // Crawl first AskReddit post sorted by "hot"
-    const crawler = new Crawler(context, {
-      userAgent: config.get("REDDIT_USER_AGENT"),
-      clientId: config.get("REDDIT_CLIENT_ID"),
-      clientSecret: config.get("REDDIT_CLIENT_SECRET"),
-      refreshToken: config.get("REDDIT_REFRESH_TOKEN")
-    });
+    const crawler = new Crawler(context);
     const post = await crawler.getPost();
     logPost(post);
 

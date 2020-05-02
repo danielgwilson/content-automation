@@ -1,3 +1,5 @@
+import { IGildings } from "./post";
+
 export interface IProcessedPost {
   id: string;
   dateProcessed: Date;
@@ -6,6 +8,14 @@ export interface IProcessedPost {
 
   details: IProcessedPostDetails;
   sections: IPostSection[];
+}
+
+export interface IProcessedPostOptions {
+  maxReplyDepth?: number;
+  maxRepliesPerComment?: number;
+  maxComments?: number;
+  maxAudioLength?: number;
+  speakingRate?: number;
 }
 
 export interface IProcessedPostDetails {
@@ -30,7 +40,7 @@ export interface IPostSection {
 
   author: string;
   score: number;
-  gildings: import("snoowrap/dist/objects/VoteableContent").Gildings;
+  gildings: IGildings;
 
   children: IPostSection[];
 }

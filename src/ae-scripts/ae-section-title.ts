@@ -19,7 +19,7 @@
     author,
     score,
     audioLevelVoice,
-    postDetails
+    postDetails,
   } = SECTION_TITLE_PARAMS;
 
   const refComp = getComp(compName);
@@ -38,9 +38,20 @@
 
   // Add voiceover audio file
   const voLayer = addLayer(importFootage(fragments[0].audio.filePath), comp, {
-    name: `audio.${fragments[0].audio.filePath}`
+    name: `audio.${fragments[0].audio.filePath}`,
   });
   voLayer.audio.audioLevels.setValue([audioLevelVoice, audioLevelVoice]);
+
+  // Add fade out expression to avoid zero crossover point popping sounds
+  voLayer.audio.audioLevels.expression = `
+  fadeTime = 3; //frames for fade
+  audio.audioLevelsMin = -48.0; 
+  audio.audioLevelsMax = audio.audioLevels[0];
+  layerDuration = outPoint - inPoint;
+  singleFrame = thisComp.frameDuration;
+  animateOut = linear(time, (outPoint - framesToTime(fadeTime+1)), (outPoint-singleFrame), audio.audioLevelsMax, audio.audioLevelsMin);
+  [animateOut, animateOut];
+  `;
 
   // Add subreddit icon
   const iconLayer = comp.layer("subreddit-icon") as AVLayer;
@@ -79,14 +90,27 @@
   );
 
   // Add transition clip at outPoint of title comp
-  const transitionLayer = addLayer(getFootageItem("transition-1s.mp4"), comp, {
-    name: "transition-ref.title"
-  });
-  transitionLayer.startTime = voLayer.outPoint;
+  const transitionLayer = addTransition(comp, voLayer);
+
+  // Update comp outPoint to match transition outPoint
+  comp.duration = transitionLayer.outPoint;
+
+  // Set background position based on the background's (and thereby the title text's) size
+  function updatePosition() {
+    // Update BG y position as a function of height (keep text centered on screen)
+    const bgLayer = comp.layer("post-bg") as ShapeLayer;
+
+    const bgHeight: number = (bgLayer as any)
+      .content("BG Rect")
+      .content("Rectangle Path 1")
+      .size.valueAtTime(comp.duration, false)[1];
+    const xPos = (bgLayer.position.value as number[])[0];
+    const yPos = Math.round(comp.height / 2 - bgHeight / 2);
+
+    bgLayer.position.setValue([xPos, yPos]);
+  }
+  updatePosition();
 
   // Change color scheme to light mode
-  setColorControls(comp);
-
-  // Update comp outPoint to match voiceover outPoint
-  comp.duration = transitionLayer.outPoint;
+  // setColorControls(comp);
 })();

@@ -1,5 +1,10 @@
 import path from "path";
-import { IContext, IProcessedPost, IGeneratorOutput } from "../types";
+import {
+  IContext,
+  IProcessedPost,
+  IGeneratorOutput,
+  IVideoSettings,
+} from "../types";
 import { renderVideo } from "./video/render";
 import { renderThumbnail } from "./video/thumbnail";
 import { saveObjectToJson } from "../util";
@@ -17,17 +22,26 @@ export default class Generator {
     const outputDir = path.join(this.context.outputDir, subDir);
     const t0 = performance.now();
 
+    const settings = {
+      BG_MUSIC: "lakey-inspired_better-days_loop.mp3",
+      AUDIO_LEVEL_BG: -18.0,
+      AUDIO_LEVEL_VOICE: 0.1, // Bug here - if 0.0, parameter check fails. TODO.
+      // TEMPLATE: "reddit-template.aep",
+      TEMPLATE: "reddit-template_tiktok.aep",
+    } as IVideoSettings;
+
     const renderOutput = await renderVideo(post, {
       outputDir,
       resourceDir,
-      debug
+      debug,
+      settings,
     });
 
     const generatorOutput = {
       id: post.id,
       dateGenerated: new Date(),
       elapsedTime: performance.now() - t0,
-      media: { metadata: {}, thumbnail: {}, render: renderOutput }
+      media: { metadata: {}, thumbnail: {}, render: renderOutput },
     } as IGeneratorOutput;
 
     console.log(`---`);
@@ -42,7 +56,7 @@ export default class Generator {
       const fileName = `${generatorOutput.id}.video.generator.json`;
       await saveObjectToJson(generatorOutput, {
         fileName,
-        outputDir
+        outputDir,
       });
       console.log(`Saved output to file named ${fileName}`);
     }
@@ -59,7 +73,7 @@ export default class Generator {
       outputDir,
       resourceDir,
       saveOutputToFile,
-      debug
+      debug,
     } as IContext);
   }
 }

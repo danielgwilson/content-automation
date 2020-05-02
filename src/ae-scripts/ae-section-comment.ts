@@ -48,8 +48,8 @@
         .content("Rectangle Path 1")
         .size.valueAtTime(keyframe.time, false)[1];
 
-      const xPos = (thisComp.width - contentComp.comp.width) / 2;
-      const yPos0 = (thisComp.height - 600) / 2;
+      const xPos = Math.round((thisComp.width - contentComp.comp.width) / 2);
+      const yPos0 = Math.round((thisComp.height * 0.444) / 2);
 
       const distFromBottom = thisComp.height - (bgHeight + yPos0);
       const yNewPos = Math.min(yPos0, distFromBottom);
@@ -86,15 +86,7 @@
   }
   updateDurations(contentComp.comp, contentComp.comp.duration);
 
-  // Add transition clip at outPoint of last voice-over audio clip
-  const transitionLayer = addLayer(
-    getFootageItem("transition-1s.mp4"),
-    thisComp,
-    {
-      name: "transition"
-    }
-  );
-  transitionLayer.startTime = thisComp.layer(2).outPoint;
+  const transitionLayer = addTransition(thisComp, thisComp.layer(1));
 
   // Set the outPoint of the comment comp to match the length of the contents
   thisComp.duration = transitionLayer.outPoint;
