@@ -1,4 +1,5 @@
 import { getCleanText } from "./clean-text";
+import c from "config";
 
 describe("Clean Text", () => {
   it("Produce clean text", () => {
@@ -64,9 +65,18 @@ describe("Clean Text", () => {
     expect(cleanText).toEqual(expectedText);
   });
 
-  // it("Doesn't lose sequences of newlines", () => {
-  //   const text = "\n\n\n\n";
-  //   const cleanText = getCleanText(text);
-  //   expect(cleanText).toEqual(text);
-  // });
+  it("Doesn't lose sequences of newlines", () => {
+    const text = "\n\n\n\n";
+    const cleanText = getCleanText(text);
+    expect(cleanText).toEqual(text);
+  });
+
+  it("Removes introductory 'Reddit, ...' phrase", () => {
+    const text =
+      "Reddit, how would you feel about a law that bans radio stations from playing commercials with honking/beeping/siren noises in them?";
+    const expectedText =
+      "How would you feel about a law that bans radio stations from playing commercials with honking/beeping/siren noises in them?";
+    const cleanText = getCleanText(text);
+    expect(cleanText).toEqual(expectedText);
+  });
 });

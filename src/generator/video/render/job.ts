@@ -20,6 +20,7 @@ export function getJob(
   }
 ) {
   const { BG_MUSIC, AUDIO_LEVEL_BG, AUDIO_LEVEL_VOICE, TEMPLATE } = settings;
+  console.log(settings);
   const resourceDirPath = path.resolve(resourceDir);
   const job: any = {
     template: {
@@ -108,14 +109,6 @@ export function getJob(
         value: path.join(resourceDirPath, "/bg-music/", BG_MUSIC),
       },
       { key: "audioLevel", value: AUDIO_LEVEL_BG },
-      // {
-      //   key: "videoPath",
-      //   value: path.join(
-      //     resourceDir,
-      //     "/bg-videos/",
-      //     "bg-03-rocks-waves-1080p.mp4"
-      //   )
-      // }
     ],
   });
 
