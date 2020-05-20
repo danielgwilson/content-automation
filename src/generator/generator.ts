@@ -37,10 +37,14 @@ export default class Generator {
       settings,
     });
 
+    const outputName = "output.mp4";
     const generatorOutput = {
       id: post.id,
       dateGenerated: new Date(),
       elapsedTime: performance.now() - t0,
+      outputName,
+      outputPath: `${path.join(outputDir, outputName)}`,
+      title: post.details.title,
       media: { metadata: {}, thumbnail: {}, render: renderOutput },
     } as IGeneratorOutput;
 

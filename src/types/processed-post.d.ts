@@ -1,8 +1,7 @@
-import { IGildings } from "./post";
-
 export interface IProcessedPost {
   id: string;
   dateProcessed: Date;
+  context: import("./context").IContext;
 
   stats: IProcessedPostStats;
 
@@ -40,7 +39,7 @@ export interface IPostSection {
 
   author: string;
   score: number;
-  gildings: IGildings;
+  gildings: import("./post").IGildings;
 
   children: IPostSection[];
 }
