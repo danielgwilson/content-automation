@@ -11,8 +11,6 @@ Line2"
 exports[`Clean Text Produce clean text 1`] = `"Shoot, does markdown work? I hope not."`;
 
 exports[`Clean Text Removes quotes 1`] = `
-"
-       My cool quote here.
-      This should all be fine! :D
-    "
+"My cool quote here.
+      This should all be fine! :D"
 `;

@@ -13,6 +13,7 @@ export function getCleanText(text: string) {
   cleanText = removeQuotes(cleanText);
   cleanText = removeReddit(cleanText);
   cleanText = removeSeriousTag(cleanText);
+  cleanText = removeEdit(cleanText);
 
   return cleanText;
 }
@@ -47,6 +48,12 @@ function removeProfanity(text: string) {
   return cleanText;
 }
 
+function removeEdit(text: string) {
+  let cleanText = text;
+  cleanText = cleanText.split(/(Edit:)/)[0].trim();
+  return cleanText;
+}
+
 function removeReddit(text: string) {
   let cleanText = text;
   cleanText = cleanText.replace(/^(\w+)( of Reddit,)/, "$1,"); // Removes e.g. "People of Reddit, ..."
@@ -58,10 +65,10 @@ function removeReddit(text: string) {
 }
 
 function removeSeriousTag(text: string) {
-  return text.replace(/^(\[Serious\] )/, "");
+  return text.replace(/( ?\[Serious\] ?)/, "");
 }
 
 // TODO: should actually render quotes
 function removeQuotes(text: string) {
-  return text.replace(new RegExp("&gt;", "gi"), "");
+  return text.replace(new RegExp("&gt; ", "gi"), "");
 }

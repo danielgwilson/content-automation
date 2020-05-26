@@ -80,7 +80,7 @@ export class UploadCommand extends Command {
       const page = await manager.login(credentials, {
         useCookies: !resetSession,
       });
-      await manager.uploadVideo({
+      await manager.uploadPost({
         targetDir: path,
         title,
         page,

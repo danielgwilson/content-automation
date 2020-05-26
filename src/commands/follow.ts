@@ -22,7 +22,7 @@ export class FollowCommand extends Command {
     }),
     tags: flags.string({
       char: "t",
-      description: "tags which target users must be following",
+      description: "tag which target users must be following",
       hidden: false,
       required: true,
       multiple: true,
@@ -31,7 +31,7 @@ export class FollowCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(FollowCommand);
-    const { path } = args;
+    // const { path } = args;
     const {
       outputDir,
       resourceDir,
@@ -49,7 +49,7 @@ export class FollowCommand extends Command {
       debug,
     });
 
-    notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
+    notify(`Started following user(s) at ${new Date().toLocaleTimeString()}`);
 
     const executablePath = config.get("PUPPETEER_EXECUTABLE_PATH") as string;
     const manager = await Manager.init(context, { executablePath });
@@ -63,12 +63,8 @@ export class FollowCommand extends Command {
     });
     await manager.followUsers(page, tags);
 
-    // for (let video of videos) {
-    //   // handle video upload
-    // }
-
     notify(
-      `Finished! Upload(s) completed at ${new Date().toLocaleTimeString()}`
+      `Finished! Follow(s) completed at ${new Date().toLocaleTimeString()}`
     );
   }
 }

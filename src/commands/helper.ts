@@ -102,8 +102,6 @@ export class HelperCommand extends Command {
     });
     logPost(post);
 
-    const resultDir = `${path.join(outputDir, post.id)}`;
-
     notify(
       `Finished! Crawling completed at at ${new Date().toLocaleTimeString()}`
     );
@@ -113,22 +111,18 @@ export class HelperCommand extends Command {
      */
     notify(`Started processing post at ${new Date().toLocaleTimeString()}`);
 
-    const crawlerPosts = getPosts(resultDir, { type: "crawler" });
-
     const processor = new Processor(context, {
       GOOGLE_APPLICATION_CREDENTIALS: config.get(
         "GOOGLE_APPLICATION_CREDENTIALS"
       ),
     });
-    for (let post of crawlerPosts) {
-      await processor.process(post, {
-        maxRepliesPerComment,
-        maxReplyDepth,
-        maxComments,
-        maxAudioLength,
-        speakingRate: speakingRate / 100,
-      });
-    }
+    const processedPost = await processor.process(post, {
+      maxRepliesPerComment,
+      maxReplyDepth,
+      maxComments,
+      maxAudioLength,
+      speakingRate: speakingRate / 100,
+    });
 
     notify(
       `Finished! Processing completed at ${new Date().toLocaleTimeString()}`
@@ -139,13 +133,9 @@ export class HelperCommand extends Command {
      */
     notify(`Started generating media at ${new Date().toLocaleTimeString()}`);
 
-    const processedPosts = getPosts(resultDir, { type: "processor" });
-
     // Create new Generator and output results
     const generator = new Generator(context);
-    for (let post of processedPosts) {
-      await generator.generateVideo(post);
-    }
+    await generator.generateVideo(processedPost);
 
     notify(`Finished! Job completed at ${new Date().toLocaleTimeString()}`);
   }
