@@ -20,14 +20,7 @@ export class FollowCommand extends Command {
       default: false, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
-    tags: flags.string({
-      char: "t",
-      description: "tag which target users must be following",
-      hidden: false,
-      required: true,
-      multiple: true,
-    }),
-    numFollows: flags.integer({
+    numUnfollows: flags.integer({
       char: "n",
       description: "number of users to follow this session",
       hidden: false,
@@ -46,8 +39,7 @@ export class FollowCommand extends Command {
       debug,
 
       resetSession,
-      tags,
-      numFollows,
+      numUnfollows,
     } = flags;
 
     const context = createContext({
@@ -57,7 +49,7 @@ export class FollowCommand extends Command {
       debug,
     });
 
-    notify(`Started following user(s) at ${new Date().toLocaleTimeString()}`);
+    notify(`Started unfollowing user(s) at ${new Date().toLocaleTimeString()}`);
 
     const executablePath = config.get("PUPPETEER_EXECUTABLE_PATH") as string;
     const manager = await Manager.init(context, { executablePath });
@@ -69,12 +61,12 @@ export class FollowCommand extends Command {
     const page = await manager.login(credentials, {
       useCookies: !resetSession,
     });
-    await manager.followUsers(page, tags, { numFollows });
+    await manager.unfollowUsers({ numUnfollows });
 
     if (!context.debug) await manager.close(); // clean up only if not in debug mode
 
     notify(
-      `Finished! Follow(s) completed at ${new Date().toLocaleTimeString()}`
+      `Finished! Unfollow(s) completed at ${new Date().toLocaleTimeString()}`
     );
   }
 }

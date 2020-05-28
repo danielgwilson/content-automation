@@ -2,7 +2,7 @@ import path from "path";
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify, getPosts, logPost } from "../util";
+import { createContext, notify, logPost } from "../util";
 import Crawler from "../crawler";
 import Processor from "../processor";
 import Generator from "../generator";
@@ -97,8 +97,10 @@ export class HelperCommand extends Command {
 
     const crawler = new Crawler(context);
 
+    const uriSuffix = postUri.split("sort").length > 1 ? "" : "&sort=top"; // Don't add sort query parameter if already present
+
     const post = await crawler.getPost({
-      postUri: `${postUri}&sort=top`,
+      postUri: `${postUri}${uriSuffix}`,
     });
     logPost(post);
 

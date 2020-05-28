@@ -1,19 +1,5 @@
-export { IContext } from "./context";
-export {
-  IPost,
-  IPostDetails,
-  IPostComment,
-  ICrawlOptions,
-  ISubreddit,
-  IGildings,
-} from "./post";
-export {
-  IProcessedPost,
-  IProcessedPostOptions,
-  IProcessedPostDetails,
-  IPostSection,
-  IPostSectionFragment,
-  IPostSectionFragmentAudio,
-  IProcessedPostStats,
-} from "./processed-post";
-export { IGeneratorOutput, IRenderOutput, IVideoSettings } from "./generator";
+export * from "./context";
+export * from "./post";
+export * from "./processed-post";
+export * from "./generator";
+export * from "./follow";

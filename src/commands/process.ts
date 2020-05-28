@@ -1,7 +1,7 @@
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify, getPosts } from "../util";
+import { createContext, notify, getBlobs, BlobType } from "../util";
 import Processor from "../processor";
 
 export class ProcessCommand extends Command {
@@ -87,7 +87,7 @@ export class ProcessCommand extends Command {
 
     notify(`Started processing post at ${new Date().toLocaleTimeString()}`);
 
-    const posts = getPosts(path, { type: "crawler" });
+    const posts = getBlobs(path, { type: BlobType.crawler });
 
     const processor = new Processor(context, {
       GOOGLE_APPLICATION_CREDENTIALS: config.get(

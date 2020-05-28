@@ -9,8 +9,8 @@ puppeteer.use(StealthPlugin());
 
 import { Page, Browser, LaunchOptions } from "puppeteer";
 
-import { IContext } from "../types";
-import { login, uploadPost, followUsers, test } from "./helpers";
+import { IContext, IFollowCriteria } from "../types";
+import { login, uploadPost, followUsers, unfollowUsers, test } from "./helpers";
 
 export default class Manager {
   context: IContext;
@@ -106,7 +106,15 @@ export default class Manager {
     await uploadPost(this, { targetDir, title, page });
   }
 
-  async followUsers(page: Page, tags: string[]) {
-    await followUsers(this, page, tags);
+  async followUsers(
+    page: Page,
+    tags: string[],
+    options?: { followCriteria?: IFollowCriteria; numFollows?: number }
+  ) {
+    await followUsers(this, page, tags, options);
+  }
+
+  async unfollowUsers(options?: { numUnfollows?: number }) {
+    await unfollowUsers(this, options);
   }
 }
