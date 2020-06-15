@@ -11,6 +11,10 @@ import {
 } from "../../../types/follow";
 import { getSelectorText, MAX_FOLLOWS } from "../../util";
 import { saveObjectToJson, getNumberFromShortString } from "../../../util";
+import {
+  getPreviouslyFollowedUsernames,
+  getFollowUnfollowBlobs,
+} from "./follow-data";
 
 const SELECTORS = {
   videoFeedItem: ".video-feed-item > div > div > div > a > div > div",
@@ -89,18 +93,22 @@ export async function followUsers(
 
         // Check if already following user
         if (userInfo && !(await userInfo.$(SELECTORS.comment.user.following))) {
+          // Check if previously followed user in the past (data blob dump)
           const username = await getSelectorText(
             userInfo,
             SELECTORS.comment.user.username
           );
+          const { follows } = await getFollowUnfollowBlobs(manager.context);
+          const previouslyFollowedUsernames = await getPreviouslyFollowedUsernames(
+            follows
+          );
+          const didPrevioulyFollow =
+            usernamesAttempted.indexOf(username) !== -1 ||
+            previouslyFollowedUsernames.indexOf(username) !== -1;
 
-          if (usernamesAttempted.indexOf(username) === -1) {
+          if (!didPrevioulyFollow) {
             usernamesAttempted.push(username);
-            const action = await followUser(
-              username,
-              manager.browser,
-              followCriteria
-            );
+            const action = await followUser(username, manager, followCriteria);
 
             if (action) followActions.push(action);
           }
@@ -132,7 +140,10 @@ export async function followUsers(
     },
   } as IFollowOutput;
 
-  console.log(followOutput);
+  console.log(
+    `Total users followed successfully (including requests): ${followActions.length}`
+  );
+
   if (manager.context.saveOutputToFile) {
     const fileName = `${followOutput.sessionStart.toISOString()}.follow.json`;
     await saveObjectToJson(followOutput, {
@@ -145,10 +156,10 @@ export async function followUsers(
 
 async function followUser(
   username: string,
-  browser: Browser,
+  manager: Manager,
   followCriteria: IFollowCriteria
 ): Promise<IFollowAction | null> {
-  const page = await browser.newPage();
+  const page = await manager.newPage();
   const url = `https://www.tiktok.com/@${username}?lang=en`;
 
   await page.goto(url, { waitUntil: "load" });
@@ -159,7 +170,8 @@ async function followUser(
   try {
     titleText = await getSelectorText(page, SELECTORS.profile.title);
     if (titleText === "Couldn't find this account") {
-      console.log(`${titleText}; skipping user.`);
+      console.log(`${titleText}; skipping user ${username}`);
+      await page.close();
       return null;
     }
   } catch (e) {
@@ -216,18 +228,16 @@ async function followUser(
     console.log(`Followed user ${username}`);
   else if (followButtonText2 === "Requested")
     console.log(`Followed user ${username}`);
+  else if (followButtonText2 === "Friends")
+    console.log(`Followed user ${username} back (friends).`);
+  // TODO: don't follow user if user is already following; minimal/unknown ROI of action.
   else throw new Error(`Failed to follow user @${username}`); // Follow unsuccessful for some reason.
 
   await page.close();
 
   const action = {
     timestamp: new Date(),
-    target: {
-      username,
-      following,
-      followers,
-      likes,
-    } as IUser,
+    target: user,
   } as IFollowAction;
 
   return action;
@@ -246,9 +256,29 @@ function shouldFollowUser(
   } = followCriteria;
 
   if (isPrivate !== null && user.isPrivate !== isPrivate) return false;
-  else if (maxFollowers !== null && user.followers > maxFollowers) return false;
-  else if (minFollowers !== null && user.followers < minFollowers) return false;
-  else if (maxFollowing !== null && user.following > maxFollowing) return false;
-  else if (minFollowing !== null && user.following < minFollowing) return false;
+  else if (
+    maxFollowers !== null &&
+    user.followers !== undefined &&
+    user.followers > maxFollowers
+  )
+    return false;
+  else if (
+    minFollowers !== null &&
+    user.followers !== undefined &&
+    user.followers < minFollowers
+  )
+    return false;
+  else if (
+    maxFollowing !== null &&
+    user.following !== undefined &&
+    user.following > maxFollowing
+  )
+    return false;
+  else if (
+    minFollowing !== null &&
+    user.following !== undefined &&
+    user.following < minFollowing
+  )
+    return false;
   else return true;
 }

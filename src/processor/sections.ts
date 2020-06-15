@@ -132,11 +132,19 @@ export function getCharacters(sections: IPostSection[]) {
     .reduce((a, b) => a + b, 0);
 }
 
-export function getAudioLengthForSections(sections: IPostSection[]): number {
-  return sections
-    .map((section) => {
-      const childLength = getAudioLengthForSections(section.children);
-      return section.length + childLength;
-    })
-    .reduce((a, b) => a + b, 0);
+export function getAudioLengthForSections(
+  sections: IPostSection[],
+  { transitionLength = 1 }: { transitionLength?: number } = {}
+): number {
+  return (
+    sections
+      .map((section) => {
+        const childLength = getAudioLengthForSections(section.children, {
+          transitionLength: 0,
+        }); // transitionLength is zero except for top-level comments
+        return section.length + childLength;
+      })
+      .reduce((a, b) => a + b, 0) +
+    transitionLength * sections.length
+  ); // add transitionLength * sections.length for the transition clips
 }

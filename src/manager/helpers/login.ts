@@ -21,7 +21,7 @@ export async function login(
   };
 
   // Must create a new page; old pages are not correctly stealthed.
-  const page = await manager.browser.newPage();
+  const page = await manager.newPage();
   await page.setDefaultNavigationTimeout(0);
 
   async function loginWithCookies() {

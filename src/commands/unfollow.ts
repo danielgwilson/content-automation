@@ -27,6 +27,14 @@ export class FollowCommand extends Command {
       required: false,
       multiple: false,
     }),
+    randomOrder: flags.boolean({
+      char: "o",
+      description:
+        "randomly select the subset of users to unfollow (default is prioritize oldest follows)",
+      hidden: false,
+      required: false,
+      default: false,
+    }),
   };
 
   async run() {
@@ -40,6 +48,7 @@ export class FollowCommand extends Command {
 
       resetSession,
       numUnfollows,
+      randomOrder,
     } = flags;
 
     const context = createContext({
@@ -58,10 +67,10 @@ export class FollowCommand extends Command {
       email: string;
       password: string;
     };
-    const page = await manager.login(credentials, {
+    await manager.login(credentials, {
       useCookies: !resetSession,
     });
-    await manager.unfollowUsers({ numUnfollows });
+    await manager.unfollowUsers({ numUnfollows, randomOrder });
 
     if (!context.debug) await manager.close(); // clean up only if not in debug mode
 

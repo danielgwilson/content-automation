@@ -46,6 +46,15 @@ describe("Clean Text", () => {
     expect(cleanText).toEqual(expectedText);
   });
 
+  it("Removes introductory 'of Reddit' phrase with two preceeding words", () => {
+    const text =
+      "Autopsy doctors of Reddit, what's the dumbest way you've seen someone accidently start a house fire?";
+    const expectedText =
+      "Autopsy doctors, what's the dumbest way you've seen someone accidently start a house fire?";
+    const cleanText = getCleanText(text);
+    expect(cleanText).toEqual(expectedText);
+  });
+
   it("Replaces introductory 'Redditors' phrase", () => {
     const text = "Redditors who are married to Karens, how is it like?";
     const expectedText = "People who are married to Karens, how is it like?";

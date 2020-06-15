@@ -56,7 +56,7 @@ function removeEdit(text: string) {
 
 function removeReddit(text: string) {
   let cleanText = text;
-  cleanText = cleanText.replace(/^(\w+)( of Reddit,)/i, "$1,"); // Removes e.g. "People of Reddit, ..."
+  cleanText = cleanText.replace(/^(.+?)( of Reddit,)/i, "$1,"); // Removes e.g. "People of Reddit, ..."
   cleanText = cleanText.replace(/^(Redditors)/, "People"); // Removes e.g "Redditors who are..."
   cleanText = cleanText // Removes e.g. "Reddit, how would you..."
     .replace(/^(Reddit, )/, "")

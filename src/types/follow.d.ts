@@ -6,9 +6,9 @@ export interface IFollowOutput {
   tags: string[];
   actionsTaken: IFollowAction[];
   manager: {
-    proxy;
-    executablePath;
-    timeout;
+    proxy?: string | string[];
+    executablePath: string;
+    timeout: number;
   };
 }
 
@@ -27,10 +27,10 @@ export interface IFollowAction {
 
 export interface IUser {
   username: string;
-  isPrivate: boolean;
-  following: number;
-  followers: number;
-  likes: number;
+  isPrivate?: boolean;
+  following?: number;
+  followers?: number;
+  likes?: number;
 }
 
 export interface IUnfollowOutput {
@@ -38,12 +38,11 @@ export interface IUnfollowOutput {
   sessionEnd: Date;
   context: import("./context").IContext;
   account: string;
-  tags: string[];
   actionsTaken: IUnfollowAction[];
   manager: {
-    proxy;
-    executablePath;
-    timeout;
+    proxy?: string | string[];
+    executablePath: string;
+    timeout: number;
   };
 }
 

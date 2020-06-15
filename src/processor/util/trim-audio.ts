@@ -17,8 +17,14 @@ export function trimAudio(
       break;
     }
     trimmedSections.push(section);
-    totalAudioLength += sectionAudioLength * 1000;
+    totalAudioLength += sectionAudioLength;
   }
+
+  if (trimmedSections.length <= 1)
+    throw new Error(
+      `Failed to trim audio output for processed sections within maxAudioLength of ${maxAudioLength}s; minimum audio length: ${sections[0]
+        .length + sections[1].length}`
+    );
 
   return trimmedSections;
 }

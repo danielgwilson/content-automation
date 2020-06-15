@@ -4,11 +4,12 @@ import path from "path";
 import Manager from "../manager";
 import { waitForRandom } from "./wait";
 import { getCaptionAndTags } from "./caption";
-import { getSelectorText } from "../util";
+import { getSelectorText, MAX_VIDEO_LENGTH } from "../util";
 import { saveObjectToJson } from "../../util/saveObjectToJson";
 import { IGeneratorOutput } from "../../types";
 import { IUploadOutput } from "../../types/upload";
 import { getBlobs, BlobType } from "../../util";
+import { getVideoLength } from "../../util/get-video-length";
 
 export async function uploadPost(
   manager: Manager,
@@ -33,11 +34,15 @@ export async function uploadPost(
     successDialogTitle: "[class*=modal-title--]",
   };
 
-  // TODO: handle multiple posts (maybe? Would you ever upload more than one at a time?)
-  const post = getBlobs(targetDir, {
-    type: BlobType.generator,
-  })[0] as IGeneratorOutput;
-  const videoPath = path.join(targetDir, post.outputName);
+  const { blob, blobDir } = getFreshBlobFromPath(targetDir);
+
+  const videoPath = path.join(blobDir, blob.outputName);
+
+  // if ((await getVideoLength(videoPath)) > MAX_VIDEO_LENGTH)
+  //   throw new Error(
+  //     `Video file at designated path exceeds maximum allowed duration of ${MAX_VIDEO_LENGTH} seconds.`
+  //   );
+
   const idealTags = [
     "#reddit",
     "#askreddit",
@@ -46,7 +51,7 @@ export async function uploadPost(
     "#redditoutloud",
   ];
   const { caption, tags } = getCaptionAndTags(
-    title || post.title,
+    title || blob.title,
     idealTags,
     150
   );
@@ -120,12 +125,12 @@ export async function uploadPost(
   console.log("Successfully uploaded post!");
 
   const uploadedPost = {
-    id: post.id,
+    id: blob.id,
     dateUploaded: new Date(),
     context: manager.context,
     account: manager.account,
-    targetDir,
-    outputName: post.outputName,
+    targetDir: blobDir,
+    outputName: blob.outputName,
     videoPath,
     caption,
     tags,
@@ -139,8 +144,52 @@ export async function uploadPost(
     const fileName = `${uploadedPost.id}.upload.json`;
     await saveObjectToJson(uploadedPost, {
       fileName,
-      outputDir: targetDir,
+      outputDir: blobDir,
     });
     console.log(`Saved output to file named ${fileName}`);
   }
+}
+
+export function getFreshBlobFromPath(targetPath: string) {
+  const generatorBlobs = getBlobs(targetPath, {
+    type: BlobType.generator,
+  }) as IGeneratorOutput[];
+  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploaded
+  const uploadIds =
+    uploadBlobs.length > 0
+      ? uploadBlobs.map((uploadBlob) => uploadBlob.id)
+      : [];
+  let blob: IGeneratorOutput | undefined = undefined;
+  for (let generatorBlob of generatorBlobs) {
+    if (uploadIds.indexOf(generatorBlob.id) === -1) {
+      blob = generatorBlob;
+      break;
+    }
+  }
+  if (!blob)
+    throw new Error(
+      `Failed to fetch IGeneratorOutput content blob from ${targetPath}; all possible blobs in this path were previously uploaded.`
+    );
+
+  const blobDir =
+    generatorBlobs.length > 1 ? path.join(targetPath, blob.id) : targetPath;
+
+  return { blob, blobDir };
+}
+
+export function getFreshBlobsFromPath(targetPath: string) {
+  const generatorBlobs = getBlobs(targetPath, {
+    type: BlobType.generator,
+  }) as IGeneratorOutput[];
+  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploaded
+  const uploadIds =
+    uploadBlobs.length > 0
+      ? uploadBlobs.map((uploadBlob) => uploadBlob.id)
+      : [];
+
+  const freshBlobs = generatorBlobs.filter(
+    (generatorBlob) => uploadIds.indexOf(generatorBlob.id) === -1
+  );
+
+  return freshBlobs;
 }

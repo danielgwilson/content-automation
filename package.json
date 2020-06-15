@@ -56,6 +56,7 @@
     "@oclif/test": "^1.2.5",
     "@types/node-notifier": "^5.4.2",
     "@types/remove-markdown": "^0.1.1",
+    "@types/underscore.string": "0.0.38",
     "@types/uuid": "^7.0.3",
     "acorn": "^7.2.0",
     "azure-cognitiveservices-websearch": "^2.0.0",
@@ -72,11 +73,12 @@
     "node-notifier": "^6.0.0",
     "puppeteer": "^3.0.4",
     "puppeteer-extra": "^3.1.9",
-    "puppeteer-extra-plugin-stealth": "^2.4.7",
+    "puppeteer-extra-plugin-stealth": "^2.4.9",
     "remove-markdown": "^0.3.0",
     "snoowrap": "^1.21.0",
     "tslib": "^1.13.0",
     "types-for-adobe": "^1.7.0",
+    "underscore.string": "^3.3.5",
     "uuid": "^7.0.3"
   },
   "devDependencies": {

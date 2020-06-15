@@ -1,4 +1,5 @@
 import path from "path";
+
 // Puppeteer-extra is a drop-in replacement for puppeteer
 // It augments the installed puppeteer with plugin functionality
 import puppeteer from "puppeteer-extra";
@@ -9,28 +10,38 @@ puppeteer.use(StealthPlugin());
 
 import { Page, Browser, LaunchOptions } from "puppeteer";
 
-import { IContext, IFollowCriteria } from "../types";
-import { login, uploadPost, followUsers, unfollowUsers, test } from "./helpers";
+import { IContext, IFollowCriteria, IProxy } from "../types";
+import {
+  login,
+  uploadPost,
+  getFreshBlobsFromPath,
+  followUsers,
+  unfollowUsers,
+  testDetection,
+} from "./helpers";
 
 export default class Manager {
   context: IContext;
   browser: Browser;
   account: string | undefined;
   executablePath?: string;
-  proxy?: string | string[];
+  proxy?: IProxy;
   timeout?: number;
+  disableMedia?: boolean;
   private constructor({
     context,
     browser,
     executablePath,
     proxy,
     timeout = 0,
+    disableMedia = false,
   }: {
     context: IContext;
     browser: Browser;
     executablePath?: string;
-    proxy?: string | string[];
+    proxy?: IProxy;
     timeout?: number;
+    disableMedia?: boolean;
   }) {
     this.context = context;
     this.account = undefined;
@@ -38,34 +49,49 @@ export default class Manager {
     this.executablePath = executablePath;
     this.proxy = proxy;
     this.timeout = timeout;
+    this.disableMedia = disableMedia;
   }
 
   static async init(
     context: IContext,
     {
       executablePath,
+      proxy,
+      disableMedia,
     }: {
       executablePath?: string;
+      proxy?: IProxy;
+      disableMedia?: boolean;
     } = {}
   ) {
+    const args = [
+      // "--no-sandbox",
+      // "--disable-setuid-sandbox",
+      // "--disable-dev-shm-usage",
+      // "--disable-accelerated-2d-canvas",
+      // "--no-first-run",
+      // "--no-zygote",
+    ];
+    if (proxy) args.push(`--proxy-server=${proxy.server}`);
+
     const launchOptions: LaunchOptions = {
+      // product: "firefox",
       ignoreHTTPSErrors: true,
       headless: !context.debug,
-      // args: [
-      //   "--no-sandbox",
-      //   "--disable-setuid-sandbox",
-      //   "--disable-dev-shm-usage",
-      //   "--disable-accelerated-2d-canvas",
-      //   "--no-first-run",
-      //   "--no-zygote",
-      // ],
+      args,
       ignoreDefaultArgs: ["--enable-automation"],
     };
     if (executablePath) launchOptions.executablePath = executablePath;
 
     const browser = await puppeteer.launch(launchOptions);
 
-    return new Manager({ context, browser, executablePath });
+    return new Manager({
+      context,
+      browser,
+      executablePath,
+      proxy,
+      disableMedia,
+    });
   }
 
   async close() {
@@ -73,16 +99,7 @@ export default class Manager {
   }
 
   async test() {
-    await test(this);
-  }
-
-  private get getProxy(): string | undefined {
-    if (Array.isArray(this.proxy)) {
-      return this.proxy.length
-        ? this.proxy[Math.floor(Math.random() * this.proxy.length)]
-        : "";
-    }
-    return this.proxy; // -> returns undefined if this.proxy is undefined
+    await testDetection(this);
   }
 
   async login(
@@ -114,7 +131,62 @@ export default class Manager {
     await followUsers(this, page, tags, options);
   }
 
-  async unfollowUsers(options?: { numUnfollows?: number }) {
+  async unfollowUsers(options?: {
+    numUnfollows?: number;
+    randomOrder: boolean;
+  }) {
     await unfollowUsers(this, options);
+  }
+
+  async newPage() {
+    const page = await this.browser.newPage();
+
+    // Bypass hairline feature
+    await page.evaluateOnNewDocument(() => {
+      // store the existing descriptor
+      const elementDescriptor = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        "offsetHeight"
+      );
+
+      // redefine the property with a patched descriptor
+      Object.defineProperty(HTMLDivElement.prototype, "offsetHeight", {
+        ...elementDescriptor,
+        get: function() {
+          if (this.id === "modernizr") {
+            return 1;
+          }
+          // @ts-ignore
+          return elementDescriptor.get.apply(this);
+        },
+      });
+    });
+
+    if (this.disableMedia) {
+      page.setRequestInterception(true);
+      page.on("request", async (request) => {
+        if (
+          request.resourceType() === "fetch" ||
+          request.resourceType() === "image" ||
+          request.resourceType() === "media" ||
+          request.resourceType() === "font"
+        ) {
+          request.abort();
+        } else {
+          request.continue();
+        }
+      });
+    }
+
+    if (this.proxy)
+      page.authenticate({
+        username: this.proxy.username,
+        password: this.proxy.password,
+      });
+    return page;
+  }
+
+  getCountOfRemainingContentItems({ targetDir }: { targetDir: string }) {
+    return getFreshBlobsFromPath(targetDir).length;
   }
 }

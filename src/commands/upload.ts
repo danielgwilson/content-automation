@@ -3,6 +3,7 @@ import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
 import { createContext, notify } from "../util";
 import Manager from "../manager";
+import { IProxy } from "../types";
 
 export class UploadCommand extends Command {
   static description = `
@@ -42,6 +43,23 @@ export class UploadCommand extends Command {
       required: false,
       default: false,
     }),
+    nContentRemaining: flags.boolean({
+      char: "n",
+      description:
+        "don't actually upload; instead, count number of remaining un-uploaded content items.",
+      hidden: false,
+      required: false,
+      default: false,
+    }),
+    browser: flags.string({
+      char: "b",
+      description:
+        "name of browser executable to use (either 'chrome' or 'firefox')",
+      hidden: false,
+      required: false,
+      options: ["chrome", "firefox"],
+      default: "chrome",
+    }),
   };
 
   async run() {
@@ -56,6 +74,8 @@ export class UploadCommand extends Command {
       resetSession,
       title,
       testDetection,
+      browser,
+      nContentRemaining,
     } = flags;
 
     const context = createContext({
@@ -67,11 +87,27 @@ export class UploadCommand extends Command {
 
     notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
 
-    const executablePath = config.get("PUPPETEER_EXECUTABLE_PATH") as string;
-    const manager = await Manager.init(context, { executablePath });
+    const executablePath = config.get("PUPPETEER_EXECUTABLE_PATH") as {
+      [key: string]: string;
+    };
+    const proxy = config.get("PROXY") as IProxy;
+    const manager = await Manager.init(context, {
+      executablePath: executablePath[browser],
+      proxy,
+    });
+
+    function logRemainingContentItems(targetDir: string) {
+      console.log(
+        `Remaining non-uploaded content items in path: ${manager.getCountOfRemainingContentItems(
+          { targetDir }
+        )}`
+      );
+    }
 
     if (testDetection) {
       await manager.test();
+    } else if (nContentRemaining) {
+      logRemainingContentItems(path);
     } else {
       const credentials = config.get("ACCOUNT_TIKTOK") as {
         email: string;
@@ -85,6 +121,7 @@ export class UploadCommand extends Command {
         title,
         page,
       });
+      logRemainingContentItems(path);
     }
 
     if (!context.debug) await manager.close(); // clean up only if not in debug mode

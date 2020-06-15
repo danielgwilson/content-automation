@@ -28,7 +28,7 @@ export default class {
   }
 
   async saveToFile(post: IPost) {
-    const subDir = `/${post.id}/`;
+    const subDir = path.join(post.id);
     const outputDir = path.join(this.context.outputDir, subDir);
     const fileName = `${post.id}.crawler.json`;
     await saveObjectToJson(post, {

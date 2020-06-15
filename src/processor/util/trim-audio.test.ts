@@ -3,7 +3,7 @@ import { IPostSection } from "../../types";
 
 describe("Trim Audio", () => {
   it("Trims audio to max length parameter", () => {
-    const maxAudioLength = 1000 * 60 * 15; // 15 minutes worth of audio
+    const maxAudioLength = 60 * 15; // 15 minutes worth of audio
     const sections = [
       {
         type: "title",
@@ -19,17 +19,17 @@ describe("Trim Audio", () => {
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",
-                ssmlGender: "MALE"
+                ssmlGender: "MALE",
               },
-              audioConfig: { audioEncoding: "MP3", speakingRate: 1 }
-            }
-          }
+              audioConfig: { audioEncoding: "MP3", speakingRate: 1 },
+            },
+          },
         ],
         length: 60 * 16,
         score: 124447,
         author: "skopein",
         gildings: { silver: 214, gold: 19, platinum: 13 },
-        children: []
+        children: [],
       },
       {
         type: "comment",
@@ -47,10 +47,10 @@ describe("Trim Audio", () => {
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",
-                ssmlGender: "MALE"
+                ssmlGender: "MALE",
               },
-              audioConfig: { audioEncoding: "MP3", speakingRate: 1 }
-            }
+              audioConfig: { audioEncoding: "MP3", speakingRate: 1 },
+            },
           },
           {
             text:
@@ -65,10 +65,10 @@ describe("Trim Audio", () => {
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",
-                ssmlGender: "MALE"
+                ssmlGender: "MALE",
               },
-              audioConfig: { audioEncoding: "MP3", speakingRate: 1 }
-            }
+              audioConfig: { audioEncoding: "MP3", speakingRate: 1 },
+            },
           },
           {
             text:
@@ -83,18 +83,18 @@ describe("Trim Audio", () => {
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",
-                ssmlGender: "MALE"
+                ssmlGender: "MALE",
               },
-              audioConfig: { audioEncoding: "MP3", speakingRate: 1 }
-            }
-          }
+              audioConfig: { audioEncoding: "MP3", speakingRate: 1 },
+            },
+          },
         ],
         length: 60 * 5,
         score: 1,
         author: "-eDgAR-",
         gildings: { silver: 6 },
-        children: []
-      }
+        children: [],
+      },
     ] as IPostSection[];
 
     const trimmedSections = trimAudio(sections, { maxAudioLength });

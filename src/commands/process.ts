@@ -47,10 +47,10 @@ export class ProcessCommand extends Command {
     }),
     maxAudioLength: flags.integer({
       char: "l",
-      description: "maximum length of audio to use in final video", // help description for flag
+      description: "maximum length of audio to use in final video (in seconds)", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
-      default: 15 * 1000 * 60, // default value if flag not passed (can be a function that returns a string or undefined)
+      default: 60, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     speakingRate: flags.integer({
@@ -87,7 +87,7 @@ export class ProcessCommand extends Command {
 
     notify(`Started processing post at ${new Date().toLocaleTimeString()}`);
 
-    const posts = getBlobs(path, { type: BlobType.crawler });
+    const posts = getBlobs(path, { type: BlobType.ICrawlerOutput });
 
     const processor = new Processor(context, {
       GOOGLE_APPLICATION_CREDENTIALS: config.get(
