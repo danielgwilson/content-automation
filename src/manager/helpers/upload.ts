@@ -1,5 +1,5 @@
-import { Page } from "puppeteer";
 import path from "path";
+import { Page, ElementHandle } from "puppeteer";
 
 import Manager from "../manager";
 import { waitForRandom } from "./wait";
@@ -9,7 +9,6 @@ import { saveObjectToJson } from "../../util/saveObjectToJson";
 import { IGeneratorOutput } from "../../types";
 import { IUploadOutput } from "../../types/upload";
 import { getBlobs, BlobType } from "../../util";
-import { getVideoLength } from "../../util/get-video-length";
 
 export async function uploadPost(
   manager: Manager,
@@ -64,19 +63,77 @@ export async function uploadPost(
   // await page.waitForSelector(SELECTORS.fileInput);
   // const fileInputHandle = await page.$(SELECTORS.fileInput); // Must exist because of page.waitForSelector(...)
   // if (!fileInputHandle) throw new Error("Failed to find file input element");
-  // await fileInputHandle.uploadFile(filePath);
+  // await fileInputHandle.uploadFile(videoPath);
 
-  // Wait for fileChooser and click "Select video to upload"
   await page.waitForSelector(SELECTORS.fileInput);
-  console.log("Waiting for fileChooser and clicking 'Select video to upload'");
-  const [fileChooser] = await Promise.all([
-    page.waitForFileChooser(),
-    page.click(SELECTORS.uploadButton),
-  ]);
-  await waitForRandom(page);
-  await fileChooser.accept([videoPath]);
+  if (manager.product !== "firefox") {
+    // Wait for fileChooser and click "Select video to upload"
+    console.log(
+      "Waiting for fileChooser and clicking 'Select video to upload'"
+    );
+    const [fileChooser] = await Promise.all([
+      page.waitForFileChooser(),
+      page.click(SELECTORS.uploadButton),
+    ]);
+    await waitForRandom(page);
+    await fileChooser.accept([videoPath]);
+  } else {
+    // Firefox-specific implementation since puppeteer doesn't yet support .uploadFile() correctly yet for Firefox
+    const fileInputHandle = await page.$(SELECTORS.fileInput); // Must exist because of page.waitForSelector(...)
+    if (!fileInputHandle) throw new Error("Failed to find file input element");
+    page.evaluate(
+      /**
+       * Updates an `<input type=file>`'s file list with given `paths`.
+       *
+       * Hereby will the file list be appended with `paths` if the
+       * element allows multiple files. Otherwise the list will be
+       * replaced.
+       *
+       * @param {string} selector
+       *     Selector for an `input type=file` element.
+       * @param {Array.<string>} paths
+       *     List of full paths to any of the files to be uploaded.
+       *
+       * @throws {Error}
+       *     If `path` doesn't exist.
+       */
+      async (selector: string, paths: string[]) => {
+        let files = [];
+        const el = document.querySelector(selector);
+
+        // @ts-ignore
+        if (el.hasAttribute("multiple")) {
+          // for multiple file uploads new files will be appended
+          // @ts-ignore
+          files = Array.prototype.slice.call(el.files);
+        } else if (paths.length > 1) {
+          // @ts-ignore
+          throw new Error(`Element ${el} doesn't accept multiple files`);
+        }
+
+        for (let path of paths) {
+          let file;
+
+          try {
+            // @ts-ignore
+            file = await File.createFromFileName(path);
+          } catch (e) {
+            // @ts-ignore
+            throw new Error("File not found: " + path);
+          }
+
+          files.push(file);
+        }
+
+        // @ts-ignore
+        el.mozSetFileArray(files);
+      },
+      SELECTORS.fileInput,
+      [path.join(__dirname, videoPath)]
+    );
+  }
+
   console.log(`File accepted (${videoPath})`);
-  // await page.click(SELECTORS.uploadButton);
 
   // Add caption
   await page.click(SELECTORS.captionField);
@@ -93,14 +150,12 @@ export async function uploadPost(
     await page.keyboard.press("Enter", {
       delay: 50 * Math.random() + 50,
     }); // Press enter between tags to ensure tag registers correctly
-
-    // If final tag, delete extra space to save on the character limit
-    if (i === tags.length - 1) {
-      await page.keyboard.press("Backspace", {
-        delay: 50 * Math.random() + 50,
-      });
-    }
   }
+
+  // After final tag or end of title, delete extra space to save on the character limit
+  await page.keyboard.press("Backspace", {
+    delay: 50 * Math.random() + 50,
+  });
 
   // Click "Post"
   await page.waitForSelector(SELECTORS.postButton, { timeout: 60000 });

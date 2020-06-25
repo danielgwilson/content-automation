@@ -95,7 +95,7 @@ async function unfollowUser(
   try {
     titleText = await getSelectorText(page, SELECTORS.profile.title);
     if (titleText === "Couldn't find this account") {
-      console.log(`${titleText}; skipping user.`);
+      console.log(`${titleText}; skipping user "${username}"`);
       await page.close();
       return null;
     }
@@ -142,7 +142,7 @@ async function unfollowUser(
   try {
     titleText2 = await getSelectorText(page, SELECTORS.profile.title);
     if (titleText === "Couldn't find this account") {
-      console.log(`${titleText}; skipping user ${username}`);
+      console.log(`${titleText}; skipping user "${username}"`);
       return null;
     }
   } catch (e) {

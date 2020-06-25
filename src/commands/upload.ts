@@ -87,12 +87,13 @@ export class UploadCommand extends Command {
 
     notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
 
-    const executablePath = config.get("PUPPETEER_EXECUTABLE_PATH") as {
-      [key: string]: string;
-    };
+    const { product, executablePath } = (config.get("PUPPETEER_BROWSER") as {
+      [key: string]: { product: "chrome" | "firefox"; executablePath?: string };
+    })[browser];
     const proxy = config.get("PROXY") as IProxy;
     const manager = await Manager.init(context, {
-      executablePath: executablePath[browser],
+      executablePath,
+      product,
       proxy,
     });
 

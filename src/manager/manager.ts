@@ -1,12 +1,13 @@
-import path from "path";
-
+// import puppeteer from "puppeteer";
 // Puppeteer-extra is a drop-in replacement for puppeteer
 // It augments the installed puppeteer with plugin functionality
 import puppeteer from "puppeteer-extra";
 
 // Add stealth plugin and use defaults (all evasion techniques)
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-puppeteer.use(StealthPlugin());
+const stealth = require("puppeteer-extra-plugin-stealth")();
+
+// stealth.onBrowser = () => {};
+puppeteer.use(stealth);
 
 import { Page, Browser, LaunchOptions } from "puppeteer";
 
@@ -24,6 +25,7 @@ export default class Manager {
   context: IContext;
   browser: Browser;
   account: string | undefined;
+  product?: "chrome" | "firefox";
   executablePath?: string;
   proxy?: IProxy;
   timeout?: number;
@@ -31,6 +33,7 @@ export default class Manager {
   private constructor({
     context,
     browser,
+    product,
     executablePath,
     proxy,
     timeout = 0,
@@ -38,6 +41,7 @@ export default class Manager {
   }: {
     context: IContext;
     browser: Browser;
+    product?: "chrome" | "firefox";
     executablePath?: string;
     proxy?: IProxy;
     timeout?: number;
@@ -46,6 +50,7 @@ export default class Manager {
     this.context = context;
     this.account = undefined;
     this.browser = browser;
+    this.product = product;
     this.executablePath = executablePath;
     this.proxy = proxy;
     this.timeout = timeout;
@@ -56,10 +61,12 @@ export default class Manager {
     context: IContext,
     {
       executablePath,
+      product,
       proxy,
       disableMedia,
     }: {
       executablePath?: string;
+      product?: "chrome" | "firefox";
       proxy?: IProxy;
       disableMedia?: boolean;
     } = {}
@@ -72,13 +79,13 @@ export default class Manager {
       // "--no-first-run",
       // "--no-zygote",
     ];
-    if (proxy) args.push(`--proxy-server=${proxy.server}`);
+    // if (proxy) args.push(`--proxy-server=${proxy.server}`);
 
     const launchOptions: LaunchOptions = {
-      // product: "firefox",
+      product,
       ignoreHTTPSErrors: true,
       headless: !context.debug,
-      args,
+      // args,
       ignoreDefaultArgs: ["--enable-automation"],
     };
     if (executablePath) launchOptions.executablePath = executablePath;
@@ -88,6 +95,7 @@ export default class Manager {
     return new Manager({
       context,
       browser,
+      product,
       executablePath,
       proxy,
       disableMedia,
@@ -125,10 +133,14 @@ export default class Manager {
 
   async followUsers(
     page: Page,
-    tags: string[],
-    options?: { followCriteria?: IFollowCriteria; numFollows?: number }
+    options?: {
+      tags?: string[];
+      users?: string[];
+      followCriteria?: IFollowCriteria;
+      numFollows?: number;
+    }
   ) {
-    await followUsers(this, page, tags, options);
+    await followUsers(this, page, options);
   }
 
   async unfollowUsers(options?: {
@@ -142,7 +154,10 @@ export default class Manager {
     const page = await this.browser.newPage();
 
     // Bypass hairline feature
-    await page.evaluateOnNewDocument(() => {
+    await page.evaluateOnNewDocument((args) => {
+      /**
+       * Hairline feature
+       */
       // store the existing descriptor
       const elementDescriptor = Object.getOwnPropertyDescriptor(
         HTMLElement.prototype,
@@ -162,27 +177,27 @@ export default class Manager {
       });
     });
 
-    if (this.disableMedia) {
-      page.setRequestInterception(true);
-      page.on("request", async (request) => {
-        if (
-          request.resourceType() === "fetch" ||
-          request.resourceType() === "image" ||
-          request.resourceType() === "media" ||
-          request.resourceType() === "font"
-        ) {
-          request.abort();
-        } else {
-          request.continue();
-        }
-      });
-    }
+    // if (this.disableMedia) {
+    //   page.setRequestInterception(true);
+    //   page.on("request", async (request) => {
+    //     if (
+    //       request.resourceType() === "fetch" ||
+    //       request.resourceType() === "image" ||
+    //       request.resourceType() === "media" ||
+    //       request.resourceType() === "font"
+    //     ) {
+    //       request.abort();
+    //     } else {
+    //       request.continue();
+    //     }
+    //   });
+    // }
 
-    if (this.proxy)
-      page.authenticate({
-        username: this.proxy.username,
-        password: this.proxy.password,
-      });
+    // if (this.proxy)
+    //   page.authenticate({
+    //     username: this.proxy.username,
+    //     password: this.proxy.password,
+    //   });
     return page;
   }
 

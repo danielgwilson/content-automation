@@ -19,6 +19,8 @@ import {
 const SELECTORS = {
   videoFeedItem: ".video-feed-item > div > div > div > a > div > div",
   comment: {
+    container: ".comment-container",
+    noContent: ".comments.no-content",
     item: ".comment-item",
     user: {
       info: ".comment-content > .content-container > .user-info",
@@ -40,8 +42,9 @@ const SELECTORS = {
 export async function followUsers(
   manager: Manager,
   page: Page,
-  tags: string[],
   {
+    tags = [],
+    users = [],
     followCriteria = {
       isPrivate: null,
       maxFollowers: 10000,
@@ -50,12 +53,22 @@ export async function followUsers(
       minFollowing: 10,
     },
     numFollows,
-  }: { followCriteria?: IFollowCriteria; numFollows?: number } = {}
+  }: {
+    tags?: string[];
+    users?: string[];
+    followCriteria?: IFollowCriteria;
+    numFollows?: number;
+  } = {}
 ) {
   const sessionStart = new Date();
 
-  if (tags.length === 0)
-    throw new Error("Must include specific tags to follow users.");
+  if (
+    (!tags && !users) ||
+    (tags && tags.length === 0 && users && users.length === 0) ||
+    (!users && tags && tags.length === 0) ||
+    (!tags && users && users.length === 0)
+  )
+    throw new Error("Must include specific tag(s) or user(s) to follow users.");
 
   if (numFollows !== undefined && numFollows > MAX_FOLLOWS)
     throw new Error(
@@ -68,10 +81,15 @@ export async function followUsers(
       : MAX_FOLLOWS - 10 + Math.round(Math.random() * 10);
   console.log(`Attempting to follow ${targetCount} users.`);
 
-  const tag = tags[0];
-  await page.goto(`https://www.tiktok.com/tag/${tag}?lang=en`, {
-    waitUntil: "load",
-  });
+  if (tags.length > 0) {
+    const tag = tags[0];
+    await page.goto(`https://www.tiktok.com/tag/${tag}?lang=en`, {
+      waitUntil: "load",
+    });
+  } else {
+    const user = users[0];
+    await page.goto(`https://www.tiktok.com/@${user}`);
+  }
 
   // Wait for and click first video card on tag page
   await page.waitForSelector(SELECTORS.videoFeedItem);
@@ -84,36 +102,47 @@ export async function followUsers(
       await videoFeedItem.click();
       await waitForRandom(page);
 
-      await page.waitForSelector(SELECTORS.comment.item);
-      const commentItems = await page.$$(SELECTORS.comment.item);
-      for (let commentItem of commentItems) {
-        if (followActions.length >= targetCount) break followLoop;
+      await page.waitForSelector(SELECTORS.comment.container);
+      const hasComments = (await page.$(SELECTORS.comment.noContent)) === null;
+      if (hasComments) {
+        const commentItems = await page.$$(SELECTORS.comment.item);
+        for (let commentItem of commentItems) {
+          if (followActions.length >= targetCount) break followLoop;
 
-        const userInfo = await commentItem.$(SELECTORS.comment.user.info);
+          const userInfo = await commentItem.$(SELECTORS.comment.user.info);
 
-        // Check if already following user
-        if (userInfo && !(await userInfo.$(SELECTORS.comment.user.following))) {
-          // Check if previously followed user in the past (data blob dump)
-          const username = await getSelectorText(
-            userInfo,
-            SELECTORS.comment.user.username
-          );
-          const { follows } = await getFollowUnfollowBlobs(manager.context);
-          const previouslyFollowedUsernames = await getPreviouslyFollowedUsernames(
-            follows
-          );
-          const didPrevioulyFollow =
-            usernamesAttempted.indexOf(username) !== -1 ||
-            previouslyFollowedUsernames.indexOf(username) !== -1;
+          // Check if already following user
+          if (
+            userInfo &&
+            !(await userInfo.$(SELECTORS.comment.user.following))
+          ) {
+            // Check if previously followed user in the past (data blob dump)
+            const profileUrl = await page.evaluate(
+              (element) => element.href,
+              userInfo
+            );
+            const username = profileUrl.split("@")[1];
+            const { follows } = await getFollowUnfollowBlobs(manager.context);
+            const previouslyFollowedUsernames = await getPreviouslyFollowedUsernames(
+              follows
+            );
+            const didPrevioulyFollow =
+              usernamesAttempted.indexOf(username) !== -1 ||
+              previouslyFollowedUsernames.indexOf(username) !== -1;
 
-          if (!didPrevioulyFollow) {
-            usernamesAttempted.push(username);
-            const action = await followUser(username, manager, followCriteria);
+            if (!didPrevioulyFollow) {
+              usernamesAttempted.push(username);
+              const action = await followUser(
+                username,
+                manager,
+                followCriteria
+              );
 
-            if (action) followActions.push(action);
+              if (action) followActions.push(action);
+            }
+
+            await waitForRandom(page);
           }
-
-          await waitForRandom(page);
         }
       }
 
@@ -168,9 +197,12 @@ async function followUser(
   // See if title text element exists—3 cases.
   let titleText: string | null = null;
   try {
-    titleText = await getSelectorText(page, SELECTORS.profile.title);
+    titleText = await page.$eval(
+      SELECTORS.profile.title,
+      (element) => element.textContent
+    );
     if (titleText === "Couldn't find this account") {
-      console.log(`${titleText}; skipping user ${username}`);
+      console.log(`${titleText}; skipping user "${username}"`);
       await page.close();
       return null;
     }
@@ -181,14 +213,17 @@ async function followUser(
   // if (titleText === "No videos yet") true; // check if user has any videos
 
   await page.waitForSelector(SELECTORS.profile.followButton);
-  const followButtonText = await getSelectorText(
-    page,
-    SELECTORS.profile.followButton
+  const followButtonText = await page.$eval(
+    SELECTORS.profile.followButton,
+    (element) => element.textContent
   );
+
+  // Exit if already following.
   if (followButtonText !== "Follow") {
+    console.log(`Already following user "${username}"`);
     await page.close();
     return null;
-  } // Exit if already following.
+  }
 
   const isPrivate = titleText === "This account is private";
   const following = getNumberFromShortString(
@@ -211,6 +246,7 @@ async function followUser(
 
   // Check if user fits target criteria; only want to follow users likely to follow back.
   if (!shouldFollowUser(user, followCriteria)) {
+    console.log(`User "${username}" does not meet target criteria`);
     await page.close();
     return null;
   }
@@ -225,11 +261,11 @@ async function followUser(
   );
 
   if (followButtonText2 === "Following")
-    console.log(`Followed user ${username}`);
+    console.log(`Followed user "${username}"`);
   else if (followButtonText2 === "Requested")
-    console.log(`Followed user ${username}`);
+    console.log(`Followed user "${username}"`);
   else if (followButtonText2 === "Friends")
-    console.log(`Followed user ${username} back (friends).`);
+    console.log(`Followed user "${username}" back (friends).`);
   // TODO: don't follow user if user is already following; minimal/unknown ROI of action.
   else throw new Error(`Failed to follow user @${username}`); // Follow unsuccessful for some reason.
 

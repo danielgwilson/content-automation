@@ -12,6 +12,7 @@ export async function login(
   { useCookies = true }: { useCookies?: boolean } = {}
 ): Promise<Page> {
   const SELECTORS = {
+    menuRightLogin: ".menu-right > a",
     phoneOrEmail: "[class*=social-container-] > div:nth-child(1)",
     emailOption: "[class*=tiktok-web-body-] > [class*=title-wrapper-] > a",
     emailField: "[class*=input-field-] > input",
@@ -40,7 +41,12 @@ export async function login(
 
   async function loginWithoutCookies() {
     // Go to login page
-    await page.goto("https://www.tiktok.com/login", { waitUntil: "load" });
+    await page.goto("https://www.tiktok.com/trending", { waitUntil: "load" });
+
+    // Click on menu right login button to display modal
+    await page.waitForSelector(SELECTORS.menuRightLogin);
+    await waitForRandom(page);
+    await page.click(SELECTORS.menuRightLogin);
 
     // Click on "Phone or Email" login option
     await page.waitForSelector(SELECTORS.phoneOrEmail);
