@@ -1,4 +1,4 @@
-import { Page, ElementHandle } from "puppeteer";
+import { Page, ElementHandle } from "playwright";
 
 export async function getSelectorText(
   parent: Page | ElementHandle<Element>,

@@ -51,14 +51,14 @@ export class UploadCommand extends Command {
       required: false,
       default: false,
     }),
-    browser: flags.string({
+    browserType: flags.string({
       char: "b",
       description:
-        "name of browser executable to use (either 'chrome' or 'firefox')",
+        "type of browser executable to use (either 'chromium', 'firefox', or 'webkit')",
       hidden: false,
       required: false,
-      options: ["chrome", "firefox"],
-      default: "chrome",
+      options: ["chromium", "firefox", "webkit"],
+      default: "chromium",
     }),
   };
 
@@ -74,7 +74,7 @@ export class UploadCommand extends Command {
       resetSession,
       title,
       testDetection,
-      browser,
+      browserType,
       nContentRemaining,
     } = flags;
 
@@ -87,13 +87,9 @@ export class UploadCommand extends Command {
 
     notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
 
-    const { product, executablePath } = (config.get("PUPPETEER_BROWSER") as {
-      [key: string]: { product: "chrome" | "firefox"; executablePath?: string };
-    })[browser];
     const proxy = config.get("PROXY") as IProxy;
     const manager = await Manager.init(context, {
-      executablePath,
-      product,
+      browserType,
       proxy,
     });
 

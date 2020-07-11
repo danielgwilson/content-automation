@@ -15,7 +15,7 @@ describe("Trim Audio", () => {
               filePath:
                 "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
               fileName: "1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
-              length: 60 * 16,
+              length: 10,
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",
@@ -25,7 +25,7 @@ describe("Trim Audio", () => {
             },
           },
         ],
-        length: 60 * 16,
+        length: 10,
         score: 124447,
         author: "skopein",
         gildings: { silver: 214, gold: 19, platinum: 13 },
@@ -43,7 +43,7 @@ describe("Trim Audio", () => {
               filePath:
                 "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.0.mp3",
               fileName: "1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.0.mp3",
-              length: 60 * 5,
+              length: 60 * 16,
               voice: {
                 languageCode: "en-US",
                 name: "en-US-Wavenet-B",

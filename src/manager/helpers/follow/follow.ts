@@ -1,5 +1,5 @@
 import path from "path";
-import { Page, ElementHandle, Browser } from "puppeteer";
+import { Page } from "playwright";
 
 import Manager from "../../manager";
 import { waitForRandom } from "../wait";
@@ -117,7 +117,7 @@ export async function followUsers(
             !(await userInfo.$(SELECTORS.comment.user.following))
           ) {
             // Check if previously followed user in the past (data blob dump)
-            const profileUrl = await page.evaluate(
+            const profileUrl = await page.evaluate<any, any>(
               (element) => element.href,
               userInfo
             );
@@ -164,6 +164,7 @@ export async function followUsers(
     actionsTaken: followActions,
     manager: {
       proxy: manager.proxy,
+      browserType: manager.browserType,
       executablePath: manager.executablePath,
       timeout: manager.timeout,
     },
