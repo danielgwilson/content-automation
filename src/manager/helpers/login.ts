@@ -20,9 +20,16 @@ export async function login(
     loginButton: "[class*=login-button-]",
     avatar: ".menu-right > .profile > .avatar",
   };
+  const startingUrl = "https://www.tiktok.com/foryou?lang=en";
 
   // Must create a new page; old pages are not correctly stealthed.
   const context = await manager.browser.newContext();
+
+  // Create new Page object
+  const page = await context.newPage();
+  await page.setDefaultNavigationTimeout(0);
+  // Go to starting page (For You)
+  await page.goto(startingUrl, { waitUntil: "load" });
 
   async function loginWithCookies() {
     if (!existsSync(cookiePath))
@@ -31,27 +38,18 @@ export async function login(
     const cookies = JSON.parse(cookiesBuffer.toString());
     await context.addCookies(cookies);
 
-    console.log(await context.cookies());
+    // console.log(await context.cookies());
 
-    const page = await context.newPage();
-    await page.setDefaultNavigationTimeout(0);
+    await page.reload({ waitUntil: "load" });
+    await waitForRandom(page);
 
-    await page.goto("https://www.tiktok.com/trending", {
-      waitUntil: "load",
-    });
     if ((await page.$(SELECTORS.avatar)) === null)
-      throw new Error("Avatar not present on Trending page.");
+      throw new Error("Avatar not present on For You page.");
     console.log("Successfully logged in using cookies.");
-
-    return page;
   }
 
   async function loginWithoutCookies() {
-    const page = await context.newPage();
     await page.setDefaultNavigationTimeout(0);
-
-    // Go to login page
-    await page.goto("https://www.tiktok.com/trending", { waitUntil: "load" });
 
     // Click on menu right login button to display modal
     // await page.waitForSelector(SELECTORS.menuRightLogin);
@@ -89,30 +87,27 @@ export async function login(
     // Click login button
     // await waitForRandom(page);
     await loginFrame.click(SELECTORS.loginButton);
+    await waitForRandom(page);
     await page.waitForLoadState("load");
 
-    if (page.url() !== "https://www.tiktok.com/foryou?lang=en") {
-      throw new Error("Failed to login.");
+    if (page.url() !== startingUrl) {
+      throw new Error("Failed to login; destination URL incorrect.");
     }
 
     console.log("Successfully logged in without using cookies.");
-
-    return page;
   }
-
-  let page: Page;
 
   const cookiePath = path.join(manager.context.outputDir, "cookies.json");
   if (useCookies) {
     try {
-      page = await loginWithCookies();
+      await loginWithCookies();
     } catch (e) {
       console.log(`Failed to reuse cookies from ${cookiePath}; ${e}`);
 
-      page = await loginWithoutCookies();
+      await loginWithoutCookies();
     }
   } else {
-    page = await loginWithoutCookies();
+    await loginWithoutCookies();
   }
 
   const cookies = await context.cookies();

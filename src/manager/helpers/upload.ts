@@ -26,11 +26,11 @@ export async function uploadPost(
     uploadVideo: ".upload-wrapper > a",
     fileInput: "input[type=file]",
     video: "video",
-    uploadButton: "[class*=upload-btn--]",
-    postButton: "[class*=btn-post--]:not([class*=disabled])",
-    captionField: "[class*=editor--]",
-    successDialog: "[class*=modal-title-container--] > div",
-    successDialogTitle: "[class*=modal-title--]",
+    uploadButton: "[class^=upload-btn--]",
+    postButton: "[class^=btn-post--]:not([class*=disabled])",
+    captionField: "[class^=editor--]",
+    successDialog: "[class^=modal-title-container--] > div",
+    successDialogTitle: "[class^=modal-title--]",
   };
 
   const { blob, blobDir } = getFreshBlobFromPath(targetDir);
@@ -58,9 +58,12 @@ export async function uploadPost(
   // Click "Upload video" icon
   await page.waitForSelector(SELECTORS.uploadVideo);
   await page.click(SELECTORS.uploadVideo);
+  console.log("Clicked upload button");
+  await waitForRandom(page);
 
   // Specify video file in file input
-  await page.waitForSelector(SELECTORS.fileInput);
+  await page.waitForLoadState("load");
+  await page.waitForSelector(SELECTORS.uploadButton);
   const fileInputHandle = await page.$(SELECTORS.fileInput); // Must exist because of page.waitForSelector(...)
   if (!fileInputHandle) throw new Error("Failed to find file input element");
   await fileInputHandle.setInputFiles(videoPath);
