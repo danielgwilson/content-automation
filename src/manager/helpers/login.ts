@@ -6,6 +6,8 @@ import { existsSync } from "fs";
 import Manager from "../manager";
 import { waitForRandom } from "./wait";
 
+import stealth from "../stealth";
+
 export async function login(
   manager: Manager,
   credentials: { email: string; password: string },
@@ -28,6 +30,10 @@ export async function login(
   // Create new Page object
   const page = await context.newPage();
   await page.setDefaultNavigationTimeout(0);
+
+  // Stealth browser instance
+  stealth(manager.browser);
+
   // Go to starting page (For You)
   await page.goto(startingUrl, { waitUntil: "load" });
 

@@ -1,4 +1,5 @@
 import playwright, { Browser, Page } from "playwright";
+import stealth from "./stealth";
 
 import { IContext, IFollowCriteria, IProxy } from "../types";
 import {
@@ -122,7 +123,7 @@ export default class Manager {
     await unfollowUsers(this, options);
   }
 
-  getCountOfRemainingContentItems({ targetDir }: { targetDir: string }) {
-    return getFreshBlobsFromPath(targetDir).length;
+  getRemainingContentItems({ targetDir }: { targetDir: string }) {
+    return getFreshBlobsFromPath(targetDir);
   }
 }

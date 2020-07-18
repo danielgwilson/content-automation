@@ -1,9 +1,10 @@
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
+import { createContext, notify, getBlobs, BlobType } from "../util";
 import Manager from "../manager";
 import { IProxy } from "../types";
+import fs from "fs";
 
 export class UploadCommand extends Command {
   static description = `
@@ -89,16 +90,15 @@ export class UploadCommand extends Command {
 
     const proxy = config.get("PROXY") as IProxy;
     const manager = await Manager.init(context, {
-      browserType,
+      browserType: browserType as "chromium" | "firefox" | "webkit" | undefined,
       proxy,
     });
 
     function logRemainingContentItems(targetDir: string) {
-      console.log(
-        `Remaining non-uploaded content items in path: ${manager.getCountOfRemainingContentItems(
-          { targetDir }
-        )}`
-      );
+      // console.log(`Remaining non-uploaded content items in path:`);
+      const contentItems = manager.getRemainingContentItems({ targetDir });
+      console.log(contentItems.map((blob) => blob.id));
+      console.log(manager.getRemainingContentItems({ targetDir }).length);
     }
 
     if (testDetection) {

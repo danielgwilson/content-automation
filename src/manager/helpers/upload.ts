@@ -130,8 +130,11 @@ export async function uploadPost(
       timeout: manager.timeout,
     },
   } as IUploadOutput;
+
+  console.log(`saveOutputToFile: ${manager.context.saveOutputToFile}`);
   if (manager.context.saveOutputToFile) {
     const fileName = `${uploadedPost.id}.upload.json`;
+    console.log(`fileName: ${fileName}`);
     await saveObjectToJson(uploadedPost, {
       fileName,
       outputDir: blobDir,
@@ -144,11 +147,9 @@ export function getFreshBlobFromPath(targetPath: string) {
   const generatorBlobs = getBlobs(targetPath, {
     type: BlobType.generator,
   }) as IGeneratorOutput[];
-  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploaded
+  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploade
   const uploadIds =
-    uploadBlobs.length > 0
-      ? uploadBlobs.map((uploadBlob) => uploadBlob.id)
-      : [];
+    uploadBlobs.length > 0 ? uploadBlobs.map((blob) => blob.id) : [];
   let blob: IGeneratorOutput | undefined = undefined;
   for (let generatorBlob of generatorBlobs) {
     if (uploadIds.indexOf(generatorBlob.id) === -1) {
