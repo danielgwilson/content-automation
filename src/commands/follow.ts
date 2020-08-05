@@ -1,7 +1,7 @@
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
+import { createContext, notify, getCredentials } from "../util";
 import Manager from "../manager";
 import { IProxy } from "../types";
 
@@ -42,14 +42,14 @@ export class FollowCommand extends Command {
       required: false,
       multiple: false,
     }),
-    browser: flags.string({
+    browserType: flags.string({
       char: "b",
       description:
-        "name of browser executable to use (either 'chrome' or 'firefox')",
+        "type of browser executable to use (either 'chromium', 'firefox', or 'webkit')",
       hidden: false,
       required: false,
-      options: ["chrome", "firefox"],
-      default: "chrome",
+      options: ["chromium", "firefox", "webkit"],
+      default: "firefox",
     }),
   };
 
@@ -66,7 +66,7 @@ export class FollowCommand extends Command {
       tags,
       users,
       numFollows,
-      browser,
+      browserType,
     } = flags;
 
     const context = createContext({
@@ -81,20 +81,14 @@ export class FollowCommand extends Command {
 
     notify(`Started following user(s) at ${new Date().toLocaleTimeString()}`);
 
-    const { product, executablePath } = (config.get("PUPPETEER_BROWSER") as {
-      [key: string]: { product: "chrome" | "firefox"; executablePath?: string };
-    })[browser];
     const proxy = config.get("PROXY") as IProxy;
     const manager = await Manager.init(context, {
-      executablePath,
-      product,
+      browserType: browserType as "chromium" | "firefox" | "webkit" | undefined,
       proxy,
     });
 
-    const credentials = config.get("ACCOUNT_TIKTOK") as {
-      email: string;
-      password: string;
-    };
+    const credentials = getCredentials(outputDir);
+
     const page = await manager.login(credentials, {
       useCookies: !resetSession,
     });

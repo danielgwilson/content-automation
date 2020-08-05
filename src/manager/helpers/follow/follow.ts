@@ -17,7 +17,7 @@ import {
 } from "./follow-data";
 
 const SELECTORS = {
-  videoFeedItem: ".video-feed-item > div > div > div > a > div > div",
+  videoFeedItem: ".image-card",
   comment: {
     container: ".comment-container",
     noContent: ".comments.no-content",
@@ -33,9 +33,9 @@ const SELECTORS = {
     username: ".share-title-container > h2",
     followButton: ".follow-button",
     title: ".share-layout-main > div > .title",
-    following: ".count-infos > .number:nth-child(1)",
-    followers: ".count-infos > .number:nth-child(3)",
-    likes: ".count-infos > .number:nth-child(5)",
+    following: ".count-infos > .number:nth-child(1) > strong",
+    followers: ".count-infos > .number:nth-child(2) > strong",
+    likes: ".count-infos > .number:nth-child(3) > strong",
   },
 };
 
@@ -51,6 +51,8 @@ export async function followUsers(
       minFollowers: 10,
       maxFollowing: 10000,
       minFollowing: 10,
+      maxLikes: null,
+      minLikes: 10,
     },
     numFollows,
   }: {
@@ -61,6 +63,8 @@ export async function followUsers(
   } = {}
 ) {
   const sessionStart = new Date();
+
+  const { timeout } = manager;
 
   if (
     (!tags && !users) ||
@@ -78,21 +82,32 @@ export async function followUsers(
   const targetCount =
     numFollows !== undefined
       ? numFollows
+      : manager.context.debug
+      ? 5
       : MAX_FOLLOWS - 10 + Math.round(Math.random() * 10);
   console.log(`Attempting to follow ${targetCount} users.`);
 
+  let targetUrl: string;
   if (tags.length > 0) {
     const tag = tags[0];
-    await page.goto(`https://www.tiktok.com/tag/${tag}?lang=en`, {
-      waitUntil: "load",
-    });
+    console.log(`Navigating to target tag: ${tag}`);
+    targetUrl = `https://www.tiktok.com/tag/${tag}?lang=en`;
+    await waitForRandom(page);
   } else {
     const user = users[0];
-    await page.goto(`https://www.tiktok.com/@${user}`);
+    console.log(`Navigating to target profile page for user: ${user}`);
+    targetUrl = `https://www.tiktok.com/@${user}`;
   }
+  console.log("Navigated successfullly.");
+  await page.goto(targetUrl, {
+    waitUntil: "load",
+  });
+  await waitForRandom(page);
 
   // Wait for and click first video card on tag page
-  await page.waitForSelector(SELECTORS.videoFeedItem);
+  console.log("Waiting for video feed item");
+  await page.waitForSelector(SELECTORS.videoFeedItem, { timeout: 5000 });
+  console.log("Found video feed item");
   const videoFeedItems = await page.$$(SELECTORS.videoFeedItem);
   const followActions: IFollowAction[] = [];
 
@@ -102,7 +117,7 @@ export async function followUsers(
       await videoFeedItem.click();
       await waitForRandom(page);
 
-      await page.waitForSelector(SELECTORS.comment.container);
+      await page.waitForSelector(SELECTORS.comment.container, { timeout });
       const hasComments = (await page.$(SELECTORS.comment.noContent)) === null;
       if (hasComments) {
         const commentItems = await page.$$(SELECTORS.comment.item);
@@ -167,7 +182,7 @@ export async function followUsers(
       browserType: manager.browserType,
       executablePath: manager.executablePath,
       timeout: manager.timeout,
-    },
+    } as IManagerOutput,
   } as IFollowOutput;
 
   console.log(
@@ -189,7 +204,10 @@ async function followUser(
   manager: Manager,
   followCriteria: IFollowCriteria
 ): Promise<IFollowAction | null> {
-  const page = await manager.newPage();
+  const { timeout } = manager;
+
+  // create a new page to navigate to the target user's profile - use first context as there should only be one
+  const page = await manager.browser.contexts()[0].newPage();
   const url = `https://www.tiktok.com/@${username}?lang=en`;
 
   await page.goto(url, { waitUntil: "load" });
@@ -200,7 +218,7 @@ async function followUser(
   try {
     titleText = await page.$eval(
       SELECTORS.profile.title,
-      (element) => element.textContent
+      (element: any) => element.textContent
     );
     if (titleText === "Couldn't find this account") {
       console.log(`${titleText}; skipping user "${username}"`);
@@ -213,10 +231,10 @@ async function followUser(
 
   // if (titleText === "No videos yet") true; // check if user has any videos
 
-  await page.waitForSelector(SELECTORS.profile.followButton);
+  await page.waitForSelector(SELECTORS.profile.followButton, { timeout });
   const followButtonText = await page.$eval(
     SELECTORS.profile.followButton,
-    (element) => element.textContent
+    (element: any) => element.textContent
   );
 
   // Exit if already following.
@@ -290,6 +308,8 @@ function shouldFollowUser(
     minFollowers,
     maxFollowing,
     minFollowing,
+    maxLikes,
+    minLikes,
   } = followCriteria;
 
   if (isPrivate !== null && user.isPrivate !== isPrivate) return false;
@@ -315,6 +335,18 @@ function shouldFollowUser(
     minFollowing !== null &&
     user.following !== undefined &&
     user.following < minFollowing
+  )
+    return false;
+  else if (
+    maxLikes !== null &&
+    user.likes !== undefined &&
+    user.likes > maxLikes
+  )
+    return false;
+  else if (
+    minLikes !== null &&
+    user.likes !== undefined &&
+    user.likes < minLikes
   )
     return false;
   else return true;

@@ -3,7 +3,7 @@ import { IPostSection } from "../../types";
 
 describe("Trim Audio", () => {
   it("Trims audio to max length parameter", () => {
-    const maxAudioLength = 60 * 15; // 15 minutes worth of audio
+    const maxAudioLength = 60; // 60 seconds worth of audio
     const sections = [
       {
         type: "title",
@@ -89,7 +89,7 @@ describe("Trim Audio", () => {
             },
           },
         ],
-        length: 60 * 5,
+        length: 0,
         score: 1,
         author: "-eDgAR-",
         gildings: { silver: 6 },
@@ -99,7 +99,7 @@ describe("Trim Audio", () => {
 
     const trimmedSections = trimAudio(sections, { maxAudioLength });
 
-    expect(trimmedSections.length).toBe(1);
+    expect(trimmedSections.length).toBe(2);
     expect(trimmedSections).toMatchSnapshot();
   });
 });

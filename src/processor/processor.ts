@@ -43,7 +43,7 @@ export default class {
       maxRepliesPerComment = 2,
       maxReplyDepth = 2,
       maxComments = -1,
-      maxAudioLength = 15 * 60,
+      maxAudioLength = 60,
       speakingRate = 1.05,
     } = options;
     const subDir = `/${post.id}/`;
@@ -66,7 +66,10 @@ export default class {
       }),
     ]);
 
-    const trimmedSections = trimAudio(sections, { maxAudioLength });
+    const trimmedSections = trimAudio(sections, {
+      maxAudioLength,
+      speakingRate,
+    });
 
     const totalCharacters = getCharacters(trimmedSections);
     const totalAudioLength = getAudioLengthForSections(trimmedSections);

@@ -24,11 +24,11 @@ export async function testDetection(manager: Manager) {
     fullPage: true,
   });
 
-  // await page.goto("http://lumtest.com/myip.json", { waitUntil: "load" });
-  // await page.screenshot({
-  //   path: `${path.join(manager.context.outputDir, "ipresult.png")}`,
-  //   fullPage: true,
-  // });
+  await page.goto("http://lumtest.com/myip.json", { waitUntil: "load" });
+  await page.screenshot({
+    path: `${path.join(manager.context.outputDir, "ipresult.png")}`,
+    fullPage: true,
+  });
 
   // Also consider running test from https://arh.antoinevastel.com/bots/areyouheadless
 

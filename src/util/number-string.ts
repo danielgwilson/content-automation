@@ -14,7 +14,7 @@ export function getNumberFromShortString(str: string) {
     result = Number(str);
   }
 
-  if (result === NaN)
+  if (result === NaN || result === null || result === undefined)
     throw new Error("Failed to convert short string to number.");
 
   return result;

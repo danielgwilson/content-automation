@@ -8,9 +8,5 @@ export interface IUploadOutput {
   videoPath: string;
   caption: string;
   tags: string[];
-  manager: {
-    proxy;
-    executablePath;
-    timeout;
-  };
+  manager: import("./manager").IManagerOutput;
 }

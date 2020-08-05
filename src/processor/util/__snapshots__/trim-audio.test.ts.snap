@@ -14,7 +14,7 @@ Array [
           },
           "fileName": "1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
           "filePath": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-0.0.mp3",
-          "length": 960,
+          "length": 10,
           "voice": Object {
             "languageCode": "en-US",
             "name": "en-US-Wavenet-B",
@@ -30,9 +30,77 @@ Array [
       "platinum": 13,
       "silver": 214,
     },
-    "length": 960,
+    "length": 10,
     "score": 124447,
     "type": "title",
+  },
+  Object {
+    "author": "-eDgAR-",
+    "children": Array [],
+    "fragments": Array [
+      Object {
+        "audio": Object {
+          "audioConfig": Object {
+            "audioEncoding": "MP3",
+            "speakingRate": 1,
+          },
+          "fileName": "1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.0.mp3",
+          "filePath": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.0.mp3",
+          "length": 960,
+          "voice": Object {
+            "languageCode": "en-US",
+            "name": "en-US-Wavenet-B",
+            "ssmlGender": "MALE",
+          },
+        },
+        "text": "Yes everyone, this post has a lot of a awards and many people in this thread have gotten awards too.",
+        "textWithPriors": "Yes everyone, this post has a lot of a awards and many people in this thread have gotten awards too.",
+      },
+      Object {
+        "audio": Object {
+          "audioConfig": Object {
+            "audioEncoding": "MP3",
+            "speakingRate": 1,
+          },
+          "fileName": "1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.1.mp3",
+          "filePath": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.1.mp3",
+          "length": 8.208,
+          "voice": Object {
+            "languageCode": "en-US",
+            "name": "en-US-Wavenet-B",
+            "ssmlGender": "MALE",
+          },
+        },
+        "text": "However, PLEASE keep in mind rule 7 and stop begging for awards, because a lot of you are doing it and it is against the rules.",
+        "textWithPriors": "Yes everyone, this post has a lot of a awards and many people in this thread have gotten awards too. However, PLEASE keep in mind rule 7 and stop begging for awards, because a lot of you are doing it and it is against the rules.",
+      },
+      Object {
+        "audio": Object {
+          "audioConfig": Object {
+            "audioEncoding": "MP3",
+            "speakingRate": 1,
+          },
+          "fileName": "1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.2.mp3",
+          "filePath": "/Users/danielgwilson/local_git/reddit-youtube-video-bot/temp/1fadf0f4-3dad-4cdf-95c2-3a424e218214/voice-over/1fadf0f4-3dad-4cdf-95c2-3a424e218214-1.2.mp3",
+          "length": 5.928,
+          "voice": Object {
+            "languageCode": "en-US",
+            "name": "en-US-Wavenet-B",
+            "ssmlGender": "MALE",
+          },
+        },
+        "text": "
+Additionally, if anyone is reading this thread and struggling, there are some resources available:",
+        "textWithPriors": "Yes everyone, this post has a lot of a awards and many people in this thread have gotten awards too. However, PLEASE keep in mind rule 7 and stop begging for awards, because a lot of you are doing it and it is against the rules. 
+Additionally, if anyone is reading this thread and struggling, there are some resources available:",
+      },
+    ],
+    "gildings": Object {
+      "silver": 6,
+    },
+    "length": 0,
+    "score": 1,
+    "type": "comment",
   },
 ]
 `;

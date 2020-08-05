@@ -1,7 +1,7 @@
 import playwright, { Browser, Page } from "playwright";
 import stealth from "./stealth";
 
-import { IContext, IFollowCriteria, IProxy } from "../types";
+import { IContext, IFollowCriteria, IProxy, ICredentials } from "../types";
 import {
   login,
   uploadPost,
@@ -26,7 +26,7 @@ export default class Manager {
     browserType,
     executablePath,
     proxy,
-    timeout = 0,
+    timeout,
     disableMedia = false,
   }: {
     context: IContext;
@@ -61,8 +61,13 @@ export default class Manager {
       disableMedia?: boolean;
     } = {}
   ) {
+    console.log(`Initializing Manager with browserType: ${browserType}`);
+
+    if (proxy) console.log(`Using proxy: ${proxy.username}`);
+
     const browser = await playwright[browserType].launch({
       headless: !context.debug,
+      proxy, // haven't paid for this in a bit due to COGS of video downloads
     });
 
     return new Manager({
@@ -71,6 +76,7 @@ export default class Manager {
       browserType,
       executablePath,
       proxy,
+      timeout: context.debug ? 0 : 30000,
       disableMedia,
     });
   }
@@ -84,11 +90,11 @@ export default class Manager {
   }
 
   async login(
-    credentials: { email: string; password: string },
+    credentials: ICredentials,
     { useCookies = true }: { useCookies?: boolean } = {}
   ): Promise<Page> {
     const page = await login(this, credentials, { useCookies });
-    this.account = credentials.email; // Only update account if successful login
+    this.account = credentials.username; // Only update account if successful login
     return page;
   }
 

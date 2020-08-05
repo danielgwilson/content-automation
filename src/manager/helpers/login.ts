@@ -7,10 +7,11 @@ import Manager from "../manager";
 import { waitForRandom } from "./wait";
 
 import stealth from "../stealth";
+import { ICredentials } from "../../types";
 
 export async function login(
   manager: Manager,
-  credentials: { email: string; password: string },
+  credentials: ICredentials,
   { useCookies = true }: { useCookies?: boolean } = {}
 ): Promise<Page> {
   const SELECTORS = {
@@ -33,6 +34,15 @@ export async function login(
 
   // Stealth browser instance
   stealth(manager.browser);
+
+  // Disable media load to save bandwidth - especially relevant for proxy COGS
+  // await context.route("**/*", (route) => {
+  //   const isRequestTypeMedia = route.request().resourceType() === "media";
+  //   if (isRequestTypeMedia)
+  //     console.log(`Blocking media request: ${route.request().url()}`);
+
+  //   return isRequestTypeMedia ? route.abort() : route.continue();
+  // });
 
   // Go to starting page (For You)
   await page.goto(startingUrl, { waitUntil: "load" });
@@ -80,7 +90,7 @@ export async function login(
 
     // Type email into field
     // await waitForRandom(page);
-    await loginFrame.type(SELECTORS.emailField, credentials.email, {
+    await loginFrame.type(SELECTORS.emailField, credentials.username, {
       delay: 50 * Math.random() + 20,
     });
 
@@ -94,6 +104,7 @@ export async function login(
     // await waitForRandom(page);
     await loginFrame.click(SELECTORS.loginButton);
     await waitForRandom(page);
+    await page.waitForTimeout(5000);
     await page.waitForLoadState("load");
 
     if (page.url() !== startingUrl) {

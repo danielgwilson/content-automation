@@ -5,11 +5,7 @@ export interface IFollowOutput {
   account: string;
   tags: string[];
   actionsTaken: IFollowAction[];
-  manager: {
-    proxy?: string | string[];
-    executablePath: string;
-    timeout: number;
-  };
+  manager: import("./manager").IManagerOutput;
 }
 
 export interface IFollowCriteria {
@@ -18,6 +14,8 @@ export interface IFollowCriteria {
   minFollowers: number | null;
   maxFollowing: number | null;
   minFollowing: number | null;
+  maxLikes: number | null;
+  minLikes: number | null;
 }
 
 export interface IFollowAction {
@@ -39,11 +37,7 @@ export interface IUnfollowOutput {
   context: import("./context").IContext;
   account: string;
   actionsTaken: IUnfollowAction[];
-  manager: {
-    proxy?: string | string[];
-    executablePath: string;
-    timeout: number;
-  };
+  manager: import("./manager").IManagerOutput;
 }
 
 export interface IUnfollowAction {
