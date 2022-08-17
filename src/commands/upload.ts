@@ -79,10 +79,8 @@ export class UploadCommand extends Command {
 
     notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
 
-    const proxy = getProxy(outputDir);
     const manager = await Manager.init(context, {
       browserType: browserType as "chromium" | "firefox" | "webkit" | undefined,
-      proxy,
     });
     const contentDir = path.join(outputDir, "content");
 

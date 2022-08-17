@@ -9,22 +9,19 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-rl.question("User directory path: ", async (userDirPath) => {
-  rl.question("New user ID (####): ", async (userId) => {
-    if (!fs.existsSync(userDirPath))
-      throw new Error("User directory path does not exist.");
+rl.question("Accounts directory path: ", async (accountsDirPath) => {
+  rl.question("New account username ([a-zA-Z0-9_]): ", async (username) => {
+    if (!fs.existsSync(accountsDirPath))
+      throw new Error("Users directory path does not exist.");
 
-    if (userId.length !== 4)
-      throw new Error("User ID must be a numeric string of the form (####)");
-
-    const dirName = `user-${userId}`;
-    const dirPath = path.join(userDirPath, dirName);
+    const dirName = username;
+    const dirPath = path.join(accountsDirPath, dirName);
     const credentials = {
-      username: "",
+      username,
       password: "",
     } as ICredentials;
     const proxy = {
-      server: "zproxy.lum-superproxy.io:22225",
+      server: "us.smartproxy.com:22225",
       username: "",
       password: "",
     } as IProxy;
