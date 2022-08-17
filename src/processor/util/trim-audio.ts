@@ -3,16 +3,15 @@ import { getAudioLengthForSections } from "../sections";
 
 export function trimAudio(
   sections: IPostSection[],
-  options: { maxAudioLength?: number } = {}
+  options: { maxAudioLength?: number; speakingRate?: number } = {}
 ) {
-  const { maxAudioLength } = options;
+  const { maxAudioLength, speakingRate } = options;
   if (!maxAudioLength) return sections;
 
   const trimmedSections: IPostSection[] = [];
   let totalAudioLength = 0;
   for (let section of sections) {
-    const sectionAudioLength =
-      section.length + getAudioLengthForSections(section.children);
+    const sectionAudioLength = getAudioLengthForSections([section]);
     if (totalAudioLength + sectionAudioLength >= maxAudioLength) {
       break;
     }
@@ -20,11 +19,22 @@ export function trimAudio(
     totalAudioLength += sectionAudioLength;
   }
 
-  if (trimmedSections.length <= 1)
-    throw new Error(
-      `Failed to trim audio output for processed sections within maxAudioLength of ${maxAudioLength}s; minimum audio length: ${sections[0]
-        .length + sections[1].length}`
+  if (trimmedSections.length <= 1) {
+    const minimumTotalAudioLength = getAudioLengthForSections(
+      sections.slice(0, 2)
     );
+    let errorText = `Failed to trim audio output for processed sections within maxAudioLength of ${maxAudioLength}s; minimum audio length: ${minimumTotalAudioLength}`;
+    if (speakingRate) {
+      const requiredSpeakingRate = Math.round(
+        ((minimumTotalAudioLength - 2) / (maxAudioLength - 2)) *
+          (speakingRate * 100)
+      );
+      errorText = errorText.concat(
+        `\nRequired speakingRate: ${requiredSpeakingRate}`
+      );
+    }
+    throw new Error(errorText);
+  }
 
   return trimmedSections;
 }

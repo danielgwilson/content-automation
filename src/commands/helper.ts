@@ -31,7 +31,7 @@ export class HelperCommand extends Command {
       description: "maximum number of replies to each comment (breadth)", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
-      default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
+      default: 0, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxReplyDepth: flags.integer({
@@ -39,7 +39,7 @@ export class HelperCommand extends Command {
       description: "maximum number of replies deep per chain (depth)", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
-      default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
+      default: 0, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxComments: flags.integer({
@@ -63,7 +63,7 @@ export class HelperCommand extends Command {
       description: "speaking rate for generated TTS audio (in %)", // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
-      default: 105, // default value if flag not passed (can be a function that returns a string or undefined)
+      default: 125, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
   };

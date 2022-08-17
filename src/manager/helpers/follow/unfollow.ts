@@ -12,8 +12,8 @@ const SELECTORS = {
     followButton: ".follow-button",
     title: ".share-layout-main > div > .title",
     following: ".count-infos > .number:nth-child(1)",
-    followers: ".count-infos > .number:nth-child(3)",
-    likes: ".count-infos > .number:nth-child(5)",
+    followers: ".count-infos > .number:nth-child(2)",
+    likes: ".count-infos > .number:nth-child(3)",
   },
 };
 
@@ -65,7 +65,8 @@ export async function unfollowUsers(
       proxy: manager.proxy,
       executablePath: manager.executablePath,
       timeout: manager.timeout,
-    },
+      browserType: manager.browserType,
+    } as IManagerOutput,
   } as IUnfollowOutput;
 
   console.log(`Total users unfollowed successfully: ${unfollowActions.length}`);
@@ -84,7 +85,7 @@ async function unfollowUser(
   username: string,
   manager: Manager
 ): Promise<IUnfollowAction | null> {
-  const page = await manager.newPage();
+  const page = await manager.browser.contexts()[0].newPage();
   const url = `https://www.tiktok.com/@${username}?lang=en`;
 
   await page.goto(url, { waitUntil: "load" });

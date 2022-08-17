@@ -1,7 +1,8 @@
+import path from "path";
 import config from "config";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
-import { createContext, notify } from "../util";
+import { createContext, notify, getCredentials, getProxy } from "../util";
 import Manager from "../manager";
 import { IProxy } from "../types";
 
@@ -10,15 +11,7 @@ export class UploadCommand extends Command {
     uploads a generated video to a target platform
   `;
 
-  static args = [
-    {
-      name: "path", // name of arg to show in help and reference with args[name]
-      required: true, // make the arg required with `required: true`
-      description:
-        "path to single post video file or directory containing multiple post video files to upload", // help description
-      hidden: false, // hide this arg from help
-    },
-  ];
+  static args = [];
 
   static flags = {
     ...contextFlags,
@@ -58,13 +51,12 @@ export class UploadCommand extends Command {
       hidden: false,
       required: false,
       options: ["chromium", "firefox", "webkit"],
-      default: "chromium",
+      default: "firefox",
     }),
   };
 
   async run() {
     const { args, flags } = this.parse(UploadCommand);
-    const { path } = args;
     const {
       outputDir,
       resourceDir,
@@ -87,45 +79,38 @@ export class UploadCommand extends Command {
 
     notify(`Started uploading post(s) at ${new Date().toLocaleTimeString()}`);
 
-    const proxy = config.get("PROXY") as IProxy;
+    const proxy = getProxy(outputDir);
     const manager = await Manager.init(context, {
-      browserType,
+      browserType: browserType as "chromium" | "firefox" | "webkit" | undefined,
       proxy,
     });
+    const contentDir = path.join(outputDir, "content");
 
     function logRemainingContentItems(targetDir: string) {
-      console.log(
-        `Remaining non-uploaded content items in path: ${manager.getCountOfRemainingContentItems(
-          { targetDir }
-        )}`
-      );
+      console.log(`\nRemaining non-uploaded content items in path:`);
+      const contentItems = manager.getRemainingContentItems({ targetDir });
+      console.log(`Count: ${contentItems.length}`);
+      console.log(contentItems.map((blob) => blob.id));
     }
 
     if (testDetection) {
       await manager.test();
     } else if (nContentRemaining) {
-      logRemainingContentItems(path);
+      logRemainingContentItems(contentDir);
     } else {
-      const credentials = config.get("ACCOUNT_TIKTOK") as {
-        email: string;
-        password: string;
-      };
+      const credentials = getCredentials(outputDir);
       const page = await manager.login(credentials, {
         useCookies: !resetSession,
       });
       await manager.uploadPost({
-        targetDir: path,
+        targetDir: contentDir,
         title,
         page,
       });
-      logRemainingContentItems(path);
+      logRemainingContentItems(contentDir);
     }
 
     if (!context.debug) await manager.close(); // clean up only if not in debug mode
-
-    // for (let video of videos) {
-    //   // handle video upload
-    // }
 
     notify(
       `Finished! Upload(s) completed at ${new Date().toLocaleTimeString()}`

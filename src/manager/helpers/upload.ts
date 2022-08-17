@@ -22,6 +22,7 @@ export async function uploadPost(
     page: Page;
   }
 ) {
+  const timeout = manager.context.debug ? 0 : 30000;
   const SELECTORS = {
     uploadVideo: ".upload-wrapper > a",
     fileInput: "input[type=file]",
@@ -43,6 +44,7 @@ export async function uploadPost(
   //   );
 
   const idealTags = [
+    "#fyp",
     "#reddit",
     "#askreddit",
     "#redditvids",
@@ -56,11 +58,14 @@ export async function uploadPost(
   );
 
   // Click "Upload video" icon
-  await page.waitForSelector(SELECTORS.uploadVideo);
+  await page.waitForSelector(SELECTORS.uploadVideo, { timeout });
   await page.click(SELECTORS.uploadVideo);
+  console.log("Clicked upload button in nav bar");
+  await waitForRandom(page);
 
   // Specify video file in file input
-  await page.waitForSelector(SELECTORS.fileInput);
+  await page.waitForLoadState("load");
+  await page.waitForSelector(SELECTORS.uploadButton, { timeout });
   const fileInputHandle = await page.$(SELECTORS.fileInput); // Must exist because of page.waitForSelector(...)
   if (!fileInputHandle) throw new Error("Failed to find file input element");
   await fileInputHandle.setInputFiles(videoPath);
@@ -75,22 +80,22 @@ export async function uploadPost(
   console.log(`Typed caption: ${caption}`);
 
   // Add hashtags
-  await page.keyboard.type(" ", { delay: 50 * Math.random() + 50 }); // Type space after caption
+  await page.keyboard.type(" ", { delay: 50 * Math.random() + 100 }); // Type space after caption
   for (let [i, tag] of tags.entries()) {
-    await page.keyboard.type(tag, { delay: 50 * Math.random() + 50 });
+    await page.keyboard.type(tag, { delay: 50 * Math.random() + 100 });
     await waitForRandom(page);
     await page.keyboard.press("Enter", {
-      delay: 50 * Math.random() + 50,
+      delay: 50 * Math.random() + 100,
     }); // Press enter between tags to ensure tag registers correctly
   }
 
   // After final tag or end of title, delete extra space to save on the character limit
   await page.keyboard.press("Backspace", {
-    delay: 50 * Math.random() + 50,
+    delay: 50 * Math.random() + 100,
   });
 
   // Click "Post"
-  await page.waitForSelector(SELECTORS.postButton, { timeout: 60000 });
+  await page.waitForSelector(SELECTORS.postButton, { timeout });
   if (!manager.context.debug) {
     await page.click(SELECTORS.postButton);
     console.log("Post button clicked");
@@ -99,7 +104,9 @@ export async function uploadPost(
   }
 
   // Check for successful upload - important to ensure browser is not pre-emptively closed.
-  await page.waitForSelector(SELECTORS.successDialogTitle);
+  await page.waitForSelector(SELECTORS.successDialogTitle, {
+    timeout,
+  });
   const successDialogTitleText = await getSelectorText(
     page,
     SELECTORS.successDialogTitle
@@ -125,10 +132,14 @@ export async function uploadPost(
       proxy: manager.proxy,
       executablePath: undefined,
       timeout: manager.timeout,
-    },
+      browserType: manager.browserType,
+    } as IManagerOutput,
   } as IUploadOutput;
+
+  // console.log(`saveOutputToFile: ${manager.context.saveOutputToFile}`);
   if (manager.context.saveOutputToFile) {
     const fileName = `${uploadedPost.id}.upload.json`;
+    console.log(`fileName: ${fileName}`);
     await saveObjectToJson(uploadedPost, {
       fileName,
       outputDir: blobDir,
@@ -141,11 +152,9 @@ export function getFreshBlobFromPath(targetPath: string) {
   const generatorBlobs = getBlobs(targetPath, {
     type: BlobType.generator,
   }) as IGeneratorOutput[];
-  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploaded
+  const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploade
   const uploadIds =
-    uploadBlobs.length > 0
-      ? uploadBlobs.map((uploadBlob) => uploadBlob.id)
-      : [];
+    uploadBlobs.length > 0 ? uploadBlobs.map((blob) => blob.id) : [];
   let blob: IGeneratorOutput | undefined = undefined;
   for (let generatorBlob of generatorBlobs) {
     if (uploadIds.indexOf(generatorBlob.id) === -1) {

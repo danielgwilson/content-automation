@@ -15,7 +15,7 @@ export enum BlobType {
  * Get the blob(s) contained at the path passed to the cli command as an argument.
  *
  * Gets one or multiple blobs depending on whether the FILE argument references...
- * (1) the /temp/ directory containing post subdirectories
+ * (1) the /temp/content directory containing post subdirectories
  * (2) a blob subdirectory
  * (3) a single blob file (e.g. *.crawler.json)
  * (4) no blobs of requested type found in path
@@ -39,6 +39,7 @@ export function getBlobs(
         blobs.push(parseBlob(join(path, blobFileName)));
       }
     } else {
+      // No blob json files in path; path leads to some directory. Blobs may be inside sub-directories.
       const subDirs = fileNames
         .map((fileName) => join(path, fileName))
         .filter(isDirectory);
@@ -65,10 +66,16 @@ function isDirectory(filePath: string) {
 
 function isBlob(filePath: string, { type }: { type?: BlobType }) {
   const fileParts = filePath.split(".");
-  if (fileParts.length <= 2) return false; // folder, extension-less file, or file missing "sub-extension" - (e.g. not *.crawler.json but misc.json)
+  // if (fileParts.length <= 2) return false; // folder, extension-less file, or file missing "sub-extension" - (e.g. not *.crawler.json but misc.json)
   const extension = fileParts.pop();
   const jobType = fileParts.pop();
-  return extension === "json" && (!type || jobType === type);
+  if (fileParts[0] === "c7a3efe3-d686-4453-b8a6-66687c5ec941") {
+    console.log(`fileParts: ${fileParts[0]}`);
+    console.log(`type: ${type}`);
+    console.log(`jobType: ${jobType}`);
+    if (type === jobType) console.log("Ding ding ding");
+  }
+  return extension === "json" && jobType === type;
 }
 
 function parseBlob(filePath: string) {

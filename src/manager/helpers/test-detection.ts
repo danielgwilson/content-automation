@@ -1,6 +1,6 @@
 import path from "path";
 import Manager from "../manager";
-import { addStealth } from "./stealth";
+import stealth from "../stealth";
 
 export async function testDetection(manager: Manager) {
   console.log("Running tests...");
@@ -14,6 +14,9 @@ export async function testDetection(manager: Manager) {
 
   const page = await context.newPage();
   await page.setDefaultNavigationTimeout(0);
+
+  // Stealth browser instance
+  stealth(manager.browser);
 
   await page.goto("https://bot.sannysoft.com", { waitUntil: "load" });
   await page.screenshot({

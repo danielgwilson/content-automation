@@ -5,3 +5,5 @@ export { notify } from "./notify";
 export { getBlobs, BlobType } from "./get-blobs";
 export { logPost } from "./log-post";
 export { getNumberFromShortString } from "./number-string";
+export * from "./get-credentials";
+export * from "./get-proxy";

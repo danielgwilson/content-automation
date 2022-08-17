@@ -1,0 +1,115 @@
+/**
+ * @module playwright-addons/stealth
+ */
+import path from "path";
+import { appendFileSync } from "fs";
+
+/**
+ * Enable the stealth add-on
+ * @param {Browser} br - Playwright Browser or BrowserContext object
+ */
+export default async function(br: any) {
+  if (typeof br !== "object" || !(br.contexts || br.pages)) {
+    console.error(
+      "Need to provide a Playwright Browser or BrowserContext object"
+    );
+  } else {
+    let context = br.contexts ? br.contexts() : [br];
+
+    await context.forEach(async (c: any) => {
+      // Init evasions script on every page load
+      await c.addInitScript({
+        path: path.join("./resources", "stealth", "evasions.js"),
+      });
+
+      // Properly set UA info (vanilla Playwright only sets the UA)
+      const userAgent = c._options.userAgent || "";
+      const acceptLanguage = c._options.locale;
+      const platform =
+        userAgent.indexOf("Macintosh") !== -1
+          ? "MacIntel"
+          : userAgent.indexOf("Windows") !== -1
+          ? "Win32"
+          : "";
+      const oscpu = userAgent.match("(Intel.*?|Windows.*?)[;)]")
+        ? userAgent.match("(Intel.*?|Windows.*?)[;)]")[1]
+        : "";
+      const userAgentMetadata = undefined; // TODO, see https://chromedevtools.github.io/devtools-protocol/tot/Emulation/#type-UserAgentMetadata
+
+      // Firefox - write to prefs
+      if (br.constructor.name.indexOf("FFBrowser") === 0) {
+        let prefs =
+          `
+                user_pref("general.appversion.override", "` +
+          userAgent.replace("Mozilla/", "") +
+          `");
+                user_pref("general.oscpu.override", "` +
+          oscpu +
+          `");
+                user_pref("general.platform.override", "` +
+          platform +
+          `");
+                user_pref("general.useragent.override", "` +
+          userAgent +
+          `");
+                `;
+        if (acceptLanguage) {
+          prefs +=
+            `
+                    user_pref("general.useragent.locale", "` +
+            acceptLanguage +
+            `");
+                    user_pref("intl.accept_languages", "` +
+            acceptLanguage +
+            `");
+                    `;
+        }
+        let proc = (br._options.ownedServer
+          ? br._options.ownedServer
+          : br._browser._options.ownedServer
+        )._process;
+        proc.spawnargs.forEach((a: any, k: any) => {
+          if (a.indexOf("-profile") !== -1) {
+            let dir = proc.spawnargs[k + 1];
+            appendFileSync(dir + "/prefs.js", prefs);
+          }
+        });
+      } else {
+        // Chromium - use CDP to override
+        c.pages().forEach(async (p: any) => {
+          try {
+            (await p.context().newCDPSession(p)).send(
+              "Emulation.setUserAgentOverride",
+              {
+                userAgent,
+                acceptLanguage,
+                platform,
+                userAgentMetadata,
+              }
+            );
+          } catch (e) {
+            console.log("Warning: could not set UA override:", e);
+          }
+        });
+
+        c.on("page", async (p: any) => {
+          try {
+            (await p.context().newCDPSession(p)).send(
+              "Emulation.setUserAgentOverride",
+              {
+                userAgent,
+                acceptLanguage,
+                platform,
+                userAgentMetadata,
+              }
+            );
+          } catch (e) {
+            console.log("Warning: could not set UA override:", e);
+          }
+        });
+      }
+    });
+
+    console.log("Stealth enabled");
+  }
+}
