@@ -89,7 +89,6 @@ The following topics are expressly out of scope and are therefore discussed mini
 | #    | Title | Description | Priority | Notes |
 | :--- | :---- | :---------- | :------- | :---- |
 
-
 ## Design
 
 ## Telemetry
