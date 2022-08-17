@@ -1,5 +1,4 @@
 import playwright, { Browser, Page } from "playwright";
-import stealth from "./stealth";
 
 import { IContext, IFollowCriteria, IProxy, ICredentials } from "../types";
 import {
@@ -10,6 +9,7 @@ import {
   unfollowUsers,
   testDetection,
 } from "./helpers";
+import { getProxy } from "../util";
 
 export default class Manager {
   context: IContext;
@@ -52,22 +52,30 @@ export default class Manager {
     {
       browserType = "chromium",
       executablePath,
-      proxy,
       disableMedia,
     }: {
       browserType?: "chromium" | "firefox" | "webkit";
       executablePath?: string;
-      proxy?: IProxy;
       disableMedia?: boolean;
     } = {}
   ) {
+    const { outputDir } = context;
     console.log(`Initializing Manager with browserType: ${browserType}`);
 
-    if (proxy) console.log(`Using proxy: ${proxy.username}`);
+    // hadn't paid for this in a bit due to COGS of video downloads
+    // Careful of shadowban risk; suspect data center IP caused shadowban (2020-08-06)
+    const proxy = getProxy(outputDir);
+    if (proxy) {
+      console.log(`Using proxy: ${proxy.username}`);
+    } else {
+      console.log(
+        `No proxy.json definition found; initializing without proxy.`
+      );
+    }
 
     const browser = await playwright[browserType].launch({
       headless: !context.debug,
-      proxy, // haven't paid for this in a bit due to COGS of video downloads
+      proxy,
     });
 
     return new Manager({

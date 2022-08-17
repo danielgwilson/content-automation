@@ -71,10 +71,8 @@ export class UnfollowCommand extends Command {
 
     notify(`Started unfollowing user(s) at ${new Date().toLocaleTimeString()}`);
 
-    const proxy = config.get("PROXY") as IProxy;
     const manager = await Manager.init(context, {
       browserType: browserType as "chromium" | "firefox" | "webkit" | undefined,
-      proxy,
     });
 
     const credentials = getCredentials(outputDir);

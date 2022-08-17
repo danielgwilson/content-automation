@@ -1,36 +1,31 @@
 import path from "path";
 import Manager from "../manager";
-import stealth from "../stealth";
+import { addStealth, newStealthContext } from "./stealth";
 
 export async function testDetection(manager: Manager) {
   console.log("Running tests...");
 
-  // Must create a new page; old pages are not correctly stealthed.
-  // Must create a new page; old pages are not correctly stealthed.
-  const context = await manager.browser.newContext();
+  // Must create a new context; create stealthed context instance
+  const context = await newStealthContext(manager.browser);
 
-  // Add stealth scripts
-  // await addStealth(manager.browser);
+  const urls = [
+    "https://bot.sannysoft.com",
+    "https://amiunique.org/fp",
+    "http://lumtest.com/myip.json",
+  ];
 
-  const page = await context.newPage();
-  await page.setDefaultNavigationTimeout(0);
+  for (let url of urls) {
+    const page = await context.newPage();
 
-  // Stealth browser instance
-  stealth(manager.browser);
+    await page.goto(url, { waitUntil: "load" });
+    await page.screenshot({
+      path: `${path.join(
+        manager.context.outputDir,
+        `${url.split("://")[1].split("/")[0]}.png`
+      )}`,
+      fullPage: true,
+    });
+  }
 
-  await page.goto("https://bot.sannysoft.com", { waitUntil: "load" });
-  await page.screenshot({
-    path: `${path.join(manager.context.outputDir, "testresult.png")}`,
-    fullPage: true,
-  });
-
-  await page.goto("http://lumtest.com/myip.json", { waitUntil: "load" });
-  await page.screenshot({
-    path: `${path.join(manager.context.outputDir, "ipresult.png")}`,
-    fullPage: true,
-  });
-
-  // Also consider running test from https://arh.antoinevastel.com/bots/areyouheadless
-
-  console.log(`All done, check the screenshot. ✨`);
+  console.log(`All done, check screenshots. ✨`);
 }

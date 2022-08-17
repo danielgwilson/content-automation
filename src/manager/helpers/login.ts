@@ -6,7 +6,7 @@ import { existsSync } from "fs";
 import Manager from "../manager";
 import { waitForRandom } from "./wait";
 
-import stealth from "../stealth";
+import stealth from "./stealth";
 import { ICredentials } from "../../types";
 
 export async function login(
@@ -21,7 +21,7 @@ export async function login(
     emailField: "[class*=input-field-] > input",
     passwordField: "input[type=password]",
     loginButton: "[class*=login-button-]",
-    avatar: ".menu-right > .profile > .avatar",
+    avatar: ".menu-right > .profile > .tiktok-avatar",
   };
   const startingUrl = "https://www.tiktok.com/foryou?lang=en";
 
