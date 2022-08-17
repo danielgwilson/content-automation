@@ -1,8 +1,14 @@
+import { string } from "@oclif/command/lib/flags";
+
 export interface IGeneratorOutput {
   id: string;
   dateGenerated: Date;
-  elapsedTime: number;
+  context: import("./context").IContext;
 
+  elapsedTime: number;
+  outputName: string;
+  outputPath: string;
+  title: string;
   media: { metadata: any; thumbnail: any; render: IRenderOutput };
 }
 

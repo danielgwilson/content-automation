@@ -1,3 +1,4 @@
+import path from "path";
 import Command, { flags } from "@oclif/command";
 import { contextFlags } from "../flags/context-flags";
 import { createContext, notify, logPost } from "../util";
@@ -166,10 +167,13 @@ export class CrawlCommand extends Command {
         })
       );
     }
-    await Promise.all(promises);
+    const posts = await Promise.all(promises);
 
     notify(
       `Finished! Crawling completed at at ${new Date().toLocaleTimeString()}`
     );
+
+    // Output result directory if single post to pipe into process command
+    // if (posts.length === 1) console.log(`${path.join(outputDir, posts[0].id)}`);
   }
 }

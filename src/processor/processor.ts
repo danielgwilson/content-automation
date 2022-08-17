@@ -43,7 +43,7 @@ export default class {
       maxRepliesPerComment = 2,
       maxReplyDepth = 2,
       maxComments = -1,
-      maxAudioLength = 15 * 1000 * 60,
+      maxAudioLength = 15 * 60,
       speakingRate = 1.05,
     } = options;
     const subDir = `/${post.id}/`;
@@ -76,6 +76,11 @@ export default class {
         .toISOString()
         .substr(11, 8)}\n`
     );
+    if (totalAudioLength > maxAudioLength)
+      throw new Error(
+        `Total audio length exceeds max audio length of ${maxAudioLength}s`
+      );
+
     const postStats = {
       characters: totalCharacters,
       audioLength: totalAudioLength,

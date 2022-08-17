@@ -1,3 +1,4 @@
+/// <reference types="types-for-adobe/aftereffects/2018"/>
 //@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
 
 interface ContentComp {

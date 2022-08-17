@@ -13,6 +13,7 @@ export function getCleanText(text: string) {
   cleanText = removeQuotes(cleanText);
   cleanText = removeReddit(cleanText);
   cleanText = removeSeriousTag(cleanText);
+  cleanText = removeEdit(cleanText);
 
   return cleanText;
 }
@@ -47,15 +48,24 @@ function removeProfanity(text: string) {
   return cleanText;
 }
 
+function removeEdit(text: string) {
+  let cleanText = text;
+  cleanText = cleanText.split(/(edit:)/i)[0].trim();
+  return cleanText;
+}
+
 function removeReddit(text: string) {
   let cleanText = text;
-  cleanText = cleanText.replace(/^(\w+)( of Reddit,)/, "$1,");
-  cleanText = cleanText.replace(/^(Redditors)/, "People");
+  cleanText = cleanText.replace(/^(.+?)( of Reddit,)/i, "$1,"); // Removes e.g. "People of Reddit, ..."
+  cleanText = cleanText.replace(/^(Redditors)/, "People"); // Removes e.g "Redditors who are..."
+  cleanText = cleanText // Removes e.g. "Reddit, how would you..."
+    .replace(/^(Reddit, )/, "")
+    .replace(/^[a-z]/, (v) => v.toUpperCase());
   return cleanText;
 }
 
 function removeSeriousTag(text: string) {
-  return text.replace(/^(\[Serious\] )/, "");
+  return text.replace(/( ?\[Serious\] ?)/i, "");
 }
 
 // TODO: should actually render quotes

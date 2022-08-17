@@ -4,14 +4,14 @@
 (() => {
   // Check if required parameters are present
   if (
-    !SECTION_TITLE_PARAMS.compName ||
-    !SECTION_TITLE_PARAMS.fragments ||
-    !SECTION_TITLE_PARAMS.author ||
-    !SECTION_TITLE_PARAMS.score ||
-    !SECTION_TITLE_PARAMS.audioLevelVoice ||
-    !SECTION_TITLE_PARAMS.postDetails
+    SECTION_TITLE_PARAMS.compName === undefined ||
+    SECTION_TITLE_PARAMS.fragments === undefined ||
+    SECTION_TITLE_PARAMS.author === undefined ||
+    SECTION_TITLE_PARAMS.score === undefined ||
+    SECTION_TITLE_PARAMS.audioLevelVoice === undefined ||
+    SECTION_TITLE_PARAMS.postDetails === undefined
   )
-    throw new Error("Script missing required parameter.");
+    throw new Error(`Script missing required parameter.`);
 
   const {
     compName,
