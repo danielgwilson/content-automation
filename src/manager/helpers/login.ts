@@ -1,13 +1,13 @@
-import { Page } from "playwright";
-import path from "path";
-import { promises as fs } from "fs";
-import { existsSync } from "fs";
+import { Page } from 'playwright';
+import path from 'path';
+import { promises as fs } from 'fs';
+import { existsSync } from 'fs';
 
-import Manager from "../manager";
-import { waitForRandom } from "./wait";
+import Manager from '../manager';
+import { waitForRandom } from './wait';
 
-import stealth from "./stealth";
-import { ICredentials } from "../../types";
+// import stealth from "./stealth";
+import { ICredentials } from '../../types';
 
 export async function login(
   manager: Manager,
@@ -15,15 +15,15 @@ export async function login(
   { useCookies = true }: { useCookies?: boolean } = {}
 ): Promise<Page> {
   const SELECTORS = {
-    menuRightLogin: ".menu-right > a",
-    phoneOrEmail: "[class*=social-container-] > div:nth-child(1)",
-    emailOption: "[class*=title-wrapper-] > a",
-    emailField: "[class*=input-field-] > input",
-    passwordField: "input[type=password]",
-    loginButton: "[class*=login-button-]",
-    avatar: ".menu-right > .profile > .tiktok-avatar",
+    menuRightLogin: '.menu-right > a',
+    phoneOrEmail: '[class*=social-container-] > div:nth-child(1)',
+    emailOption: '[class*=title-wrapper-] > a',
+    emailField: '[class*=input-field-] > input',
+    passwordField: 'input[type=password]',
+    loginButton: '[class*=login-button-]',
+    avatar: '.menu-right > .profile > .tiktok-avatar',
   };
-  const startingUrl = "https://www.tiktok.com/foryou?lang=en";
+  const startingUrl = 'https://www.tiktok.com/foryou?lang=en';
 
   // Must create a new page; old pages are not correctly stealthed.
   const context = await manager.browser.newContext();
@@ -33,7 +33,7 @@ export async function login(
   await page.setDefaultNavigationTimeout(0);
 
   // Stealth browser instance
-  stealth(manager.browser);
+  // stealth(manager.browser);
 
   // Disable media load to save bandwidth - especially relevant for proxy COGS
   // await context.route("**/*", (route) => {
@@ -45,7 +45,7 @@ export async function login(
   // });
 
   // Go to starting page (For You)
-  await page.goto(startingUrl, { waitUntil: "load" });
+  await page.goto(startingUrl, { waitUntil: 'load' });
 
   async function loginWithCookies() {
     if (!existsSync(cookiePath))
@@ -56,12 +56,12 @@ export async function login(
 
     // console.log(await context.cookies());
 
-    await page.reload({ waitUntil: "load" });
+    await page.reload({ waitUntil: 'load' });
     await waitForRandom(page);
 
     if ((await page.$(SELECTORS.avatar)) === null)
-      throw new Error("Avatar not present on For You page.");
-    console.log("Successfully logged in using cookies.");
+      throw new Error('Avatar not present on For You page.');
+    console.log('Successfully logged in using cookies.');
   }
 
   async function loginWithoutCookies() {
@@ -74,9 +74,9 @@ export async function login(
 
     const loginFrame = page
       .frames()
-      .find((frame) => frame.url().includes("redirect_url"));
+      .find((frame) => frame.url().includes('redirect_url'));
 
-    if (!loginFrame) throw new Error("Failed to find login modal iframe");
+    if (!loginFrame) throw new Error('Failed to find login modal iframe');
 
     // Click on "Phone or Email" login option
     // await page.waitForSelector(SELECTORS.phoneOrEmail);
@@ -105,16 +105,16 @@ export async function login(
     await loginFrame.click(SELECTORS.loginButton);
     await waitForRandom(page);
     await page.waitForTimeout(5000);
-    await page.waitForLoadState("load");
+    await page.waitForLoadState('load');
 
     if (page.url() !== startingUrl) {
-      throw new Error("Failed to login; destination URL incorrect.");
+      throw new Error('Failed to login; destination URL incorrect.');
     }
 
-    console.log("Successfully logged in without using cookies.");
+    console.log('Successfully logged in without using cookies.');
   }
 
-  const cookiePath = path.join(manager.context.outputDir, "cookies.json");
+  const cookiePath = path.join(manager.context.outputDir, 'cookies.json');
   if (useCookies) {
     try {
       await loginWithCookies();

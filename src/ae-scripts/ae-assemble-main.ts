@@ -1,12 +1,17 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/content-automation/lib/resources/ae-scripts/ae-util.js"
 
 (() => {
-  // Check if required parameters are present
-  if (!ASSEMBLE_MAIN_PARAMS.compName || !ASSEMBLE_MAIN_PARAMS.subCompNames)
-    throw new Error("Script missing required parameter.");
-
-  const { compName, subCompNames } = ASSEMBLE_MAIN_PARAMS;
+  const compName = NX.get('compName');
+  if (!compName)
+    throw new Error(
+      `Script 'ae-assemble-main.jsx' missing required parameter: 'compName'.`
+    );
+  const subCompNames = NX.get('subCompNames');
+  if (!subCompNames)
+    throw new Error(
+      `Script 'ae-assemble-main.jsx' missing required parameter: 'subCompNames'.`
+    );
 
   const comp = getComp(compName);
   for (let i = 0; i < subCompNames.length; i++) {

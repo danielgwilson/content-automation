@@ -1,5 +1,5 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/content-automation/lib/resources/ae-scripts/ae-util.js"
 
 interface ContentComp {
   comp: CompItem;
@@ -12,7 +12,7 @@ interface ContentComp {
 function createCommentContentComp(
   refComp: CompItem,
   newCompName: string,
-  section: import("../types/processed-post").IPostSection,
+  section: import('../types/processed-post').IPostSection,
   audioLevelVoice: number,
   subCommentLevel: number = 0
 ): ContentComp {
@@ -29,10 +29,10 @@ function createCommentContentComp(
   // Copy content layers from refComp
   for (let i = refComp.numLayers; i > 0; i--) {
     const layer = refComp.layer(i);
-    if (layer.name === "comment-bg" && subCommentLevel > 0) continue;
+    if (layer.name === 'comment-bg' && subCommentLevel > 0) continue;
     copyLayerToComp({ index: i, comp: refComp }, { comp: thisComp });
   }
-  const nullLayer = thisComp.layer("null-parent");
+  const nullLayer = thisComp.layer('null-parent');
 
   // Voice-overs
   const voLayers: AVLayer[] = [];
@@ -64,10 +64,10 @@ function createCommentContentComp(
   // Move layers over if child comment / reply
   if (subCommentLevel) {
     // Resize child comment text box to account for less space on the right side
-    const upvoteArrowLayer = thisComp.layer("upvote-arrow") as TextLayer;
+    const upvoteArrowLayer = thisComp.layer('upvote-arrow') as TextLayer;
     const xOffset =
       subCommentLevel * (upvoteArrowLayer.position.value as number[])[0]; // amount child reply comments are shifted over
-    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
+    const commentTextLayer = thisComp.layer('comment-text') as TextLayer;
     const commentTextDoc = commentTextLayer.text.sourceText.value as any;
     commentTextDoc.boxTextSize = [
       commentTextDoc.boxTextSize[0] - xOffset,
@@ -80,7 +80,7 @@ function createCommentContentComp(
   for (let i = 0; i < section.fragments.length; i++) {
     const textWithPriors = section.fragments[i].textWithPriors;
     const voInPoint = voLayers[i].inPoint;
-    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
+    const commentTextLayer = thisComp.layer('comment-text') as TextLayer;
     commentTextLayer.text.sourceText.setValueAtTime(
       voInPoint,
       new TextDocument(textWithPriors)
@@ -92,7 +92,7 @@ function createCommentContentComp(
   const keyframes: { time: number; height: number }[] = [];
   for (let i = 0; i < voLayers.length; i++) {
     const time = voLayers[i].inPoint;
-    const commentTextLayer = thisComp.layer("comment-text") as TextLayer;
+    const commentTextLayer = thisComp.layer('comment-text') as TextLayer;
     const yPos = (commentTextLayer.position.value as number[])[1];
     const commentTextHeight = commentTextLayer.sourceRectAtTime(
       time + thisComp.frameDuration, // because of sourceRectAtTime() single frame lag, add one frame to time to get size AFTER text has been updated
@@ -104,19 +104,19 @@ function createCommentContentComp(
 
   // Update user text
   updateTextLayerAtTime(
-    thisComp.layer("user-text") as TextLayer,
+    thisComp.layer('user-text') as TextLayer,
     section.author,
     voLayers[0].inPoint
   );
 
   // Update score text
-  let scoreText = "";
+  let scoreText = '';
   if (section.score < 999) scoreText = `${section.score} points`;
   else if (section.score < 99999)
     scoreText = `${Math.round(section.score / 100) / 10}k points`;
   else scoreText = `${Math.round(section.score / 1000)}k points`;
   updateTextLayerAtTime(
-    thisComp.layer("score-text") as TextLayer,
+    thisComp.layer('score-text') as TextLayer,
     scoreText,
     voLayers[0].inPoint
   );
@@ -173,7 +173,7 @@ function resizeCompToContents(comp: CompItem) {
         height,
         (childLayer.position.value as number[])[1] + childComp.height
       );
-    } else if (layer.name === "comment-text") {
+    } else if (layer.name === 'comment-text') {
       const commentTextLayer = layer as TextLayer;
       const rect = commentTextLayer.sourceRectAtTime(comp.duration, false);
       width = Math.max(
@@ -184,11 +184,11 @@ function resizeCompToContents(comp: CompItem) {
         height,
         (commentTextLayer.position.value as number[])[1] + rect.height
       );
-    } else if (layer.name === "comment-bg") {
+    } else if (layer.name === 'comment-bg') {
       const bgLayer = layer as TextLayer;
       const bgSize = (bgLayer as any)
-        .content("Rectangle 1")
-        .content("Rectangle Path 1").size;
+        .content('Rectangle 1')
+        .content('Rectangle Path 1').size;
       width = Math.max(width, bgSize.valueAtTime(comp.duration, false)[0]);
       height = Math.max(height, bgSize.valueAtTime(comp.duration, false)[1]);
     }
@@ -201,7 +201,7 @@ function resizeCompToContents(comp: CompItem) {
 
 // Handle reply comments
 function addChildren(
-  children: import("../types/processed-post").IPostSection[],
+  children: import('../types/processed-post').IPostSection[],
   comp: CompItem,
   refComp: CompItem,
   newCompName: string,
@@ -231,13 +231,13 @@ function addChildren(
     contentCompLayer.anchorPoint.setValue([0, 0]);
 
     // Reposition subcomp
-    const nullLayer = comp.layer("null-parent");
+    const nullLayer = comp.layer('null-parent');
     // const childNullLayer = childComp.layer("null-parent");
-    const upvoteArrowLayer = comp.layer("upvote-arrow") as TextLayer;
+    const upvoteArrowLayer = comp.layer('upvote-arrow') as TextLayer;
     const xPos = (upvoteArrowLayer.position.value as number[])[0]; // where subCommentLevel represents rank of subcomment
     let yPos = 0;
     if (i === 0) {
-      const commentTextLayer = comp.layer("comment-text") as TextLayer;
+      const commentTextLayer = comp.layer('comment-text') as TextLayer;
       yPos =
         (commentTextLayer.position.value as number[])[1] +
         commentTextLayer.sourceRectAtTime(voOutPoint, false).height +
@@ -279,11 +279,11 @@ function updateCollapseCommentBar(
   comp: CompItem,
   keyframe: { time: number; height: number }
 ) {
-  const barLayer = comp.layer("collapse-comment-bar") as ShapeLayer;
+  const barLayer = comp.layer('collapse-comment-bar') as ShapeLayer;
   const yPos = (barLayer.position.value as number[])[1];
   const barSize = (barLayer as any)
-    .content("Rectangle 1")
-    .content("Rectangle Path 1").size;
+    .content('Rectangle 1')
+    .content('Rectangle Path 1').size;
   const barWidth = 5;
   const barHeight = keyframe.height - yPos;
   barSize.setValueAtTime(keyframe.time, [barWidth, barHeight]);
@@ -298,10 +298,10 @@ function updateBGSizeAndPos(
   comp: CompItem,
   keyframe: { time: number; height: number }
 ) {
-  const bgLayer = comp.layer("comment-bg");
+  const bgLayer = comp.layer('comment-bg');
   const bgSize = (bgLayer as any)
-    .content("Rectangle 1")
-    .content("Rectangle Path 1").size;
+    .content('Rectangle 1')
+    .content('Rectangle Path 1').size;
   const paddingBottom = 60;
   const bgWidth = bgSize.value[0];
 

@@ -1,9 +1,9 @@
-import path from "path";
-import Command, { flags } from "@oclif/command";
-import { contextFlags } from "../flags/context-flags";
-import { createContext, notify, logPost } from "../util";
-import Crawler from "../crawler";
-import { IPost } from "../types";
+import path from 'path';
+import Command, { flags } from '@oclif/command';
+import { contextFlags } from '../flags/context-flags';
+import { createContext, notify, logPost } from '../util';
+import Crawler from '../crawler';
+import { IPost } from '../types';
 
 export class CrawlCommand extends Command {
   static description = `
@@ -13,77 +13,77 @@ export class CrawlCommand extends Command {
   static flags = {
     ...contextFlags,
     postId: flags.string({
-      char: "p",
-      description: "id of the post to be crawled",
+      char: 'p',
+      description: 'id of the post to be crawled',
       hidden: false,
       multiple: true,
       required: false,
     }),
     postUri: flags.string({
-      char: "u",
-      description: "uri of the post or comment to be crawled",
+      char: 'u',
+      description: 'uri of the post or comment to be crawled',
       hidden: false,
       multiple: true,
       required: false,
     }),
     subredditName: flags.string({
-      char: "n",
-      description: "name of the subreddit to be crawled", // help description for flag
+      char: 'n',
+      description: 'name of the subreddit to be crawled', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
-      default: "AskReddit", // default value if flag not passed (can be a function that returns a string or undefined)
-      exclusive: ["postId"],
+      default: 'AskReddit', // default value if flag not passed (can be a function that returns a string or undefined)
+      exclusive: ['postId'],
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     postIndex: flags.integer({
-      char: "i",
-      description: "index of the post to be crawled", // help description for flag
+      char: 'i',
+      description: 'index of the post to be crawled', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 0, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     nPosts: flags.integer({
-      char: "N",
-      description: "number of posts to crawl", // help description for flag
+      char: 'N',
+      description: 'number of posts to crawl', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 1, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     minWords: flags.integer({
-      char: "w",
-      description: "minimum number of words to return", // help description for flag
+      char: 'w',
+      description: 'minimum number of words to return', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2.6 * 60 * 20, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxReplyDepth: flags.integer({
-      char: "d",
+      char: 'd',
       description:
-        "maximum number of subcomments to return for each top-level comment", // help description for flag
+        'maximum number of subcomments to return for each top-level comment', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     maxRepliesPerComment: flags.integer({
-      char: "r",
+      char: 'r',
       description:
-        "maximum number of direct replies to return for each comment (not including sub-replies)", // help description for flag
+        'maximum number of direct replies to return for each comment (not including sub-replies)', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       default: 2, // default value if flag not passed (can be a function that returns a string or undefined)
       required: false, // make flag required (this is not common and you should probably use an argument instead)
     }),
     top: flags.string({
-      char: "t",
-      description: "sort subreddit posts by top (of time period)", // help description for flag
+      char: 't',
+      description: 'sort subreddit posts by top (of time period)', // help description for flag
       hidden: false, // hide from help
       multiple: false, // allow setting this flag multiple times
       required: false, // make flag required (this is not common and you should probably use an argument instead)
-      options: ["hour", "day", "week", "month", "year", "all"],
+      options: ['hour', 'day', 'week', 'month', 'year', 'all'],
     }),
   };
 
@@ -110,16 +110,16 @@ export class CrawlCommand extends Command {
     });
 
     const sort:
-      | { type: "hot" }
+      | { type: 'hot' }
       | {
-          type: "top";
-          time: "week" | "hour" | "day" | "month" | "year" | "all";
+          type: 'top';
+          time: 'week' | 'hour' | 'day' | 'month' | 'year' | 'all';
         } = top
       ? {
-          type: "top",
-          time: top as "week" | "hour" | "day" | "month" | "year" | "all",
+          type: 'top',
+          time: top as 'week' | 'hour' | 'day' | 'month' | 'year' | 'all',
         }
-      : { type: "hot" };
+      : { type: 'hot' };
 
     notify(`Started crawling post at ${new Date().toLocaleTimeString()}`);
 

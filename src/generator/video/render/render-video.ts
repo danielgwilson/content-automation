@@ -1,6 +1,6 @@
-const { render } = require("@nexrender/core");
-import { IProcessedPost, IRenderOutput, IVideoSettings } from "../../../types";
-import { getJob } from "./job";
+const { render } = require('@nexrender/core');
+import { IProcessedPost, IRenderOutput, IVideoSettings } from '../../../types';
+import { getJob } from './job';
 
 export async function renderVideo(
   post: IProcessedPost,
@@ -19,11 +19,12 @@ export async function renderVideo(
   const job = getJob(post, {
     outputDir,
     resourceDir,
-    compName: "reddit-template-01",
+    compName: 'reddit-template-01',
     settings,
   });
   const renderSettings = {
     workpath: outputDir,
+    binary: '/Applications/Adobe After Effects 2022/aerender',
     maxMemoryPercent: 75, // suspect does not do anything, output shows -mem_usage 50 75
     skipCleanup: debug,
     debug,

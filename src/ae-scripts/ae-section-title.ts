@@ -1,26 +1,37 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/content-automation/lib/resources/ae-scripts/ae-util.js"
 
 (() => {
-  // Check if required parameters are present
-  if (
-    SECTION_TITLE_PARAMS.compName === undefined ||
-    SECTION_TITLE_PARAMS.fragments === undefined ||
-    SECTION_TITLE_PARAMS.author === undefined ||
-    SECTION_TITLE_PARAMS.score === undefined ||
-    SECTION_TITLE_PARAMS.audioLevelVoice === undefined ||
-    SECTION_TITLE_PARAMS.postDetails === undefined
-  )
-    throw new Error(`Script missing required parameter.`);
-
-  const {
-    compName,
-    fragments,
-    author,
-    score,
-    audioLevelVoice,
-    postDetails,
-  } = SECTION_TITLE_PARAMS;
+  const compName = NX.get('compName');
+  if (!compName)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'compName'.`
+    );
+  const fragments = NX.get('fragments');
+  if (!fragments)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'fragments'.`
+    );
+  const author = NX.get('author');
+  if (!author)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'author'.`
+    );
+  const score = NX.get('score');
+  if (!score)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'score'.`
+    );
+  const audioLevelVoice = NX.get('audioLevelVoice');
+  if (!audioLevelVoice)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'audioLevelVoice'.`
+    );
+  const postDetails = NX.get('postDetails');
+  if (!postDetails)
+    throw new Error(
+      `Script 'ae-section-title.jsx' missing required parameter: 'postDetails'.`
+    );
 
   const refComp = getComp(compName);
   const comp = app.project.items.addComp(
@@ -54,38 +65,38 @@
   `;
 
   // Add subreddit icon
-  const iconLayer = comp.layer("subreddit-icon") as AVLayer;
+  const iconLayer = comp.layer('subreddit-icon') as AVLayer;
   iconLayer.replaceSource(
     importFootage(postDetails.subredditIcon.filePath),
     true
   );
 
   // Update title text
-  updateTextLayer({ name: "title-text", comp }, fragments[0].text);
+  updateTextLayer({ name: 'title-text', comp }, fragments[0].text);
 
   // Update subreddit name
   updateTextLayer(
-    { name: "subreddit-text", comp },
-    "r/" + postDetails.subredditName
+    { name: 'subreddit-text', comp },
+    'r/' + postDetails.subredditName
   );
 
   // Update author name
-  updateTextLayer({ name: "user-text", comp }, "u/" + author);
+  updateTextLayer({ name: 'user-text', comp }, 'u/' + author);
 
   // Update number of comments
   const numCommentsText = get3Digits(postDetails.numComments);
   updateTextLayer(
-    { name: "num-comments-text", comp },
+    { name: 'num-comments-text', comp },
     `${numCommentsText} Comments`
   );
 
   // Update score
   const scoreText = get3Digits(score);
-  updateTextLayer({ name: "score-text", comp }, scoreText);
+  updateTextLayer({ name: 'score-text', comp }, scoreText);
 
   // Update upvote ratio
   updateTextLayer(
-    { name: "pct-upvoted-text", comp },
+    { name: 'pct-upvoted-text', comp },
     `${Math.round(postDetails.upvoteRatio * 100)}% Upvoted`
   );
 
@@ -98,11 +109,11 @@
   // Set background position based on the background's (and thereby the title text's) size
   function updatePosition() {
     // Update BG y position as a function of height (keep text centered on screen)
-    const bgLayer = comp.layer("post-bg") as ShapeLayer;
+    const bgLayer = comp.layer('post-bg') as ShapeLayer;
 
     const bgHeight: number = (bgLayer as any)
-      .content("BG Rect")
-      .content("Rectangle Path 1")
+      .content('BG Rect')
+      .content('Rectangle Path 1')
       .size.valueAtTime(comp.duration, false)[1];
     const xPos = (bgLayer.position.value as number[])[0];
     const yPos = Math.round(comp.height / 2 - bgHeight / 2);

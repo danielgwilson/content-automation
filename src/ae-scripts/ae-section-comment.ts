@@ -1,17 +1,23 @@
 /// <reference types="types-for-adobe/aftereffects/2018"/>
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-util.js"
-//@include "/Users/danielgwilson/local_git/reddit-youtube-video-bot/lib/resources/ae-scripts/ae-section-comment-util.js"
+//@include "/Users/danielgwilson/local_git/content-automation/lib/resources/ae-scripts/ae-util.js"
+//@include "/Users/danielgwilson/local_git/content-automation/lib/resources/ae-scripts/ae-section-comment-util.js"
 
 (() => {
-  // Check if required parameters are present
-  if (
-    !SECTION_COMMENT_PARAMS.compName ||
-    !SECTION_COMMENT_PARAMS.section ||
-    !SECTION_COMMENT_PARAMS.audioLevelVoice
-  )
-    throw new Error("Script missing required parameter.");
-
-  const { compName, section, audioLevelVoice } = SECTION_COMMENT_PARAMS;
+  const compName = NX.get('compName');
+  if (!compName)
+    throw new Error(
+      `Script 'ae-section-comment.jsx' missing required parameter: 'compName'.`
+    );
+  const section = NX.get('section');
+  if (!section)
+    throw new Error(
+      `Script 'ae-section-comment.jsx' missing required parameter: 'section'.`
+    );
+  const audioLevelVoice = NX.get('audioLevelVoice');
+  if (!audioLevelVoice)
+    throw new Error(
+      `Script 'ae-section-comment.jsx' missing required parameter: 'audioLevelVoice'.`
+    );
 
   const refComp = getComp(compName);
   const thisComp = app.project.items.addComp(
@@ -42,10 +48,10 @@
   function updateContentCompPosition() {
     for (let keyframe of contentComp.keyframes) {
       // Update BG y position as a function of new height (keep bottom text on screen)
-      const bgLayer = contentComp.comp.layer("comment-bg") as ShapeLayer;
+      const bgLayer = contentComp.comp.layer('comment-bg') as ShapeLayer;
       const bgHeight: number = (bgLayer as any)
-        .content("Rectangle 1")
-        .content("Rectangle Path 1")
+        .content('Rectangle 1')
+        .content('Rectangle Path 1')
         .size.valueAtTime(keyframe.time, false)[1];
 
       const xPos = Math.round((thisComp.width - contentComp.comp.width) / 2);
