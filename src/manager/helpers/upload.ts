@@ -1,14 +1,14 @@
-import path from "path";
-import { Page } from "playwright";
+import path from 'path';
+import { Page } from 'playwright';
 
-import Manager from "../manager";
-import { waitForRandom } from "./wait";
-import { getCaptionAndTags } from "./caption";
-import { getSelectorText, MAX_VIDEO_LENGTH } from "../util";
-import { saveObjectToJson } from "../../util/saveObjectToJson";
-import { IGeneratorOutput } from "../../types";
-import { IUploadOutput } from "../../types/upload";
-import { getBlobs, BlobType } from "../../util";
+import Manager from '../manager';
+import { waitForRandom } from './wait';
+import { getCaptionAndTags } from './caption';
+import { getSelectorText, MAX_VIDEO_LENGTH } from '../util';
+import { saveObjectToJson } from '../../util/saveObjectToJson';
+import { IGeneratorOutput } from '../../types';
+import { IUploadOutput } from '../../types/upload';
+import { getBlobs, BlobType } from '../../util';
 
 export async function uploadPost(
   manager: Manager,
@@ -24,14 +24,14 @@ export async function uploadPost(
 ) {
   const timeout = manager.context.debug ? 0 : 30000;
   const SELECTORS = {
-    uploadVideo: ".upload-wrapper > a",
-    fileInput: "input[type=file]",
-    video: "video",
-    uploadButton: "[class*=upload-btn--]",
-    postButton: "[class*=btn-post--]:not([class*=disabled])",
-    captionField: "[class*=editor--]",
-    successDialog: "[class*=modal-title-container--] > div",
-    successDialogTitle: "[class*=modal-title--]",
+    uploadVideo: '.upload-wrapper > a',
+    fileInput: 'input[type=file]',
+    video: 'video',
+    uploadButton: '[class*=upload-btn--]',
+    postButton: '[class*=btn-post--]:not([class*=disabled])',
+    captionField: '[class*=editor--]',
+    successDialog: '[class*=modal-title-container--] > div',
+    successDialogTitle: '[class*=modal-title--]',
   };
 
   const { blob, blobDir } = getFreshBlobFromPath(targetDir);
@@ -44,12 +44,12 @@ export async function uploadPost(
   //   );
 
   const idealTags = [
-    "#fyp",
-    "#reddit",
-    "#askreddit",
-    "#redditvids",
-    "#redditstories",
-    "#redditoutloud",
+    '#fyp',
+    '#reddit',
+    '#askreddit',
+    '#redditvids',
+    '#redditstories',
+    '#redditoutloud',
   ];
   const { caption, tags } = getCaptionAndTags(
     title || blob.title,
@@ -60,14 +60,14 @@ export async function uploadPost(
   // Click "Upload video" icon
   await page.waitForSelector(SELECTORS.uploadVideo, { timeout });
   await page.click(SELECTORS.uploadVideo);
-  console.log("Clicked upload button in nav bar");
+  console.log('Clicked upload button in nav bar');
   await waitForRandom(page);
 
   // Specify video file in file input
-  await page.waitForLoadState("load");
+  await page.waitForLoadState('load');
   await page.waitForSelector(SELECTORS.uploadButton, { timeout });
   const fileInputHandle = await page.$(SELECTORS.fileInput); // Must exist because of page.waitForSelector(...)
-  if (!fileInputHandle) throw new Error("Failed to find file input element");
+  if (!fileInputHandle) throw new Error('Failed to find file input element');
   await fileInputHandle.setInputFiles(videoPath);
 
   console.log(`File accepted (${videoPath})`);
@@ -80,17 +80,17 @@ export async function uploadPost(
   console.log(`Typed caption: ${caption}`);
 
   // Add hashtags
-  await page.keyboard.type(" ", { delay: 50 * Math.random() + 100 }); // Type space after caption
+  await page.keyboard.type(' ', { delay: 50 * Math.random() + 100 }); // Type space after caption
   for (let [i, tag] of tags.entries()) {
     await page.keyboard.type(tag, { delay: 50 * Math.random() + 100 });
     await waitForRandom(page);
-    await page.keyboard.press("Enter", {
+    await page.keyboard.press('Enter', {
       delay: 50 * Math.random() + 100,
     }); // Press enter between tags to ensure tag registers correctly
   }
 
   // After final tag or end of title, delete extra space to save on the character limit
-  await page.keyboard.press("Backspace", {
+  await page.keyboard.press('Backspace', {
     delay: 50 * Math.random() + 100,
   });
 
@@ -98,9 +98,9 @@ export async function uploadPost(
   await page.waitForSelector(SELECTORS.postButton, { timeout });
   if (!manager.context.debug) {
     await page.click(SELECTORS.postButton);
-    console.log("Post button clicked");
+    console.log('Post button clicked');
   } else {
-    console.log("Execution finished—paused at completion due to debug flag");
+    console.log('Execution finished—paused at completion due to debug flag');
   }
 
   // Check for successful upload - important to ensure browser is not pre-emptively closed.
@@ -111,12 +111,12 @@ export async function uploadPost(
     page,
     SELECTORS.successDialogTitle
   );
-  if (successDialogTitleText !== "Your video is being uploaded to TikTok!")
+  if (successDialogTitleText !== 'Your video is being uploaded to TikTok!')
     throw new Error(
       `Success dialog text is unexpected; dialog text is: ${successDialogTitleText}`
     );
 
-  console.log("Successfully uploaded post!");
+  console.log('Successfully uploaded post!');
 
   const uploadedPost = {
     id: blob.id,
@@ -177,6 +177,7 @@ export function getFreshBlobsFromPath(targetPath: string) {
   const generatorBlobs = getBlobs(targetPath, {
     type: BlobType.generator,
   }) as IGeneratorOutput[];
+  // console.dir(generatorBlobs);
   const uploadBlobs = getBlobs(targetPath, { type: BlobType.upload }); // Make sure we grab a content blob that hasn't previously been uploaded
   const uploadIds =
     uploadBlobs.length > 0

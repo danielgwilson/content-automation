@@ -163,6 +163,7 @@ export class CrawlCommand extends Command {
             sort,
           });
           posts.map((post) => logPost(post));
+          // @ts-ignore
           return resolve(...posts);
         })
       );

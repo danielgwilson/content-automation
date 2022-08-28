@@ -1,7 +1,8 @@
-import { IPost, IPostSection, IPostComment, IGildings } from "../types";
-import VoiceOverClient from "./voice-over";
-import { getFragments, getAudioLengthForFragments } from "./fragments";
-import { getCleanText } from "./util/clean-text";
+import ProgressBar from 'progress';
+import { IPost, IPostSection, IPostComment, IGildings } from '../types';
+import VoiceOverClient from './voice-over';
+import { getFragments, getAudioLengthForFragments } from './fragments';
+import { getCleanText } from './util/clean-text';
 
 export async function getSections(
   post: IPost,
@@ -11,28 +12,41 @@ export async function getSections(
 ) {
   const { speakingRate } = options;
 
+  const progressBar = new ProgressBar(
+    ':bar :current/:total :percent',
+    post.comments.length + 1
+  );
+
   const sections = await Promise.all([
-    getSectionForTitle(
-      {
-        text: post.details.title,
-        author: post.details.author,
-        score: post.details.score,
-        gildings: post.details.gildings,
-      },
-      {
-        voiceOverClient,
-        fileNamePrefix: `${post.id}-${0}`,
-        outputDir,
-        speakingRate,
-      }
-    ),
-    ...post.comments.map((comment, i) => {
-      return getSectionForComment(comment, {
+    (async () => {
+      const title = await getSectionForTitle(
+        {
+          text: post.details.title,
+          author: post.details.author,
+          score: post.details.score,
+          gildings: post.details.gildings,
+        },
+        {
+          voiceOverClient,
+          fileNamePrefix: `${post.id}-${0}`,
+          outputDir,
+          speakingRate,
+        }
+      );
+      progressBar.tick();
+      return title;
+    })(),
+    ...post.comments.map(async (comment, i) => {
+      const section = await getSectionForComment(comment, {
         voiceOverClient,
         fileNamePrefix: `${post.id}-${i + 1}`,
         outputDir,
         speakingRate,
       });
+
+      progressBar.tick();
+
+      return section;
     }),
   ]);
 
@@ -67,7 +81,7 @@ async function getSectionForTitle(
     speakingRate,
   });
   return {
-    type: "title",
+    type: 'title',
     fragments,
     length: getAudioLengthForFragments(fragments),
 
@@ -102,7 +116,7 @@ async function getSectionForComment(
     speakingRate,
   });
   return {
-    type: "comment",
+    type: 'comment',
     fragments,
     length: getAudioLengthForFragments(fragments),
 

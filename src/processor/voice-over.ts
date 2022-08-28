@@ -1,9 +1,9 @@
-import path from "path";
-import Bottleneck from "bottleneck";
-import textToSpeech from "@google-cloud/text-to-speech";
-import { writeFile } from "../util";
-import { IPostSectionFragmentAudio } from "../types";
-import { IContext } from "../types";
+import path from 'path';
+import Bottleneck from 'bottleneck';
+import textToSpeech from '@google-cloud/text-to-speech';
+import { writeFile } from '../util';
+import { IPostSectionFragmentAudio } from '../types';
+import { IContext } from '../types';
 
 interface IVoice {
   languageCode: string;
@@ -34,22 +34,30 @@ export default class VoiceOverClient {
   }) {
     // Set up rate limiter
     this.limiter = new Bottleneck({
-      maxConcurrent: 5,
-      minTime: 1000,
-      reservoir: 300,
+      // maxConcurrent: 5,
+      // minTime: 1000,
+      reservoir: 1000,
       reservoirRefreshInterval: 1000 * 60,
       reservoirRefreshAmount: 300,
     });
 
     // Creates a Google Cloud Text-to-Speech client
     process.env[
-      "GOOGLE_APPLICATION_CREDENTIALS"
+      'GOOGLE_APPLICATION_CREDENTIALS'
     ] = GOOGLE_APPLICATION_CREDENTIALS;
     this.client = new textToSpeech.TextToSpeechClient();
     this.voice = {
-      languageCode: "en-GB",
-      name: "en-GB-Wavenet-B",
-      ssmlGender: "MALE",
+      languageCode: 'en-US',
+
+      // name: "en-GB-Wavenet-B",
+      // name: 'en-AU-Neural2-A',
+      // name: 'en-AU-Neural2-C',
+      // name: 'en-GB-Neural2-A',
+      // name: 'en-GB-Neural2-C',
+      name: 'en-US-Neural2-C',
+
+      ssmlGender: 'MALE',
+      // ssmlGender: 'FEMALE',
     };
   }
 
@@ -65,8 +73,9 @@ export default class VoiceOverClient {
     speakingRate?: number;
   }) {
     const audioConfig = {
-      audioEncoding: "MP3",
+      audioEncoding: 'MP3',
       speakingRate,
+      effectsProfileId: ['handset-class-device'],
     } as IAudioConfig;
     // Performs the text-to-speech request
     const request: ITextToSpeechRequest = {
@@ -81,8 +90,8 @@ export default class VoiceOverClient {
     const [response] = await this.limiter.schedule(synthesizeSpeech, request);
 
     // Write the binary audio content to a local file
-    const filePath = path.resolve(path.join(outputDir, "voice-over", fileName));
-    await writeFile(filePath, response.audioContent, "binary");
+    const filePath = path.resolve(path.join(outputDir, 'voice-over', fileName));
+    await writeFile(filePath, response.audioContent, 'binary');
 
     /* 
     From

@@ -1,7 +1,7 @@
-import path from "path";
-import { getPost, getPostsFromSubreddit } from "./reddit/get-post";
-import { IContext, IPost, ICrawlOptions } from "../types";
-import { saveObjectToJson } from "../util";
+import path from 'path';
+import { getPost, getPostsFromSubreddit } from './reddit/get-post';
+import { IContext, IPost, ICrawlOptions } from '../types';
+import { saveObjectToJson } from '../util';
 
 export default class {
   context: IContext;
@@ -13,7 +13,7 @@ export default class {
     const post = await getPost(options, this.context);
 
     const { saveOutputToFile } = this.context;
-    if (saveOutputToFile) this.saveToFile(post);
+    if (saveOutputToFile) await this.saveToFile(post);
 
     return post;
   }

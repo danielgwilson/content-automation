@@ -1,4 +1,5 @@
-import path from "path";
+import ProgressBar from 'progress';
+import path from 'path';
 import {
   IContext,
   IPost,
@@ -6,16 +7,16 @@ import {
   IProcessedPostDetails,
   IProcessedPostStats,
   IProcessedPostOptions,
-} from "../types";
-import VoiceOverClient from "./voice-over";
+} from '../types';
+import VoiceOverClient from './voice-over';
 import {
   getSections,
   getCharacters,
   getAudioLengthForSections,
-} from "./sections";
-import { saveObjectToJson } from "../util";
-import { fetchAndSaveFile, trimComments } from "./util";
-import { trimAudio } from "./util/trim-audio";
+} from './sections';
+import { saveObjectToJson } from '../util';
+import { fetchAndSaveFile, trimComments } from './util';
+import { trimAudio } from './util/trim-audio';
 
 export default class {
   context: IContext;
@@ -61,7 +62,7 @@ export default class {
         speakingRate,
       }),
       await fetchAndSaveFile(post.details.subreddit.iconUri, {
-        fileName: "subreddit-icon.png",
+        fileName: 'subreddit-icon.png',
         outputDir,
       }),
     ]);
